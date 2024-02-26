@@ -1,0 +1,39 @@
+services:
+  postgres:
+    container_name: money-exchange-database
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=backend
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=backend
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: pg_isready -U backend
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    container_name: money-exchange-backend
+    build:
+      context: ./moneyExchange
+      dockerfile: backend.dockerfile
+    environment:
+      - POSTGRES_USER=backend
+      - POSTGRES_PASSWORD=admin
+      - DATABASE_URL=jdbc:postgresql://postgres-database:5432/backend
+      - DATABASE_DDL=update
+    ports:
+      - 8080:8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    container_name: money-exchange-frontend
+    build:
+      context: ./frontend
+      dockerfile: frontend.dockerfile
+    ports:
+      - 3000:3000
