@@ -30,3 +30,7 @@ springdoc:
 
 server:
   port: 8080
+
+app:
+  cors:
+    allowed-origins: http://localhost:3000
