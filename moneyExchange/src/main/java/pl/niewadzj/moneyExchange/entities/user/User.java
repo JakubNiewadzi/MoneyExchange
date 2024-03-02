@@ -1,5 +1,6 @@
 package pl.niewadzj.moneyExchange.entities.user;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -10,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Collate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +22,6 @@ import java.util.List;
 import static pl.niewadzj.moneyExchange.entities.user.constants.UserConstants.USER_TABLE;
 
 @Data
-@RequiredArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
 @Entity
@@ -29,9 +30,10 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
     private String firstName;
     private String lastName;
+    @Column(unique = true)
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
