@@ -2,12 +2,14 @@ package pl.niewadzj.moneyExchange.auth;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.antlr.v4.runtime.Token;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.niewadzj.moneyExchange.auth.interfaces.AuthController;
 import pl.niewadzj.moneyExchange.auth.interfaces.AuthService;
+import pl.niewadzj.moneyExchange.auth.records.LoginRequest;
 import pl.niewadzj.moneyExchange.auth.records.RegistrationRequest;
 import pl.niewadzj.moneyExchange.auth.records.TokenResponse;
 
@@ -25,5 +27,10 @@ public class AuthControllerImpl implements AuthController {
     @PostMapping(REGISTER_MAPPING)
     public TokenResponse register(@RequestBody @Valid RegistrationRequest registrationRequest) {
         return authService.register(registrationRequest);
+    }
+
+    @PostMapping
+    public TokenResponse login(@RequestBody @Valid LoginRequest loginRequest){
+        return new TokenResponse("a", "b");
     }
 }

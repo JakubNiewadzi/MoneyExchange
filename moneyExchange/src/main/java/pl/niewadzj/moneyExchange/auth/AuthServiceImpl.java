@@ -8,9 +8,13 @@ import pl.niewadzj.moneyExchange.auth.interfaces.AuthService;
 import pl.niewadzj.moneyExchange.auth.records.RegistrationRequest;
 import pl.niewadzj.moneyExchange.auth.records.TokenResponse;
 import pl.niewadzj.moneyExchange.config.jwt.JwtService;
+import pl.niewadzj.moneyExchange.entities.account.interfaces.AccountService;
 import pl.niewadzj.moneyExchange.entities.user.User;
-import pl.niewadzj.moneyExchange.entities.user.UserRepository;
 import pl.niewadzj.moneyExchange.entities.user.UserRole;
+import pl.niewadzj.moneyExchange.entities.user.interfaces.UserRepository;
+import pl.niewadzj.moneyExchange.exceptions.auth.UserAlreadyExistsException;
+
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -18,12 +22,16 @@ import pl.niewadzj.moneyExchange.entities.user.UserRole;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
+    private final AccountService accountService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
     @Override
     public TokenResponse register(RegistrationRequest registrationRequest) {
         log.debug("Registering user: {}", registrationRequest);
+
+        checkIfUserExists(registrationRequest.email());
+
         User user = User.builder()
                 .email(registrationRequest.email())
                 .firstName(registrationRequest.firstName())
@@ -31,7 +39,11 @@ public class AuthServiceImpl implements AuthService {
                 .role(UserRole.USER)
                 .password(passwordEncoder.encode(registrationRequest.password()))
                 .build();
+
         userRepository.save(user);
+
+        accountService.createAccount(user);
+
         String authToken = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
 
@@ -39,5 +51,14 @@ public class AuthServiceImpl implements AuthService {
                 .authToken(authToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    private void checkIfUserExists(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+
+        userOptional.ifPresent(user -> {
+            throw new UserAlreadyExistsException(email);
+        });
+
     }
 }
