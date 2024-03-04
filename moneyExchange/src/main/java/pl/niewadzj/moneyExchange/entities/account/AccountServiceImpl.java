@@ -12,6 +12,10 @@ import pl.niewadzj.moneyExchange.entities.user.User;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+
+import static pl.niewadzj.moneyExchange.entities.account.constants.AccountConstants.ACCOUNT_NUMBER_SIZE;
+import static pl.niewadzj.moneyExchange.entities.account.constants.AccountConstants.NUMBERS;
 
 @Slf4j
 @Service
@@ -33,9 +37,22 @@ public class AccountServiceImpl implements AccountService {
         Account account = Account.builder()
                 .accountOwner(owner)
                 .accountBalance(currentAccountBalance)
+                .accountNumber(generateAccountNumber())
                 .build();
 
         accountRepository.save(account);
         log.debug("Account successfully created");
+    }
+
+    private String generateAccountNumber(){
+        Random random = new Random();
+        StringBuilder accountNumberBuilder = new StringBuilder();
+
+        for(int i = 0; i < ACCOUNT_NUMBER_SIZE; i++){
+            int index = random.nextInt(0, 10);
+            accountNumberBuilder.append(index);
+        }
+
+        return accountNumberBuilder.toString();
     }
 }

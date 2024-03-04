@@ -9,6 +9,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapKeyJoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -16,6 +18,9 @@ import pl.niewadzj.moneyExchange.entities.currency.Currency;
 import pl.niewadzj.moneyExchange.entities.user.User;
 
 import java.util.Map;
+
+import static pl.niewadzj.moneyExchange.entities.account.constants.AccountConstants.ACCOUNT_NUMBER_SIZE;
+import static pl.niewadzj.moneyExchange.entities.account.constants.AccountConstants.NUMBER_NULL_MSG;
 
 @Data
 @NoArgsConstructor
@@ -27,6 +32,11 @@ public class Account {
     @Id
     @GeneratedValue
     private Long id;
+
+    @NotNull(message = NUMBER_NULL_MSG)
+    @Size(min = ACCOUNT_NUMBER_SIZE, max = ACCOUNT_NUMBER_SIZE)
+    private String accountNumber;
+
     @OneToOne
     private User accountOwner;
 

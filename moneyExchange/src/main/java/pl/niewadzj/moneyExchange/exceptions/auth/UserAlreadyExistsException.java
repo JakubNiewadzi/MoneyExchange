@@ -1,8 +1,10 @@
 package pl.niewadzj.moneyExchange.exceptions.auth;
 
-public class UserAlreadyExistsException extends IllegalArgumentException{
+import pl.niewadzj.moneyExchange.exceptions.BadRequestException;
 
-    public UserAlreadyExistsException(String email){
+public class UserAlreadyExistsException extends BadRequestException {
+
+    public UserAlreadyExistsException(String email) {
         super(String.format("User with email %s already exits", email));
     }
 
