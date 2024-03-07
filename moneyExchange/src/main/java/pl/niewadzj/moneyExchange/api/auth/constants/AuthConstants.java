@@ -1,4 +1,4 @@
-package pl.niewadzj.moneyExchange.auth.constants;
+package pl.niewadzj.moneyExchange.api.auth.constants;
 
 public final class AuthConstants {
 

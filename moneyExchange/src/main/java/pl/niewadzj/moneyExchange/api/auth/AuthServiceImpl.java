@@ -1,18 +1,23 @@
-package pl.niewadzj.moneyExchange.auth;
+package pl.niewadzj.moneyExchange.api.auth;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import pl.niewadzj.moneyExchange.auth.interfaces.AuthService;
-import pl.niewadzj.moneyExchange.auth.records.RegistrationRequest;
-import pl.niewadzj.moneyExchange.auth.records.TokenResponse;
+import pl.niewadzj.moneyExchange.api.auth.records.LoginRequest;
+import pl.niewadzj.moneyExchange.api.auth.records.RegistrationRequest;
+import pl.niewadzj.moneyExchange.api.auth.records.TokenResponse;
+import pl.niewadzj.moneyExchange.api.auth.interfaces.AuthService;
 import pl.niewadzj.moneyExchange.config.jwt.JwtService;
-import pl.niewadzj.moneyExchange.entities.account.interfaces.AccountService;
+import pl.niewadzj.moneyExchange.api.account.interfaces.AccountService;
 import pl.niewadzj.moneyExchange.entities.user.User;
 import pl.niewadzj.moneyExchange.entities.user.UserRole;
 import pl.niewadzj.moneyExchange.entities.user.interfaces.UserRepository;
+import pl.niewadzj.moneyExchange.exceptions.auth.PasswordsDoNotMatchException;
 import pl.niewadzj.moneyExchange.exceptions.auth.UserAlreadyExistsException;
+import pl.niewadzj.moneyExchange.exceptions.auth.UserNotFoundException;
 
 import java.util.Optional;
 
@@ -25,6 +30,7 @@ public class AuthServiceImpl implements AuthService {
     private final AccountService accountService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final UserDetailsService userDetailsService;
 
     @Override
     public TokenResponse register(RegistrationRequest registrationRequest) {
@@ -46,6 +52,28 @@ public class AuthServiceImpl implements AuthService {
 
         String authToken = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
+
+        return TokenResponse.builder()
+                .authToken(authToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    @Override
+    public TokenResponse login(LoginRequest loginRequest) {
+        log.debug("Processing login request: {}", loginRequest);
+        
+        User user = userRepository
+                .findByEmail(loginRequest.email())
+                .orElseThrow(() -> new UserNotFoundException(loginRequest.email()));
+
+
+        if (!passwordEncoder.matches(loginRequest.password(), user.getPassword())){
+            throw new PasswordsDoNotMatchException();
+        }
+
+        final String authToken = jwtService.generateToken(user);
+        final String refreshToken = jwtService.generateRefreshToken(user);
 
         return TokenResponse.builder()
                 .authToken(authToken)

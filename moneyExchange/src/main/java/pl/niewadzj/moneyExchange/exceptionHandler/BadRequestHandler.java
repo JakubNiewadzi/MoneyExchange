@@ -15,8 +15,8 @@ public class BadRequestHandler {
     public final ResponseEntity<String> badRequestHandler(BadRequestException exception){
         String message = exception.getMessage();
 
-        log.error("There has been an error trying to find an entity in repository");
+        log.error("Given input is not valid");
 
-        return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 }

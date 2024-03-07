@@ -40,6 +40,7 @@ public class ApiConsumer {
                                 .build()
                     ).collect(Collectors.toList());
         } catch (JsonProcessingException e) {
+            log.debug("Fetch error");
             throw new RuntimeException(e);
         }
     }

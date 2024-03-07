@@ -1,4 +1,4 @@
-package pl.niewadzj.moneyExchange.auth.records;
+package pl.niewadzj.moneyExchange.api.auth.records;
 
 import lombok.Builder;
 
