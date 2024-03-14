@@ -3,6 +3,7 @@ package pl.niewadzj.moneyExchange.entities.transaction;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -23,11 +24,11 @@ public class Transaction {
     @Id
     @GeneratedValue
     private Long id;
-    @OneToMany
+    @ManyToOne
     private Currency exchangeFrom;
-    @OneToMany
+    @ManyToOne
     private Currency exchangeTo;
-    @OneToMany
+    @ManyToOne
     private Account account;
     private double exchangeRate;
     private LocalDateTime  exchangeDate;
