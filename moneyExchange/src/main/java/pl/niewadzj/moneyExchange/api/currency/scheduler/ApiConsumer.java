@@ -7,11 +7,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import pl.niewadzj.moneyExchange.api.currency.records.RatesResponse;
+import pl.niewadzj.moneyExchange.api.currency.records.RatesExternalResponse;
 import pl.niewadzj.moneyExchange.entities.currency.Currency;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static pl.niewadzj.moneyExchange.api.currency.constants.ApiCallConstants.SUPPLIER_URL;
@@ -27,17 +27,17 @@ public class ApiConsumer {
         String currencyJson = fetchCurrencyFromApi();
         log.debug("Fetched currency JSON from api: {}", currencyJson);
         try {
-            RatesResponse ratesResponse = mapJsonToResponse(currencyJson);
-            return ratesResponse
+            RatesExternalResponse ratesExternalResponse = mapJsonToResponse(currencyJson);
+            return ratesExternalResponse
                     .rates()
                     .stream()
                     .map(rate -> Currency
-                                .builder()
-                                .name(rate.currency())
-                                .code(rate.code())
-                                .rateDate(ratesResponse.effectiveDate())
-                                .exchangeRate(rate.mid())
-                                .build()
+                            .builder()
+                            .name(rate.currency())
+                            .code(rate.code())
+                            .rateDate(LocalDateTime.now())
+                            .exchangeRate(rate.mid())
+                            .build()
                     ).collect(Collectors.toList());
         } catch (JsonProcessingException e) {
             log.debug("Fetch error");
@@ -45,16 +45,20 @@ public class ApiConsumer {
         }
     }
 
-    private String fetchCurrencyFromApi(){
+    private String fetchCurrencyFromApi() {
         final RestTemplate restTemplate = new RestTemplate();
         return restTemplate.getForObject(SUPPLIER_URL, String.class);
     }
 
-    private RatesResponse mapJsonToResponse(String currencyJson) throws JsonProcessingException {
-        JsonNode jsonNode;
-        jsonNode = objectMapper.readTree(currencyJson);
-        jsonNode = jsonNode.elements().next();
-        return objectMapper.readValue(jsonNode.toString(), RatesResponse.class);
+    private RatesExternalResponse mapJsonToResponse(String currencyJson) throws JsonProcessingException {
+        JsonNode jsonNode = objectMapper
+                .readTree(currencyJson);
+
+        jsonNode = jsonNode
+                .elements()
+                .next();
+        return objectMapper
+                .readValue(jsonNode.toString(), RatesExternalResponse.class);
     }
 
 }

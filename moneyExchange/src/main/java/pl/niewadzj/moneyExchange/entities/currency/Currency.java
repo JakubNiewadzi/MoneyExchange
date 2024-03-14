@@ -9,12 +9,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
+@Entity
 @SuperBuilder
 @NoArgsConstructor
-@Entity
 @Table(name = "currencies")
 public class Currency {
 
@@ -24,7 +25,7 @@ public class Currency {
     private String name;
     @Column(unique = true)
     private String code;
-    private Date rateDate;
+    private LocalDateTime rateDate;
     private double exchangeRate;
 
 }

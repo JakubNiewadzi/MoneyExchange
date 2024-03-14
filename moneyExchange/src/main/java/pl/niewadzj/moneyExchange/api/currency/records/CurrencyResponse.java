@@ -1,9 +1,10 @@
 package pl.niewadzj.moneyExchange.api.currency.records;
 
-import lombok.Builder;
+import java.util.Date;
 
-@Builder
-public record CurrencyResponse(String currency,
+public record CurrencyResponse(Long id,
+                               String name,
                                String code,
-                               double mid) {
+                               Date rateDate,
+                               double exchangeRate) {
 }
