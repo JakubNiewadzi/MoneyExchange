@@ -30,7 +30,8 @@ public class Transaction {
     private Currency exchangeTo;
     @ManyToOne
     private Account account;
-    private double exchangeRate;
-    private LocalDateTime  exchangeDate;
+    private Float exchangeRate;
+    private Float amountExchanged;
+    private LocalDateTime transactionDate;
 
 }

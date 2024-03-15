@@ -1,6 +1,6 @@
 FROM eclipse-temurin:21-jdk-alpine AS builder
 
-WORKDIR /app
+WORKDIR app
 
 COPY mvnw .
 COPY .mvn .mvn
@@ -15,11 +15,11 @@ RUN java -Djarmode=layertools -jar ${JAR_FILE} extract --destination target/extr
 
 FROM eclipse-temurin:21-jdk-alpine
 
-WORKDIR /app
-ARG EXTRACTED=app/target/extracted
+WORKDIR app
+ARG EXTRACTED=/app/target/extracted
 COPY --from=builder ${EXTRACTED}/dependencies/ ./
 COPY --from=builder ${EXTRACTED}/spring-boot-loader/ ./
 COPY --from=builder ${EXTRACTED}/snapshot-dependencies/ ./
 COPY --from=builder ${EXTRACTED}/application/ ./
 
-ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
+ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]

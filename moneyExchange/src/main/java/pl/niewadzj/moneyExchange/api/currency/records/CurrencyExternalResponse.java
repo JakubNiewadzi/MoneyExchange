@@ -5,5 +5,5 @@ import lombok.Builder;
 @Builder
 public record CurrencyExternalResponse(String currency,
                                        String code,
-                                       double mid) {
+                                       Float mid) {
 }

@@ -3,15 +3,16 @@ package pl.niewadzj.moneyExchange.api.account;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import pl.niewadzj.moneyExchange.api.account.interfaces.AccountService;
 import pl.niewadzj.moneyExchange.api.account.records.BalanceResponse;
-import pl.niewadzj.moneyExchange.api.account.records.TopUpRequest;
+import pl.niewadzj.moneyExchange.api.account.records.TransferRequest;
 import pl.niewadzj.moneyExchange.entities.account.Account;
 import pl.niewadzj.moneyExchange.entities.account.interfaces.AccountRepository;
-import pl.niewadzj.moneyExchange.api.account.interfaces.AccountService;
 import pl.niewadzj.moneyExchange.entities.currency.Currency;
 import pl.niewadzj.moneyExchange.entities.currency.interfaces.CurrencyRepository;
 import pl.niewadzj.moneyExchange.entities.user.User;
 import pl.niewadzj.moneyExchange.exceptions.account.AccountNotFoundException;
+import pl.niewadzj.moneyExchange.exceptions.account.NotEnoughMoneyException;
 import pl.niewadzj.moneyExchange.exceptions.currency.CurrencyNotFoundException;
 
 import java.util.HashMap;
@@ -49,17 +50,17 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public BalanceResponse topUpAccount(TopUpRequest topUpRequest, User user) {
+    public BalanceResponse depositToAccount(TransferRequest transferRequest, User user) {
         Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
 
-        Currency currencyToIncrease = currencyRepository.findById(topUpRequest
-                .currencyId()).orElseThrow(() -> new CurrencyNotFoundException(topUpRequest.currencyId()));
+        Currency currencyToIncrease = currencyRepository.findById(transferRequest
+                .currencyId()).orElseThrow(() -> new CurrencyNotFoundException(transferRequest.currencyId()));
 
         Map<Currency, Float> accountBalance = account.getAccountBalance();
 
         accountBalance.put(currencyToIncrease,
-                accountBalance.get(currencyToIncrease) + topUpRequest.amount());
+                accountBalance.get(currencyToIncrease) + transferRequest.amount());
 
         accountRepository.saveAndFlush(account);
 
@@ -71,11 +72,37 @@ public class AccountServiceImpl implements AccountService {
                 .build();
     }
 
-    private String generateAccountNumber(){
+    @Override
+    public BalanceResponse withdrawFromAccount(TransferRequest transferRequest, User user) {
+        Account account = accountRepository.findByAccountOwner(user)
+                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+
+        Currency currencyToIncrease = currencyRepository.findById(transferRequest.currencyId())
+                .orElseThrow(() -> new CurrencyNotFoundException(transferRequest.currencyId()));
+
+        Map<Currency, Float> accountBalance = account.getAccountBalance();
+
+        accountBalance.put(currencyToIncrease,
+                accountBalance.get(currencyToIncrease) - transferRequest.amount());
+
+        if (accountBalance.get(currencyToIncrease) < 0.00) {
+            throw new NotEnoughMoneyException();
+        }
+
+        accountRepository.saveAndFlush(account);
+
+        return BalanceResponse.builder()
+                .currencyId(currencyToIncrease.getId())
+                .currencyCode(currencyToIncrease.getCode())
+                .balance(accountBalance.get(currencyToIncrease))
+                .build();
+    }
+
+    private String generateAccountNumber() {
         Random random = new Random();
         StringBuilder accountNumberBuilder = new StringBuilder();
 
-        for(int i = 0; i < ACCOUNT_NUMBER_SIZE; i++){
+        for (int i = 0; i < ACCOUNT_NUMBER_SIZE; i++) {
             int index = random.nextInt(0, 10);
             accountNumberBuilder.append(index);
         }

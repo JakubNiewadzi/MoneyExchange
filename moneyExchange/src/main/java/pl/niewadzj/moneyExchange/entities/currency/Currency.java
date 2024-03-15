@@ -26,6 +26,6 @@ public class Currency {
     @Column(unique = true)
     private String code;
     private LocalDateTime rateDate;
-    private double exchangeRate;
+    private Float exchangeRate;
 
 }

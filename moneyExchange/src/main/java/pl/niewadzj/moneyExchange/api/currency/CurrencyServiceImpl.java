@@ -10,6 +10,7 @@ import pl.niewadzj.moneyExchange.entities.currency.Currency;
 import pl.niewadzj.moneyExchange.entities.currency.interfaces.CurrencyRepository;
 import pl.niewadzj.moneyExchange.exceptions.currency.CurrencyNotFoundException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +25,18 @@ public class CurrencyServiceImpl implements CurrencyService {
     @Override
     public void addExchangeRates(List<Currency> currencies) {
         log.debug("Posting currencies to database: {}", currencies);
+
+        if (!currencyRepository.findAll().isEmpty()){
+            return;
+        }
+
+        currencies.add(Currency.builder()
+                .name("Polski złoty")
+                .name("PLN")
+                .exchangeRate(1.0f)
+                .rateDate(LocalDateTime.now())
+                .build());
+
         currencyRepository.saveAllAndFlush(currencies);
     }
 

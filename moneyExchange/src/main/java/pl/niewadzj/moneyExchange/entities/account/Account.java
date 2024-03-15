@@ -41,7 +41,7 @@ public class Account {
     private User accountOwner;
 
     @ElementCollection
-    @CollectionTable(name = "currency_belongings", joinColumns = @JoinColumn(name = "currency_belongings_id"))
+    @CollectionTable(name = "currency_ownings", joinColumns = @JoinColumn(name = "account_id"))
     @MapKeyJoinColumn(name = "currency_id")
     private Map<Currency, Float> accountBalance;
 
