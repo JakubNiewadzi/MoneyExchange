@@ -17,7 +17,7 @@ services:
   backend:
     container_name: money-exchange-backend
     build:
-      context: ./moneyExchange
+      context: ./backend/moneyExchange
       dockerfile: backend.dockerfile
     environment:
       - POSTGRES_USER=backend
@@ -30,10 +30,37 @@ services:
       postgres:
         condition: service_healthy
 
+  scheduler:
+    container_name: money-exchange-scheduler
+    build:
+      context: ./backend/scheduler-service
+      dockerfile: scheduler.dockerfile
+    environment:
+      - POSTGRES_USER=backend
+      - POSTGRES_PASSWORD=admin
+      - DATABASE_URL=jdbc:postgresql://money-exchange-database:5432/backend
+      - DATABASE_DDL=update
+    ports:
+      - 7111:7111
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   frontend:
     container_name: money-exchange-frontend
     build:
       context: ./frontend
       dockerfile: frontend.dockerfile
     ports:
-      - 3000:3000
+      - 3000:80
+
+#  proxy:
+#    build:
+#      context: ./proxy
+#      dockerfile: nginx.dockerfile
+#    ports:
+#      - "80:80"
+#    depends_on:
+#      - scheduler
+#      - frontend
+#      - backend
