@@ -10,7 +10,6 @@ import org.springframework.web.client.RestTemplate;
 import pl.niewadzj.schedulerservice.api.currency.records.RatesExternalResponse;
 import pl.niewadzj.schedulerservice.entities.currency.Currency;
 
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,6 +28,7 @@ public class ApiConsumer {
         log.debug("Fetched currency JSON from api: {}", currencyJson);
         try {
             RatesExternalResponse ratesExternalResponse = mapJsonToResponse(currencyJson);
+
             return ratesExternalResponse
                     .rates()
                     .stream()
@@ -58,6 +58,7 @@ public class ApiConsumer {
         jsonNode = jsonNode
                 .elements()
                 .next();
+
         return objectMapper
                 .readValue(jsonNode.toString(), RatesExternalResponse.class);
     }

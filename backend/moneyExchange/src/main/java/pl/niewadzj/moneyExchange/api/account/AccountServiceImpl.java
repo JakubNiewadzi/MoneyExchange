@@ -10,15 +10,19 @@ import pl.niewadzj.moneyExchange.entities.account.Account;
 import pl.niewadzj.moneyExchange.entities.account.interfaces.AccountRepository;
 import pl.niewadzj.moneyExchange.entities.currency.Currency;
 import pl.niewadzj.moneyExchange.entities.currency.interfaces.CurrencyRepository;
+import pl.niewadzj.moneyExchange.entities.currencyAccount.CurrencyAccount;
+import pl.niewadzj.moneyExchange.entities.currencyAccount.CurrencyAccountStatus;
+import pl.niewadzj.moneyExchange.entities.currencyAccount.interfaces.CurrencyAccountRepository;
 import pl.niewadzj.moneyExchange.entities.user.User;
 import pl.niewadzj.moneyExchange.exceptions.account.AccountNotFoundException;
 import pl.niewadzj.moneyExchange.exceptions.account.NotEnoughMoneyException;
 import pl.niewadzj.moneyExchange.exceptions.currency.CurrencyNotFoundException;
+import pl.niewadzj.moneyExchange.exceptions.currencyAccount.CurrencyAccountNotFoundException;
 
-import java.util.HashMap;
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import static pl.niewadzj.moneyExchange.entities.account.constants.AccountConstants.ACCOUNT_NUMBER_SIZE;
 
@@ -29,23 +33,29 @@ public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
     private final CurrencyRepository currencyRepository;
+    private final CurrencyAccountRepository currencyAccountRepository;
 
     @Override
     public void createAccount(User owner) {
         log.debug("Creating account for user: {}", owner);
         List<Currency> currencies = currencyRepository.findAll();
 
-        Map<Currency, Float> currentAccountBalance = new HashMap<>();
-
-        currencies.forEach(currency -> currentAccountBalance.put(currency, 0.00f));
-
-        Account account = Account.builder()
+        final Account account = Account.builder()
                 .accountOwner(owner)
-                .accountBalance(currentAccountBalance)
                 .accountNumber(generateAccountNumber())
                 .build();
 
+        List<CurrencyAccount> currentAccountBalance = currencies.stream()
+                .map(currency -> CurrencyAccount.builder()
+                        .account(account)
+                        .balance(BigDecimal.valueOf(0.00))
+                        .currencyAccountStatus(CurrencyAccountStatus.INACTIVE)
+                        .currency(currency)
+                        .build())
+                .collect(Collectors.toList());
+
         accountRepository.save(account);
+        currencyAccountRepository.saveAllAndFlush(currentAccountBalance);
         log.debug("Account successfully created");
     }
 
@@ -57,18 +67,19 @@ public class AccountServiceImpl implements AccountService {
         Currency currencyToIncrease = currencyRepository.findById(transferRequest
                 .currencyId()).orElseThrow(() -> new CurrencyNotFoundException(transferRequest.currencyId()));
 
-        Map<Currency, Float> accountBalance = account.getAccountBalance();
+        CurrencyAccount currencyBalance = currencyAccountRepository
+                .findByCurrencyAndAccount(currencyToIncrease, account)
+                .orElseThrow(() -> new CurrencyAccountNotFoundException(account.getId(), transferRequest.currencyId()));
 
-        accountBalance.put(currencyToIncrease,
-                accountBalance.get(currencyToIncrease) + transferRequest.amount());
+        currencyBalance.setBalance(currencyBalance.getBalance().add(transferRequest.amount()));
+        currencyBalance.setCurrencyAccountStatus(CurrencyAccountStatus.ACTIVE);
 
-        accountRepository.saveAndFlush(account);
-
+        currencyAccountRepository.saveAndFlush(currencyBalance);
 
         return BalanceResponse.builder()
                 .currencyId(currencyToIncrease.getId())
                 .currencyCode(currencyToIncrease.getCode())
-                .balance(accountBalance.get(currencyToIncrease))
+                .balance(currencyBalance.getBalance())
                 .build();
     }
 
@@ -80,21 +91,22 @@ public class AccountServiceImpl implements AccountService {
         Currency currencyToIncrease = currencyRepository.findById(transferRequest.currencyId())
                 .orElseThrow(() -> new CurrencyNotFoundException(transferRequest.currencyId()));
 
-        Map<Currency, Float> accountBalance = account.getAccountBalance();
+        CurrencyAccount currencyBalance = currencyAccountRepository
+                .findByCurrencyAndAccount(currencyToIncrease, account)
+                .orElseThrow(() -> new CurrencyAccountNotFoundException(account.getId(), transferRequest.currencyId()));
 
-        accountBalance.put(currencyToIncrease,
-                accountBalance.get(currencyToIncrease) - transferRequest.amount());
+        currencyBalance.setBalance(currencyBalance.getBalance().subtract(transferRequest.amount()));
 
-        if (accountBalance.get(currencyToIncrease) < 0.00) {
+        if (currencyBalance.getBalance().compareTo(BigDecimal.ZERO) < 0) {
             throw new NotEnoughMoneyException();
         }
 
-        accountRepository.saveAndFlush(account);
+        currencyAccountRepository.saveAndFlush(currencyBalance);
 
         return BalanceResponse.builder()
                 .currencyId(currencyToIncrease.getId())
                 .currencyCode(currencyToIncrease.getCode())
-                .balance(accountBalance.get(currencyToIncrease))
+                .balance(currencyBalance.getBalance())
                 .build();
     }
 

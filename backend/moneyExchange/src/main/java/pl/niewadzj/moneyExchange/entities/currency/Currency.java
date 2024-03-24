@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -26,6 +27,7 @@ public class Currency {
     @Column(unique = true)
     private String code;
     private LocalDateTime rateDate;
-    private Float exchangeRate;
+    @Column(precision = 12, scale = 6)
+    private BigDecimal exchangeRate;
 
 }

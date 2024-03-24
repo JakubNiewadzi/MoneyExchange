@@ -10,13 +10,18 @@ import pl.niewadzj.moneyExchange.entities.account.Account;
 import pl.niewadzj.moneyExchange.entities.account.interfaces.AccountRepository;
 import pl.niewadzj.moneyExchange.entities.currency.Currency;
 import pl.niewadzj.moneyExchange.entities.currency.interfaces.CurrencyRepository;
+import pl.niewadzj.moneyExchange.entities.currencyAccount.CurrencyAccount;
+import pl.niewadzj.moneyExchange.entities.currencyAccount.interfaces.CurrencyAccountRepository;
 import pl.niewadzj.moneyExchange.entities.transaction.Transaction;
 import pl.niewadzj.moneyExchange.entities.transaction.interfaces.TransactionRepository;
 import pl.niewadzj.moneyExchange.entities.user.User;
 import pl.niewadzj.moneyExchange.exceptions.account.AccountNotFoundException;
 import pl.niewadzj.moneyExchange.exceptions.account.NotEnoughMoneyException;
 import pl.niewadzj.moneyExchange.exceptions.currency.CurrencyNotFoundException;
+import pl.niewadzj.moneyExchange.exceptions.currencyAccount.CurrencyAccountNotFoundException;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -27,6 +32,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
     private final CurrencyRepository currencyRepository;
     private final AccountRepository accountRepository;
+    private final CurrencyAccountRepository currencyAccountRepository;
 
     @Override
     @Transactional
@@ -41,12 +47,17 @@ public class TransactionServiceImpl implements TransactionService {
         Currency currencyToIncrease = currencyRepository.findById(transactionRequest.currencyToId())
                 .orElseThrow(() -> new CurrencyNotFoundException(transactionRequest.currencyToId()));
 
-        Float exchangeRate = currencyToIncrease.getExchangeRate() / currencyToDecrease.getExchangeRate();
-        //TODO refactor
+        BigDecimal exchangeRate = currencyToIncrease
+                .getExchangeRate()
+                .divide(currencyToDecrease.getExchangeRate(), new MathContext(6));
+        System.out.println(exchangeRate.toString());
         decreaseCurrency(account, currencyToDecrease, transactionRequest.amount());
-        increaseCurrency(account, currencyToIncrease, (float) Math.floor((transactionRequest.amount() / exchangeRate) * 100.0f) / 100.0f);
 
-        accountRepository.saveAndFlush(account);
+        BigDecimal amountToIncrease = transactionRequest
+                .amount()
+                .divide(exchangeRate, new MathContext(4));
+        System.out.println(amountToIncrease.toString());
+        increaseCurrency(account, currencyToIncrease, amountToIncrease);
 
         Transaction transaction = Transaction.builder()
                 .account(account)
@@ -60,17 +71,36 @@ public class TransactionServiceImpl implements TransactionService {
         transactionRepository.saveAndFlush(transaction);
     }
 
-    private void decreaseCurrency(Account account, Currency currencyToDecrease, Float amount) {
-        if (account.getAccountBalance().get(currencyToDecrease) - amount < 0.00) {
+    private void decreaseCurrency(Account account, Currency currencyToDecrease, BigDecimal amount) {
+        CurrencyAccount currencyAccount = currencyAccountRepository
+                .findByCurrencyAndAccount(currencyToDecrease, account)
+                .orElseThrow(() -> new CurrencyAccountNotFoundException(account.getId(), currencyToDecrease.getId()));
+
+        if (currencyAccount
+                .getBalance()
+                .subtract(amount)
+                .compareTo(BigDecimal.ZERO) < 0.00) {
+
             throw new NotEnoughMoneyException();
         }
+        currencyAccount
+                .setBalance(currencyAccount
+                        .getBalance()
+                        .subtract(amount));
 
-        account.getAccountBalance()
-                .put(currencyToDecrease, account.getAccountBalance().get(currencyToDecrease) - amount);
+        currencyAccountRepository.saveAndFlush(currencyAccount);
     }
 
-    private void increaseCurrency(Account account, Currency currencyToIncrease, Float amount) {
-        account.getAccountBalance()
-                .put(currencyToIncrease, account.getAccountBalance().get(currencyToIncrease) + amount);
+    private void increaseCurrency(Account account, Currency currencyToIncrease, BigDecimal amount) {
+        CurrencyAccount currencyAccount = currencyAccountRepository
+                .findByCurrencyAndAccount(currencyToIncrease, account)
+                .orElseThrow(() -> new CurrencyAccountNotFoundException(account.getId(), currencyToIncrease.getId()));
+
+        currencyAccount
+                .setBalance(currencyAccount
+                        .getBalance()
+                        .add(amount));
+
+        currencyAccountRepository.saveAndFlush(currencyAccount);
     }
 }

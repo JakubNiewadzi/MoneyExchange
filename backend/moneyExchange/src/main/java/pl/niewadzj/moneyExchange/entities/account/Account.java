@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapKeyJoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -14,19 +15,19 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import pl.niewadzj.moneyExchange.entities.currency.Currency;
+import pl.niewadzj.moneyExchange.entities.currencyAccount.CurrencyAccount;
 import pl.niewadzj.moneyExchange.entities.user.User;
 
-import java.util.Map;
+import java.util.List;
 
 import static pl.niewadzj.moneyExchange.entities.account.constants.AccountConstants.ACCOUNT_NUMBER_SIZE;
 import static pl.niewadzj.moneyExchange.entities.account.constants.AccountConstants.NUMBER_NULL_MSG;
 
 @Data
-@NoArgsConstructor
 @Entity
-@Table(name = "accounts")
 @SuperBuilder
+@NoArgsConstructor
+@Table(name = "accounts")
 public class Account {
 
     @Id
@@ -40,9 +41,7 @@ public class Account {
     @OneToOne
     private User accountOwner;
 
-    @ElementCollection
-    @CollectionTable(name = "currency_ownings", joinColumns = @JoinColumn(name = "account_id"))
-    @MapKeyJoinColumn(name = "currency_id")
-    private Map<Currency, Float> accountBalance;
+    @OneToMany(mappedBy = "account")
+    private List<CurrencyAccount> accountBalance;
 
 }

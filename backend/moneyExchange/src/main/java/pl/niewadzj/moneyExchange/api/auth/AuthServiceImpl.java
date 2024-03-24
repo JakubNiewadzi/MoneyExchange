@@ -1,17 +1,17 @@
 package pl.niewadzj.moneyExchange.api.auth;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.niewadzj.moneyExchange.api.account.interfaces.AccountService;
+import pl.niewadzj.moneyExchange.api.auth.interfaces.AuthService;
 import pl.niewadzj.moneyExchange.api.auth.records.LoginRequest;
 import pl.niewadzj.moneyExchange.api.auth.records.RegistrationRequest;
 import pl.niewadzj.moneyExchange.api.auth.records.TokenResponse;
-import pl.niewadzj.moneyExchange.api.auth.interfaces.AuthService;
 import pl.niewadzj.moneyExchange.config.jwt.JwtService;
-import pl.niewadzj.moneyExchange.api.account.interfaces.AccountService;
 import pl.niewadzj.moneyExchange.entities.user.User;
 import pl.niewadzj.moneyExchange.entities.user.UserRole;
 import pl.niewadzj.moneyExchange.entities.user.interfaces.UserRepository;
@@ -33,6 +33,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserDetailsService userDetailsService;
 
     @Override
+    @Transactional
     public TokenResponse register(RegistrationRequest registrationRequest) {
         log.debug("Registering user: {}", registrationRequest);
 

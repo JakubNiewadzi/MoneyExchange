@@ -1,11 +1,14 @@
-package pl.niewadzj.moneyExchange.entities.transaction;
+package pl.niewadzj.moneyExchange.entities.currencyAccount;
+
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,28 +17,27 @@ import pl.niewadzj.moneyExchange.entities.account.Account;
 import pl.niewadzj.moneyExchange.entities.currency.Currency;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Data
 @Entity
 @SuperBuilder
 @NoArgsConstructor
-@Table(name = "transactions")
-public class Transaction {
+@Table(name = "currency_accounts")
+public class CurrencyAccount {
 
     @Id
     @GeneratedValue
     private Long id;
-    @ManyToOne
-    private Currency exchangeFrom;
-    @ManyToOne
-    private Currency exchangeTo;
-    @ManyToOne
-    private Account account;
-    @Column(precision = 12, scale = 6)
-    private BigDecimal exchangeRate;
     @Column(precision = 12, scale = 2)
-    private BigDecimal amountExchanged;
-    private LocalDateTime transactionDate;
+    private BigDecimal balance;
+
+    @ManyToOne
+    @JoinColumn(name = "currency_id")
+    private Currency currency;
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private Account account;
+    @Enumerated(EnumType.STRING)
+    private CurrencyAccountStatus currencyAccountStatus;
 
 }

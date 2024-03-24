@@ -7,6 +7,7 @@ import pl.niewadzj.schedulerservice.api.currency.interfaces.CurrencyService;
 import pl.niewadzj.schedulerservice.entities.currency.Currency;
 import pl.niewadzj.schedulerservice.entities.currency.interfaces.CurrencyRepository;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -28,8 +29,8 @@ public class CurrencyServiceImpl implements CurrencyService {
 
         currencies.add(Currency.builder()
                 .name("Polski złoty")
-                .name("PLN")
-                .exchangeRate(1.0f)
+                .code("PLN")
+                .exchangeRate(BigDecimal.valueOf(1.0f))
                 .rateDate(LocalDateTime.now())
                 .build());
 

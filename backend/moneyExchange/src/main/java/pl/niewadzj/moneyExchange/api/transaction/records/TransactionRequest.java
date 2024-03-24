@@ -1,7 +1,12 @@
 package pl.niewadzj.moneyExchange.api.transaction.records;
 
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
+
+import java.math.BigDecimal;
+
+import static pl.niewadzj.moneyExchange.api.account.constants.BadRequestMessages.NEGATIVE_AMOUNT_MSG;
 
 public record TransactionRequest(
         @NotNull
@@ -9,7 +14,8 @@ public record TransactionRequest(
         @NotNull
         Long currencyToId,
         @NotNull
+        @DecimalMin(value = "0.0")
         @Digits(integer = 10, fraction = 2)
-        Float amount
+        BigDecimal amount
 ) {
 }
