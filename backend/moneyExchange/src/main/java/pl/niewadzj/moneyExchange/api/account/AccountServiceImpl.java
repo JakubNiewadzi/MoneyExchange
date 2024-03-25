@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.niewadzj.moneyExchange.api.account.interfaces.AccountService;
+import pl.niewadzj.moneyExchange.api.account.mapper.CurrencyAccountMapper;
 import pl.niewadzj.moneyExchange.api.account.records.BalanceResponse;
+import pl.niewadzj.moneyExchange.api.account.records.CurrencyAccountResponse;
 import pl.niewadzj.moneyExchange.api.account.records.TransferRequest;
 import pl.niewadzj.moneyExchange.entities.account.Account;
 import pl.niewadzj.moneyExchange.entities.account.interfaces.AccountRepository;
@@ -33,6 +35,7 @@ public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
     private final CurrencyRepository currencyRepository;
+    private final CurrencyAccountMapper currencyAccountMapper;
     private final CurrencyAccountRepository currencyAccountRepository;
 
     @Override
@@ -61,6 +64,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public BalanceResponse depositToAccount(TransferRequest transferRequest, User user) {
+        log.debug("Depositing onto account for user {}", user);
         Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
 
@@ -85,6 +89,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public BalanceResponse withdrawFromAccount(TransferRequest transferRequest, User user) {
+        log.debug("Withdrawing from account for user {}", user);
         Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
 
@@ -108,6 +113,45 @@ public class AccountServiceImpl implements AccountService {
                 .currencyCode(currencyToIncrease.getCode())
                 .balance(currencyBalance.getBalance())
                 .build();
+    }
+
+    @Override
+    public List<CurrencyAccountResponse> getCurrencyAccounts(User user) {
+        log.debug("Fetching all currency accounts for user {}", user);
+        final Account account = accountRepository.findByAccountOwner(user)
+                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+
+        return account.getAccountBalance()
+                .stream()
+                .map(currencyAccountMapper)
+                .toList();
+    }
+
+    @Override
+    public CurrencyAccountResponse getCurrencyAccountByCurrencyId(Long currencyId, User user) {
+        log.debug("Fetching currency account for currency with id {}", currencyId);
+        final Account account = accountRepository.findByAccountOwner(user)
+                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+
+        final Currency currency = currencyRepository.findById(currencyId)
+                .orElseThrow(() -> new CurrencyAccountNotFoundException(account.getId(), currencyId));
+
+        return currencyAccountMapper
+                .apply(currencyAccountRepository.findByCurrencyAndAccount(currency, account)
+                        .orElseThrow(() -> new CurrencyAccountNotFoundException(account.getId(), currencyId)));
+    }
+
+    @Override
+    public List<CurrencyAccountResponse> getActiveCurrencyAccounts(User user) {
+        log.debug("Fetching all currency accounts for user {}", user);
+        final Account account = accountRepository.findByAccountOwner(user)
+                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+
+        return account.getAccountBalance()
+                .stream()
+                .filter(currencyAccount -> currencyAccount.getCurrencyAccountStatus() == CurrencyAccountStatus.ACTIVE)
+                .map(currencyAccountMapper)
+                .toList();
     }
 
     private String generateAccountNumber() {

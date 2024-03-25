@@ -50,13 +50,13 @@ public class TransactionServiceImpl implements TransactionService {
         BigDecimal exchangeRate = currencyToIncrease
                 .getExchangeRate()
                 .divide(currencyToDecrease.getExchangeRate(), new MathContext(6));
-        System.out.println(exchangeRate.toString());
+
         decreaseCurrency(account, currencyToDecrease, transactionRequest.amount());
 
         BigDecimal amountToIncrease = transactionRequest
                 .amount()
                 .divide(exchangeRate, new MathContext(4));
-        System.out.println(amountToIncrease.toString());
+
         increaseCurrency(account, currencyToIncrease, amountToIncrease);
 
         Transaction transaction = Transaction.builder()
