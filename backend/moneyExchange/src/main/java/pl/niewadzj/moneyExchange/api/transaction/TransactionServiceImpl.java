@@ -21,7 +21,7 @@ import pl.niewadzj.moneyExchange.exceptions.currency.CurrencyNotFoundException;
 import pl.niewadzj.moneyExchange.exceptions.currencyAccount.CurrencyAccountNotFoundException;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -49,13 +49,13 @@ public class TransactionServiceImpl implements TransactionService {
 
         BigDecimal exchangeRate = currencyToIncrease
                 .getExchangeRate()
-                .divide(currencyToDecrease.getExchangeRate(), new MathContext(6));
+                .divide(currencyToDecrease.getExchangeRate(), 6, RoundingMode.DOWN);
 
         decreaseCurrency(account, currencyToDecrease, transactionRequest.amount());
 
         BigDecimal amountToIncrease = transactionRequest
                 .amount()
-                .divide(exchangeRate, new MathContext(4));
+                .divide(exchangeRate, 2, RoundingMode.DOWN);
 
         increaseCurrency(account, currencyToIncrease, amountToIncrease);
 
