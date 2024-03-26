@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.niewadzj.moneyExchange.api.account.interfaces.AccountService;
 import pl.niewadzj.moneyExchange.api.account.mapper.CurrencyAccountMapper;
+import pl.niewadzj.moneyExchange.api.account.records.AccountResponse;
 import pl.niewadzj.moneyExchange.api.account.records.BalanceResponse;
 import pl.niewadzj.moneyExchange.api.account.records.CurrencyAccountResponse;
 import pl.niewadzj.moneyExchange.api.account.records.TransferRequest;
@@ -78,7 +79,7 @@ public class AccountServiceImpl implements AccountService {
                 .findByCurrencyAndAccount(currencyToIncrease, account)
                 .orElseThrow(() -> new CurrencyAccountNotFoundException(account.getId(), transferRequest.currencyId()));
 
-        if(currencyBalance.getCurrencyAccountStatus() == CurrencyAccountStatus.SUSPENDED){
+        if (currencyBalance.getCurrencyAccountStatus() == CurrencyAccountStatus.SUSPENDED) {
             throw new CurrencyAccountSuspendedException();
         }
 
@@ -107,7 +108,7 @@ public class AccountServiceImpl implements AccountService {
                 .findByCurrencyAndAccount(currencyToIncrease, account)
                 .orElseThrow(() -> new CurrencyAccountNotFoundException(account.getId(), transferRequest.currencyId()));
 
-        if(currencyBalance.getCurrencyAccountStatus() == CurrencyAccountStatus.SUSPENDED){
+        if (currencyBalance.getCurrencyAccountStatus() == CurrencyAccountStatus.SUSPENDED) {
             throw new CurrencyAccountSuspendedException();
         }
 
@@ -196,12 +197,24 @@ public class AccountServiceImpl implements AccountService {
         CurrencyAccount currencyAccount = currencyAccountRepository.findByCurrencyAndAccount(currency, account)
                 .orElseThrow(() -> new CurrencyAccountNotFoundException(account.getId(), currencyId));
 
-        if(currencyAccount.getCurrencyAccountStatus() != CurrencyAccountStatus.SUSPENDED){
+        if (currencyAccount.getCurrencyAccountStatus() != CurrencyAccountStatus.SUSPENDED) {
             throw new CurrencyAccountNotSuspendedException();
         }
 
         currencyAccount.setCurrencyAccountStatus(CurrencyAccountStatus.ACTIVE);
         currencyAccountRepository.saveAndFlush(currencyAccount);
+    }
+
+    //TODO change account not found exception and overload constructor
+    @Override
+    public final AccountResponse getAccountByAccountNumber(String accountNumber) {
+        final Account account = accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new AccountNotFoundException("123"));
+
+        return AccountResponse.builder()
+                .id(account.getId())
+                .accountNumber(account.getAccountNumber())
+                .build();
     }
 
     private String generateAccountNumber() {

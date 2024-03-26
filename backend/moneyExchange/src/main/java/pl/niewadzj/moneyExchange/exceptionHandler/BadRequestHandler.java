@@ -12,7 +12,7 @@ import pl.niewadzj.moneyExchange.exceptions.BadRequestException;
 public class BadRequestHandler {
 
     @ExceptionHandler({BadRequestException.class})
-    public final ResponseEntity<String> badRequestHandler(BadRequestException exception){
+    public final ResponseEntity<String> badRequestHandler(BadRequestException exception) {
         String message = exception.getMessage();
 
         log.error("Given input is not valid");

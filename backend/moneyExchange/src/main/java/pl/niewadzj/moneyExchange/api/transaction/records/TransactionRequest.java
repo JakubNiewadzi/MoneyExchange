@@ -6,8 +6,6 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-import static pl.niewadzj.moneyExchange.api.account.constants.BadRequestMessages.NEGATIVE_AMOUNT_MSG;
-
 public record TransactionRequest(
         @NotNull
         Long currencyFromId,

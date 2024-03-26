@@ -1,5 +1,6 @@
 package pl.niewadzj.moneyExchange.api.account.interfaces;
 
+import pl.niewadzj.moneyExchange.api.account.records.AccountResponse;
 import pl.niewadzj.moneyExchange.api.account.records.BalanceResponse;
 import pl.niewadzj.moneyExchange.api.account.records.CurrencyAccountResponse;
 import pl.niewadzj.moneyExchange.api.account.records.TransferRequest;
@@ -24,4 +25,6 @@ public interface AccountService {
     void suspendCurrencyAccount(Long currencyId, User user);
 
     void activateSuspendedCurrencyAccout(Long currencyId, User user);
+
+    AccountResponse getAccountByAccountNumber(String accountNumber);
 }

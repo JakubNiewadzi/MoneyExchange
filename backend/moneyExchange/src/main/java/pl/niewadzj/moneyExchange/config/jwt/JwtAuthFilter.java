@@ -56,10 +56,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 }
             }
             filterChain.doFilter(request, response);
-        }catch(JwtException jwtException){
+        } catch (JwtException jwtException) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.getWriter().write("Jwt token has expired");
-        }catch (UsernameNotFoundException usernameNotFoundException){
+        } catch (UsernameNotFoundException usernameNotFoundException) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.getWriter().write("User does not exist");
         }

@@ -15,7 +15,7 @@ import pl.niewadzj.moneyExchange.exceptions.NotFoundException;
 public class NotFoundHandler {
 
     @ExceptionHandler({NotFoundException.class})
-    public final ResponseEntity<String> notFoundHandler(NotFoundException exception){
+    public final ResponseEntity<String> notFoundHandler(NotFoundException exception) {
         String message = exception.getMessage();
 
         log.error("There has been an error trying to find an entity in repository");

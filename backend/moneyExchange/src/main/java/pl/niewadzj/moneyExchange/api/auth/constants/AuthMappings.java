@@ -2,7 +2,8 @@ package pl.niewadzj.moneyExchange.api.auth.constants;
 
 public final class AuthMappings {
 
-    private AuthMappings(){}
+    private AuthMappings() {
+    }
 
     public static final String AUTH_MAPPING = "/api/v1/auth";
     public static final String REGISTER_MAPPING = "/register";

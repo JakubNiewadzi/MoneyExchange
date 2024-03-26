@@ -2,7 +2,7 @@ package pl.niewadzj.moneyExchange.api.auth.constants;
 
 public final class AuthConstants {
 
-    private AuthConstants(){
+    private AuthConstants() {
     }
 
 

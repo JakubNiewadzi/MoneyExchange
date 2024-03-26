@@ -6,12 +6,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.niewadzj.moneyExchange.api.auth.constants.AuthMappings;
 import pl.niewadzj.moneyExchange.api.auth.interfaces.AuthController;
+import pl.niewadzj.moneyExchange.api.auth.interfaces.AuthService;
 import pl.niewadzj.moneyExchange.api.auth.records.LoginRequest;
 import pl.niewadzj.moneyExchange.api.auth.records.RegistrationRequest;
 import pl.niewadzj.moneyExchange.api.auth.records.TokenResponse;
-import pl.niewadzj.moneyExchange.api.auth.interfaces.AuthService;
 
 import static pl.niewadzj.moneyExchange.api.auth.constants.AuthMappings.AUTH_MAPPING;
 import static pl.niewadzj.moneyExchange.api.auth.constants.AuthMappings.LOGIN_MAPPING;
@@ -32,7 +31,7 @@ public class AuthControllerImpl implements AuthController {
 
     @Override
     @PostMapping(LOGIN_MAPPING)
-    public final TokenResponse login(@RequestBody @Valid LoginRequest loginRequest){
+    public final TokenResponse login(@RequestBody @Valid LoginRequest loginRequest) {
         return authService.login(loginRequest);
     }
 }

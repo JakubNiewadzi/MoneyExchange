@@ -16,7 +16,7 @@ public class CorsConfig {
     private List<String> allowedOrigins;
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource(){
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOrigins(allowedOrigins);
         corsConfiguration.addAllowedHeader("*");

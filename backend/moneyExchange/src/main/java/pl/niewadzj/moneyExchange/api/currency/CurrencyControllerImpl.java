@@ -23,7 +23,7 @@ public class CurrencyControllerImpl implements CurrencyController {
     private final CurrencyService currencyService;
 
     @GetMapping(GET_ALL_MAPPING)
-    public final List<CurrencyResponse> getCurrencies(){
+    public final List<CurrencyResponse> getCurrencies() {
         return currencyService.getCurrencies();
     }
 

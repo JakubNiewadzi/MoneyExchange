@@ -63,13 +63,13 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public final TokenResponse login(LoginRequest loginRequest) {
         log.debug("Processing login request: {}", loginRequest);
-        
+
         User user = userRepository
                 .findByEmail(loginRequest.email())
                 .orElseThrow(() -> new UserNotFoundException(loginRequest.email()));
 
 
-        if (!passwordEncoder.matches(loginRequest.password(), user.getPassword())){
+        if (!passwordEncoder.matches(loginRequest.password(), user.getPassword())) {
             throw new PasswordsDoNotMatchException();
         }
 

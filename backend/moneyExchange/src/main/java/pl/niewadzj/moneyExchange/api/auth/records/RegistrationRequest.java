@@ -2,9 +2,9 @@ package pl.niewadzj.moneyExchange.api.auth.records;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
-import jakarta.validation.constraints.NotNull;
 import pl.niewadzj.moneyExchange.api.auth.constants.AuthConstants;
 
 @Builder

@@ -13,4 +13,5 @@ public final class AccountMappings {
     public static final String GET_ACTIVE_ACCOUNTS = "/getFilteredAccounts";
     public static final String SUSPEND_ACCOUNT_MAPPING = "/suspendAccount";
     public static final String ACTIVATE_SUSPENDED_ACCOUNT_MAPPING = "activateSuspendedAccount";
+    public static final String GET_ACCOUNT_BY_NUMBER = "/getByNumber";
 }
