@@ -20,4 +20,8 @@ public interface AccountService {
     CurrencyAccountResponse getCurrencyAccountByCurrencyId(Long currencyId, User user);
 
     List<CurrencyAccountResponse> getActiveCurrencyAccounts(User user);
+
+    void suspendCurrencyAccount(Long currencyId, User user);
+
+    void activateSuspendedCurrencyAccout(Long currencyId, User user);
 }

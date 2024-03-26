@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.niewadzj.moneyExchange.api.transaction.interfaces.TransactionController;
 import pl.niewadzj.moneyExchange.api.transaction.interfaces.TransactionService;
 import pl.niewadzj.moneyExchange.api.transaction.records.TransactionRequest;
+import pl.niewadzj.moneyExchange.api.transaction.records.TransactionResponse;
 import pl.niewadzj.moneyExchange.entities.user.User;
 
 import static pl.niewadzj.moneyExchange.api.transaction.constants.TransactionMappings.MAKE_TRANSACTION_MAPPING;
@@ -23,9 +24,9 @@ public class TransactionControllerImpl implements TransactionController {
     private final TransactionService transactionService;
 
     @PostMapping(MAKE_TRANSACTION_MAPPING)
-    public void makeTransaction(@RequestBody @Valid TransactionRequest transactionRequest,
-                                @AuthenticationPrincipal User user){
-        transactionService.makeTransaction(transactionRequest, user);
+    public TransactionResponse makeTransaction(@RequestBody @Valid TransactionRequest transactionRequest,
+                                               @AuthenticationPrincipal User user){
+        return transactionService.makeTransaction(transactionRequest, user);
     }
 
 }

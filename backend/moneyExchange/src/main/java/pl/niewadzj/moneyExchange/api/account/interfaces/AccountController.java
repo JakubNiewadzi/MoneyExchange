@@ -16,6 +16,12 @@ public interface AccountController {
                                         User user);
 
     List<CurrencyAccountResponse> getCurrencyAccounts(User user);
+
     CurrencyAccountResponse getCurrencyAccountByCurrencyId(Long currencyId, User user);
+
     List<CurrencyAccountResponse> getActiveCurrencyAccounts(User user);
+
+    void suspendCurrencyAccount(Long currencyId, User user);
+
+    void activateSuspendedCurrencyAccount(Long currencyId, User user);
 }

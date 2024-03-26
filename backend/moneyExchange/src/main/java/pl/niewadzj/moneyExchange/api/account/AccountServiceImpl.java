@@ -19,6 +19,7 @@ import pl.niewadzj.moneyExchange.entities.user.User;
 import pl.niewadzj.moneyExchange.exceptions.account.AccountNotFoundException;
 import pl.niewadzj.moneyExchange.exceptions.account.NotEnoughMoneyException;
 import pl.niewadzj.moneyExchange.exceptions.currency.CurrencyNotFoundException;
+import pl.niewadzj.moneyExchange.exceptions.currencyAccount.CurrencyAccountNotActiveException;
 import pl.niewadzj.moneyExchange.exceptions.currencyAccount.CurrencyAccountNotFoundException;
 
 import java.math.BigDecimal;
@@ -152,6 +153,31 @@ public class AccountServiceImpl implements AccountService {
                 .filter(currencyAccount -> currencyAccount.getCurrencyAccountStatus() == CurrencyAccountStatus.ACTIVE)
                 .map(currencyAccountMapper)
                 .toList();
+    }
+
+    @Override
+    public final void suspendCurrencyAccount(Long currencyId, User user) {
+        final Account account = accountRepository.findByAccountOwner(user)
+                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+
+        final Currency currency = currencyRepository.findById(currencyId)
+                .orElseThrow(() -> new CurrencyAccountNotFoundException(account.getId(), currencyId));
+
+        CurrencyAccount currencyAccount = currencyAccountRepository
+                .findByCurrencyAndAccount(currency, account)
+                .orElseThrow(() -> new CurrencyAccountNotFoundException(account.getId(), currencyId));
+
+        if (currencyAccount.getCurrencyAccountStatus() != CurrencyAccountStatus.ACTIVE) {
+            throw new CurrencyAccountNotActiveException();
+        }
+
+        currencyAccount.setCurrencyAccountStatus(CurrencyAccountStatus.SUSPENDED);
+        currencyAccountRepository.saveAndFlush(currencyAccount);
+    }
+
+    @Override
+    public void activateSuspendedCurrencyAccout(Long currencyId, User user) {
+        
     }
 
     private String generateAccountNumber() {
