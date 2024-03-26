@@ -26,13 +26,13 @@ public class AuthControllerImpl implements AuthController {
 
     @Override
     @PostMapping(REGISTER_MAPPING)
-    public TokenResponse register(@RequestBody @Valid RegistrationRequest registrationRequest) {
+    public final TokenResponse register(@RequestBody @Valid RegistrationRequest registrationRequest) {
         return authService.register(registrationRequest);
     }
 
     @Override
     @PostMapping(LOGIN_MAPPING)
-    public TokenResponse login(@RequestBody @Valid LoginRequest loginRequest){
+    public final TokenResponse login(@RequestBody @Valid LoginRequest loginRequest){
         return authService.login(loginRequest);
     }
 }

@@ -24,7 +24,7 @@ public class CurrencyServiceImpl implements CurrencyService {
 
 
     @Override
-    public List<CurrencyResponse> getCurrencies() {
+    public final List<CurrencyResponse> getCurrencies() {
         log.debug("Fetching all currencies from database");
 
         return currencyRepository
@@ -34,7 +34,7 @@ public class CurrencyServiceImpl implements CurrencyService {
     }
 
     @Override
-    public CurrencyResponse getCurrency(Long id) {
+    public final CurrencyResponse getCurrency(Long id) {
         log.debug("Fetching currency with id: {}", id);
 
         Currency currency = currencyRepository

@@ -34,7 +34,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public TokenResponse register(RegistrationRequest registrationRequest) {
+    public final TokenResponse register(RegistrationRequest registrationRequest) {
         log.debug("Registering user: {}", registrationRequest);
 
         checkIfUserExists(registrationRequest.email());
@@ -61,7 +61,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public TokenResponse login(LoginRequest loginRequest) {
+    public final TokenResponse login(LoginRequest loginRequest) {
         log.debug("Processing login request: {}", loginRequest);
         
         User user = userRepository

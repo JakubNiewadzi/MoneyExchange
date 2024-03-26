@@ -40,7 +40,7 @@ public class AccountServiceImpl implements AccountService {
     private final CurrencyAccountRepository currencyAccountRepository;
 
     @Override
-    public void createAccount(User owner) {
+    public final void createAccount(User owner) {
         log.debug("Creating account for user: {}", owner);
         List<Currency> currencies = currencyRepository.findAll();
 
@@ -64,7 +64,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public BalanceResponse depositToAccount(TransferRequest transferRequest, User user) {
+    public final BalanceResponse depositToAccount(TransferRequest transferRequest, User user) {
         log.debug("Depositing onto account for user {}", user);
         Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
@@ -89,7 +89,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public BalanceResponse withdrawFromAccount(TransferRequest transferRequest, User user) {
+    public final BalanceResponse withdrawFromAccount(TransferRequest transferRequest, User user) {
         log.debug("Withdrawing from account for user {}", user);
         Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
@@ -117,7 +117,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<CurrencyAccountResponse> getCurrencyAccounts(User user) {
+    public final List<CurrencyAccountResponse> getCurrencyAccounts(User user) {
         log.debug("Fetching all currency accounts for user {}", user);
         final Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
@@ -129,7 +129,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public CurrencyAccountResponse getCurrencyAccountByCurrencyId(Long currencyId, User user) {
+    public final CurrencyAccountResponse getCurrencyAccountByCurrencyId(Long currencyId, User user) {
         log.debug("Fetching currency account for currency with id {}", currencyId);
         final Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
@@ -143,7 +143,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<CurrencyAccountResponse> getActiveCurrencyAccounts(User user) {
+    public final List<CurrencyAccountResponse> getActiveCurrencyAccounts(User user) {
         log.debug("Fetching all currency accounts for user {}", user);
         final Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
@@ -176,7 +176,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void activateSuspendedCurrencyAccout(Long currencyId, User user) {
+    public final void activateSuspendedCurrencyAccout(Long currencyId, User user) {
         
     }
 

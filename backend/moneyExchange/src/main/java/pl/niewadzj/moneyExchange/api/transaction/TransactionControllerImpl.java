@@ -23,8 +23,9 @@ public class TransactionControllerImpl implements TransactionController {
 
     private final TransactionService transactionService;
 
+    @Override
     @PostMapping(MAKE_TRANSACTION_MAPPING)
-    public TransactionResponse makeTransaction(@RequestBody @Valid TransactionRequest transactionRequest,
+    public final TransactionResponse makeTransaction(@RequestBody @Valid TransactionRequest transactionRequest,
                                                @AuthenticationPrincipal User user){
         return transactionService.makeTransaction(transactionRequest, user);
     }

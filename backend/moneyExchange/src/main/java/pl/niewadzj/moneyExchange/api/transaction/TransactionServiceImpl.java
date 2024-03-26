@@ -38,7 +38,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
-    public TransactionResponse makeTransaction(TransactionRequest transactionRequest, User user) {
+    public final TransactionResponse makeTransaction(TransactionRequest transactionRequest, User user) {
         log.debug("Performing transaction: {}", transactionRequest);
         Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));

@@ -39,46 +39,46 @@ public class AccountControllerImpl implements AccountController {
 
     @Override
     @PutMapping(DEPOSIT_MAPPING)
-    public BalanceResponse depositToAccount(@RequestBody @Valid TransferRequest transferRequest,
+    public final BalanceResponse depositToAccount(@RequestBody @Valid TransferRequest transferRequest,
                                             @AuthenticationPrincipal User user) {
         return accountService.depositToAccount(transferRequest, user);
     }
 
     @Override
     @PutMapping(WITHDRAW_MAPPING)
-    public BalanceResponse withdrawFromAccount(@RequestBody @Valid TransferRequest transferRequest,
+    public final BalanceResponse withdrawFromAccount(@RequestBody @Valid TransferRequest transferRequest,
                                                @AuthenticationPrincipal User user) {
         return accountService.withdrawFromAccount(transferRequest, user);
     }
 
     @Override
     @GetMapping(GET_CURRENCY_ACCOUNTS)
-    public List<CurrencyAccountResponse> getCurrencyAccounts(@AuthenticationPrincipal User user) {
+    public final List<CurrencyAccountResponse> getCurrencyAccounts(@AuthenticationPrincipal User user) {
         return accountService.getCurrencyAccounts(user);
     }
 
     @Override
     @GetMapping(GET_CURRENCY_ACCOUNT)
-    public CurrencyAccountResponse getCurrencyAccountByCurrencyId(@RequestParam Long currencyId,
+    public final CurrencyAccountResponse getCurrencyAccountByCurrencyId(@RequestParam Long currencyId,
                                                                   @AuthenticationPrincipal User user) {
         return accountService.getCurrencyAccountByCurrencyId(currencyId, user);
     }
 
     @Override
     @GetMapping(GET_ACTIVE_ACCOUNTS)
-    public List<CurrencyAccountResponse> getActiveCurrencyAccounts(@AuthenticationPrincipal User user) {
+    public final List<CurrencyAccountResponse> getActiveCurrencyAccounts(@AuthenticationPrincipal User user) {
         return accountService.getActiveCurrencyAccounts(user);
     }
 
     @Override
     @PatchMapping(SUSPEND_ACCOUNT_MAPPING)
-    public void suspendCurrencyAccount(@RequestParam Long currencyId, @AuthenticationPrincipal User user) {
+    public final void suspendCurrencyAccount(@RequestParam Long currencyId, @AuthenticationPrincipal User user) {
         accountService.suspendCurrencyAccount(currencyId, user);
     }
 
     @Override
     @PatchMapping(ACTIVATE_SUSPENDED_ACCOUNT_MAPPING)
-    public void activateSuspendedCurrencyAccount(@RequestParam Long currencyId, @AuthenticationPrincipal User user) {
+    public final void activateSuspendedCurrencyAccount(@RequestParam Long currencyId, @AuthenticationPrincipal User user) {
         accountService.activateSuspendedCurrencyAccout(currencyId, user);
     }
 
