@@ -2,6 +2,8 @@ package pl.niewadzj.moneyExchange.entities.transaction;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
@@ -37,5 +39,7 @@ public class Transaction {
     @Column(precision = 12, scale = 2)
     private BigDecimal amountExchanged;
     private LocalDateTime transactionDate;
+    @Enumerated(EnumType.STRING)
+    private TransactionStatus transactionStatus;
 
 }
