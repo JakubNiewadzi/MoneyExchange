@@ -1,7 +1,7 @@
-package pl.niewadzj.moneyExchange.api.account.mapper;
+package pl.niewadzj.moneyExchange.api.currencyAccount.mapper;
 
 import org.springframework.stereotype.Service;
-import pl.niewadzj.moneyExchange.api.account.records.CurrencyAccountResponse;
+import pl.niewadzj.moneyExchange.api.currencyAccount.records.CurrencyAccountResponse;
 import pl.niewadzj.moneyExchange.entities.currencyAccount.CurrencyAccount;
 
 import java.util.function.Function;
