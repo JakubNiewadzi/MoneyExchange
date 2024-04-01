@@ -3,7 +3,7 @@ package pl.niewadzj.moneyExchange.api.currencyAccount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import pl.niewadzj.moneyExchange.api.account.records.TransferRequest;
+import pl.niewadzj.moneyExchange.api.currencyAccount.records.TransactionRequest;
 import pl.niewadzj.moneyExchange.api.currencyAccount.interfaces.CurrencyAccountService;
 import pl.niewadzj.moneyExchange.api.currencyAccount.mapper.CurrencyAccountMapper;
 import pl.niewadzj.moneyExchange.api.currencyAccount.records.BalanceResponse;
@@ -37,23 +37,23 @@ public class CurrencyAccountServiceImpl implements CurrencyAccountService {
     private final CurrencyAccountRepository currencyAccountRepository;
 
     @Override
-    public final BalanceResponse depositToAccount(TransferRequest transferRequest, User user) {
+    public final BalanceResponse depositToAccount(TransactionRequest transactionRequest, User user) {
         log.debug("Depositing onto account for user {}", user);
         Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
 
-        Currency currencyToIncrease = currencyRepository.findById(transferRequest
-                .currencyId()).orElseThrow(() -> new CurrencyNotFoundException(transferRequest.currencyId()));
+        Currency currencyToIncrease = currencyRepository.findById(transactionRequest
+                .currencyId()).orElseThrow(() -> new CurrencyNotFoundException(transactionRequest.currencyId()));
 
         CurrencyAccount currencyBalance = currencyAccountRepository
                 .findByCurrencyAndAccount(currencyToIncrease, account)
-                .orElseThrow(() -> new CurrencyAccountNotFoundException(account.getId(), transferRequest.currencyId()));
+                .orElseThrow(() -> new CurrencyAccountNotFoundException(account.getId(), transactionRequest.currencyId()));
 
         if (currencyBalance.getCurrencyAccountStatus() == CurrencyAccountStatus.SUSPENDED) {
             throw new CurrencyAccountSuspendedException();
         }
 
-        currencyBalance.setBalance(currencyBalance.getBalance().add(transferRequest.amount()));
+        currencyBalance.setBalance(currencyBalance.getBalance().add(transactionRequest.amount()));
         currencyBalance.setCurrencyAccountStatus(CurrencyAccountStatus.ACTIVE);
 
         currencyAccountRepository.saveAndFlush(currencyBalance);
@@ -66,23 +66,23 @@ public class CurrencyAccountServiceImpl implements CurrencyAccountService {
     }
 
     @Override
-    public final BalanceResponse withdrawFromAccount(TransferRequest transferRequest, User user) {
+    public final BalanceResponse withdrawFromAccount(TransactionRequest transactionRequest, User user) {
         log.debug("Withdrawing from account for user {}", user);
         Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
 
-        Currency currencyToIncrease = currencyRepository.findById(transferRequest.currencyId())
-                .orElseThrow(() -> new CurrencyNotFoundException(transferRequest.currencyId()));
+        Currency currencyToIncrease = currencyRepository.findById(transactionRequest.currencyId())
+                .orElseThrow(() -> new CurrencyNotFoundException(transactionRequest.currencyId()));
 
         CurrencyAccount currencyBalance = currencyAccountRepository
                 .findByCurrencyAndAccount(currencyToIncrease, account)
-                .orElseThrow(() -> new CurrencyAccountNotFoundException(account.getId(), transferRequest.currencyId()));
+                .orElseThrow(() -> new CurrencyAccountNotFoundException(account.getId(), transactionRequest.currencyId()));
 
         if (currencyBalance.getCurrencyAccountStatus() == CurrencyAccountStatus.SUSPENDED) {
             throw new CurrencyAccountSuspendedException();
         }
 
-        currencyBalance.setBalance(currencyBalance.getBalance().subtract(transferRequest.amount()));
+        currencyBalance.setBalance(currencyBalance.getBalance().subtract(transactionRequest.amount()));
 
         if (currencyBalance.getBalance().compareTo(BigDecimal.ZERO) < 0) {
             throw new NotEnoughMoneyException();

@@ -1,4 +1,4 @@
-package pl.niewadzj.moneyExchange.entities.transaction;
+package pl.niewadzj.moneyExchange.entities.currencyExchange;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,8 +21,8 @@ import java.time.LocalDateTime;
 @Entity
 @SuperBuilder
 @NoArgsConstructor
-@Table(name = "transactions")
-public class Transaction {
+@Table(name = "currency_exchanges")
+public class CurrencyExchange {
 
     @Id
     @GeneratedValue
@@ -39,6 +39,6 @@ public class Transaction {
     private BigDecimal amountExchanged;
     private LocalDateTime transactionDate;
     @Enumerated(EnumType.STRING)
-    private TransactionStatus transactionStatus;
+    private CurrencyExchangeStatus currencyExchangeStatus;
 
 }

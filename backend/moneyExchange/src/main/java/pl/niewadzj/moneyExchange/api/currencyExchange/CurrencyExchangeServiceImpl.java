@@ -1,12 +1,12 @@
-package pl.niewadzj.moneyExchange.api.transaction;
+package pl.niewadzj.moneyExchange.api.currencyExchange;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.niewadzj.moneyExchange.api.transaction.interfaces.TransactionService;
-import pl.niewadzj.moneyExchange.api.transaction.records.TransactionRequest;
-import pl.niewadzj.moneyExchange.api.transaction.records.TransactionResponse;
+import pl.niewadzj.moneyExchange.api.currencyExchange.interfaces.CurrencyExchangeService;
+import pl.niewadzj.moneyExchange.api.currencyExchange.records.CurrencyExchangeRequest;
+import pl.niewadzj.moneyExchange.api.currencyExchange.records.CurrencyExchangeResponse;
 import pl.niewadzj.moneyExchange.entities.account.Account;
 import pl.niewadzj.moneyExchange.entities.account.interfaces.AccountRepository;
 import pl.niewadzj.moneyExchange.entities.currency.Currency;
@@ -14,8 +14,8 @@ import pl.niewadzj.moneyExchange.entities.currency.interfaces.CurrencyRepository
 import pl.niewadzj.moneyExchange.entities.currencyAccount.CurrencyAccount;
 import pl.niewadzj.moneyExchange.entities.currencyAccount.CurrencyAccountStatus;
 import pl.niewadzj.moneyExchange.entities.currencyAccount.interfaces.CurrencyAccountRepository;
-import pl.niewadzj.moneyExchange.entities.transaction.Transaction;
-import pl.niewadzj.moneyExchange.entities.transaction.interfaces.TransactionRepository;
+import pl.niewadzj.moneyExchange.entities.currencyExchange.CurrencyExchange;
+import pl.niewadzj.moneyExchange.entities.currencyExchange.interfaces.CurrencyExchangeRepository;
 import pl.niewadzj.moneyExchange.entities.user.User;
 import pl.niewadzj.moneyExchange.exceptions.account.AccountNotFoundException;
 import pl.niewadzj.moneyExchange.exceptions.account.NotEnoughMoneyException;
@@ -29,57 +29,57 @@ import java.time.LocalDateTime;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TransactionServiceImpl implements TransactionService {
+public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
 
-    private final TransactionRepository transactionRepository;
+    private final CurrencyExchangeRepository currencyExchangeRepository;
     private final CurrencyRepository currencyRepository;
     private final AccountRepository accountRepository;
     private final CurrencyAccountRepository currencyAccountRepository;
 
     @Override
     @Transactional
-    public final TransactionResponse makeTransaction(TransactionRequest transactionRequest, User user) {
-        log.debug("Performing transaction: {}", transactionRequest);
+    public final CurrencyExchangeResponse exchangeCurrency(CurrencyExchangeRequest currencyExchangeRequest, User user) {
+        log.debug("Performing transaction: {}", currencyExchangeRequest);
         Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
 
-        Currency currencyToDecrease = currencyRepository.findById(transactionRequest.currencyFromId())
-                .orElseThrow(() -> new CurrencyNotFoundException(transactionRequest.currencyFromId()));
+        Currency currencyToDecrease = currencyRepository.findById(currencyExchangeRequest.currencyFromId())
+                .orElseThrow(() -> new CurrencyNotFoundException(currencyExchangeRequest.currencyFromId()));
 
-        Currency currencyToIncrease = currencyRepository.findById(transactionRequest.currencyToId())
-                .orElseThrow(() -> new CurrencyNotFoundException(transactionRequest.currencyToId()));
+        Currency currencyToIncrease = currencyRepository.findById(currencyExchangeRequest.currencyToId())
+                .orElseThrow(() -> new CurrencyNotFoundException(currencyExchangeRequest.currencyToId()));
 
         BigDecimal exchangeRate = currencyToIncrease
                 .getExchangeRate()
                 .divide(currencyToDecrease.getExchangeRate(), 6, RoundingMode.DOWN);
 
-        BigDecimal decreasedCurrencyBalance = decreaseCurrency(account, currencyToDecrease, transactionRequest.amount());
+        BigDecimal decreasedCurrencyBalance = decreaseCurrency(account, currencyToDecrease, currencyExchangeRequest.amount());
 
-        BigDecimal amountToIncrease = transactionRequest
+        BigDecimal amountToIncrease = currencyExchangeRequest
                 .amount()
                 .divide(exchangeRate, 2, RoundingMode.DOWN);
 
         BigDecimal increasedCurrencyBalance = increaseCurrency(account, currencyToIncrease, amountToIncrease);
 
-        Transaction transaction = Transaction.builder()
+        CurrencyExchange currencyExchange = CurrencyExchange.builder()
                 .account(account)
                 .exchangeRate(exchangeRate)
                 .transactionDate(LocalDateTime.now())
                 .exchangeFrom(currencyToDecrease)
                 .exchangeTo(currencyToIncrease)
-                .amountExchanged(transactionRequest.amount())
+                .amountExchanged(currencyExchangeRequest.amount())
                 .build();
 
-        transactionRepository.saveAndFlush(transaction);
+        currencyExchangeRepository.saveAndFlush(currencyExchange);
 
-        return TransactionResponse.builder()
-                .decreasedCurrencyId(transactionRequest.currencyFromId())
+        return CurrencyExchangeResponse.builder()
+                .decreasedCurrencyId(currencyExchangeRequest.currencyFromId())
                 .decreasedCurrencyCode(currencyToDecrease.getCode())
                 .decreasedCurrencyBalance(decreasedCurrencyBalance)
-                .increasedCurrencyId(transactionRequest.currencyToId())
+                .increasedCurrencyId(currencyExchangeRequest.currencyToId())
                 .increasedCurrencyCode(currencyToIncrease.getCode())
                 .increasedCurrencyBalance(increasedCurrencyBalance)
-                .transactionDate(transaction.getTransactionDate())
+                .transactionDate(currencyExchange.getTransactionDate())
                 .build();
     }
 

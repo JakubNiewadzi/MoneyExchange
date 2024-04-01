@@ -1,4 +1,4 @@
-package pl.niewadzj.moneyExchange.api.transaction.constants;
+package pl.niewadzj.moneyExchange.api.currencyExchange.constants;
 
 public final class TransactionMappings {
 

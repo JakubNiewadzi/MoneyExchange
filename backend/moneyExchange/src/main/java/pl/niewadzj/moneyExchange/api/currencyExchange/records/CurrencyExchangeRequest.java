@@ -1,4 +1,4 @@
-package pl.niewadzj.moneyExchange.api.transaction.records;
+package pl.niewadzj.moneyExchange.api.currencyExchange.records;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-public record TransactionRequest(
+public record CurrencyExchangeRequest(
         @NotNull
         Long currencyFromId,
         @NotNull

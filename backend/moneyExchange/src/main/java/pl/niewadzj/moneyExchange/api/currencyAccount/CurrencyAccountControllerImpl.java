@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import pl.niewadzj.moneyExchange.api.account.records.TransferRequest;
+import pl.niewadzj.moneyExchange.api.currencyAccount.records.TransactionRequest;
 import pl.niewadzj.moneyExchange.api.currencyAccount.interfaces.CurrencyAccountController;
 import pl.niewadzj.moneyExchange.api.currencyAccount.interfaces.CurrencyAccountService;
 import pl.niewadzj.moneyExchange.api.currencyAccount.records.BalanceResponse;
@@ -36,16 +36,16 @@ public class CurrencyAccountControllerImpl implements CurrencyAccountController 
 
     @Override
     @PutMapping(DEPOSIT_MAPPING)
-    public final BalanceResponse depositToAccount(@RequestBody @Valid TransferRequest transferRequest,
+    public final BalanceResponse depositToAccount(@RequestBody @Valid TransactionRequest transactionRequest,
                                                   @AuthenticationPrincipal User user) {
-        return currencyAccountService.depositToAccount(transferRequest, user);
+        return currencyAccountService.depositToAccount(transactionRequest, user);
     }
 
     @Override
     @PutMapping(WITHDRAW_MAPPING)
-    public final BalanceResponse withdrawFromAccount(@RequestBody @Valid TransferRequest transferRequest,
+    public final BalanceResponse withdrawFromAccount(@RequestBody @Valid TransactionRequest transactionRequest,
                                                      @AuthenticationPrincipal User user) {
-        return currencyAccountService.withdrawFromAccount(transferRequest, user);
+        return currencyAccountService.withdrawFromAccount(transactionRequest, user);
     }
 
     @Override
