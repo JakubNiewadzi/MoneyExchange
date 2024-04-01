@@ -1,9 +1,0 @@
-package pl.niewadzj.moneyExchange.api.currencyExchange.constants;
-
-public final class TransactionMappings {
-
-    public static final String TRANSACTION_MAPPING = "/api/v1/transaction";
-    public static final String MAKE_TRANSACTION_MAPPING = "/makeTransaction";
-    private TransactionMappings() {
-    }
-}

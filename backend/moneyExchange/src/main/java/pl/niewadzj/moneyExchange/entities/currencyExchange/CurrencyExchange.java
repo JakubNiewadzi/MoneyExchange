@@ -28,16 +28,18 @@ public class CurrencyExchange {
     @GeneratedValue
     private Long id;
     @ManyToOne
-    private Currency exchangeFrom;
+    private Currency decreasedCurrency;
     @ManyToOne
-    private Currency exchangeTo;
+    private Currency increasedCurrency;
     @ManyToOne
     private Account account;
     @Column(precision = 12, scale = 6)
     private BigDecimal exchangeRate;
     @Column(precision = 12, scale = 2)
-    private BigDecimal amountExchanged;
-    private LocalDateTime transactionDate;
+    private BigDecimal amountDecreased;
+    @Column(precision = 12, scale = 2)
+    private BigDecimal amountIncreased;
+    private LocalDateTime exchangeDateTime;
     @Enumerated(EnumType.STRING)
     private CurrencyExchangeStatus currencyExchangeStatus;
 

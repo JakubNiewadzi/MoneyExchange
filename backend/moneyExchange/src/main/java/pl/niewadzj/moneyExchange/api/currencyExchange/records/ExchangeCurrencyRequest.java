@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-public record CurrencyExchangeRequest(
+public record ExchangeCurrencyRequest(
         @NotNull
         Long currencyFromId,
         @NotNull

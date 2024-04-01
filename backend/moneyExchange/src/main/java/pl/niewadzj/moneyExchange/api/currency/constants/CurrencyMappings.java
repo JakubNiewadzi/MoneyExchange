@@ -5,6 +5,7 @@ public final class CurrencyMappings {
     public static final String CURRENCY_MAPPING = "/api/v1/currency";
     public static final String GET_ALL_MAPPING = "/getAll";
     public static final String GET_ONE_MAPPING = "/getOne";
+
     private CurrencyMappings() {
     }
 

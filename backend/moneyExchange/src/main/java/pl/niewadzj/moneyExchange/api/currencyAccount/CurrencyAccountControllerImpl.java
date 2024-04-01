@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import pl.niewadzj.moneyExchange.api.currencyAccount.records.TransactionRequest;
 import pl.niewadzj.moneyExchange.api.currencyAccount.interfaces.CurrencyAccountController;
 import pl.niewadzj.moneyExchange.api.currencyAccount.interfaces.CurrencyAccountService;
 import pl.niewadzj.moneyExchange.api.currencyAccount.records.BalanceResponse;
 import pl.niewadzj.moneyExchange.api.currencyAccount.records.CurrencyAccountResponse;
+import pl.niewadzj.moneyExchange.api.currencyAccount.records.TransactionRequest;
 import pl.niewadzj.moneyExchange.entities.user.User;
 
 import static pl.niewadzj.moneyExchange.api.currencyAccount.constants.CurrencyAccountMappings.ACTIVATE_SUSPENDED_ACCOUNT_MAPPING;

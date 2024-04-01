@@ -11,6 +11,7 @@ public final class AuthConstants {
     public static final int MAX_NAME = 20;
     public static final int MIN_PASSWORD = 8;
     public static final int MAX_PASSWORD = 30;
+
     private AuthConstants() {
     }
 

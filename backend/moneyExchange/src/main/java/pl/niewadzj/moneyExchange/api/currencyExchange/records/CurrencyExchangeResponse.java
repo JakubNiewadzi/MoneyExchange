@@ -6,11 +6,13 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Builder
-public record CurrencyExchangeResponse(Long decreasedCurrencyId,
+public record CurrencyExchangeResponse(Long id,
+                                       Long decreasedCurrencyId,
                                        String decreasedCurrencyCode,
-                                       BigDecimal decreasedCurrencyBalance,
+                                       BigDecimal amountDecreased,
                                        Long increasedCurrencyId,
                                        String increasedCurrencyCode,
-                                       BigDecimal increasedCurrencyBalance,
-                                       LocalDateTime transactionDate) {
+                                       BigDecimal amountIncreased,
+                                       BigDecimal exchangeRate,
+                                       LocalDateTime exchangeDateTime) {
 }

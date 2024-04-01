@@ -2,11 +2,16 @@ package pl.niewadzj.moneyExchange.api.currencyExchange;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.niewadzj.moneyExchange.api.currencyExchange.interfaces.CurrencyExchangeService;
-import pl.niewadzj.moneyExchange.api.currencyExchange.records.CurrencyExchangeRequest;
+import pl.niewadzj.moneyExchange.api.currencyExchange.mapper.CurrencyExchangeMapper;
 import pl.niewadzj.moneyExchange.api.currencyExchange.records.CurrencyExchangeResponse;
+import pl.niewadzj.moneyExchange.api.currencyExchange.records.ExchangeCurrencyRequest;
+import pl.niewadzj.moneyExchange.api.currencyExchange.records.ExchangeCurrencyResponse;
 import pl.niewadzj.moneyExchange.entities.account.Account;
 import pl.niewadzj.moneyExchange.entities.account.interfaces.AccountRepository;
 import pl.niewadzj.moneyExchange.entities.currency.Currency;
@@ -15,6 +20,7 @@ import pl.niewadzj.moneyExchange.entities.currencyAccount.CurrencyAccount;
 import pl.niewadzj.moneyExchange.entities.currencyAccount.CurrencyAccountStatus;
 import pl.niewadzj.moneyExchange.entities.currencyAccount.interfaces.CurrencyAccountRepository;
 import pl.niewadzj.moneyExchange.entities.currencyExchange.CurrencyExchange;
+import pl.niewadzj.moneyExchange.entities.currencyExchange.CurrencyExchangeStatus;
 import pl.niewadzj.moneyExchange.entities.currencyExchange.interfaces.CurrencyExchangeRepository;
 import pl.niewadzj.moneyExchange.entities.user.User;
 import pl.niewadzj.moneyExchange.exceptions.account.AccountNotFoundException;
@@ -31,31 +37,32 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
 
-    private final CurrencyExchangeRepository currencyExchangeRepository;
-    private final CurrencyRepository currencyRepository;
     private final AccountRepository accountRepository;
+    private final CurrencyRepository currencyRepository;
+    private final CurrencyExchangeMapper currencyExchangeMapper;
     private final CurrencyAccountRepository currencyAccountRepository;
+    private final CurrencyExchangeRepository currencyExchangeRepository;
 
     @Override
     @Transactional
-    public final CurrencyExchangeResponse exchangeCurrency(CurrencyExchangeRequest currencyExchangeRequest, User user) {
-        log.debug("Performing transaction: {}", currencyExchangeRequest);
+    public ExchangeCurrencyResponse exchangeCurrency(ExchangeCurrencyRequest exchangeCurrencyRequest, User user) {
+        log.debug("Performing transaction: {}", exchangeCurrencyRequest);
         Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
 
-        Currency currencyToDecrease = currencyRepository.findById(currencyExchangeRequest.currencyFromId())
-                .orElseThrow(() -> new CurrencyNotFoundException(currencyExchangeRequest.currencyFromId()));
+        Currency currencyToDecrease = currencyRepository.findById(exchangeCurrencyRequest.currencyFromId())
+                .orElseThrow(() -> new CurrencyNotFoundException(exchangeCurrencyRequest.currencyFromId()));
 
-        Currency currencyToIncrease = currencyRepository.findById(currencyExchangeRequest.currencyToId())
-                .orElseThrow(() -> new CurrencyNotFoundException(currencyExchangeRequest.currencyToId()));
+        Currency currencyToIncrease = currencyRepository.findById(exchangeCurrencyRequest.currencyToId())
+                .orElseThrow(() -> new CurrencyNotFoundException(exchangeCurrencyRequest.currencyToId()));
 
         BigDecimal exchangeRate = currencyToIncrease
                 .getExchangeRate()
                 .divide(currencyToDecrease.getExchangeRate(), 6, RoundingMode.DOWN);
 
-        BigDecimal decreasedCurrencyBalance = decreaseCurrency(account, currencyToDecrease, currencyExchangeRequest.amount());
+        BigDecimal decreasedCurrencyBalance = decreaseCurrency(account, currencyToDecrease, exchangeCurrencyRequest.amount());
 
-        BigDecimal amountToIncrease = currencyExchangeRequest
+        BigDecimal amountToIncrease = exchangeCurrencyRequest
                 .amount()
                 .divide(exchangeRate, 2, RoundingMode.DOWN);
 
@@ -64,23 +71,39 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
         CurrencyExchange currencyExchange = CurrencyExchange.builder()
                 .account(account)
                 .exchangeRate(exchangeRate)
-                .transactionDate(LocalDateTime.now())
-                .exchangeFrom(currencyToDecrease)
-                .exchangeTo(currencyToIncrease)
-                .amountExchanged(currencyExchangeRequest.amount())
+                .exchangeDateTime(LocalDateTime.now())
+                .decreasedCurrency(currencyToDecrease)
+                .increasedCurrency(currencyToIncrease)
+                .amountDecreased(exchangeCurrencyRequest.amount())
+                .amountIncreased(amountToIncrease)
+                .currencyExchangeStatus(CurrencyExchangeStatus.SUCCESSFUL)
                 .build();
 
         currencyExchangeRepository.saveAndFlush(currencyExchange);
 
-        return CurrencyExchangeResponse.builder()
-                .decreasedCurrencyId(currencyExchangeRequest.currencyFromId())
+        return ExchangeCurrencyResponse.builder()
+                .decreasedCurrencyId(exchangeCurrencyRequest.currencyFromId())
                 .decreasedCurrencyCode(currencyToDecrease.getCode())
                 .decreasedCurrencyBalance(decreasedCurrencyBalance)
-                .increasedCurrencyId(currencyExchangeRequest.currencyToId())
+                .increasedCurrencyId(exchangeCurrencyRequest.currencyToId())
                 .increasedCurrencyCode(currencyToIncrease.getCode())
                 .increasedCurrencyBalance(increasedCurrencyBalance)
-                .transactionDate(currencyExchange.getTransactionDate())
+                .transactionDateTime(currencyExchange.getExchangeDateTime())
                 .build();
+    }
+
+    @Override
+    public Page<CurrencyExchangeResponse> getExchangesHistoryForUser(int pageNo, int pageSize, User user) {
+        log.debug("Getting exchange history for user: {}", user);
+
+        Account account = accountRepository.findByAccountOwner(user)
+                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+        return currencyExchangeRepository.findByAccountAndCurrencyExchangeStatus(account,
+                CurrencyExchangeStatus.SUCCESSFUL,
+                pageable).map(currencyExchangeMapper);
     }
 
     private BigDecimal decreaseCurrency(Account account, Currency currencyToDecrease, BigDecimal amount) {
