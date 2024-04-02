@@ -11,4 +11,6 @@ public interface CurrencyExchangeController {
 
     Page<CurrencyExchangeResponse> getExchangesHistoryForUser(int pageNo, int pageSize, User user);
 
+    ExchangeCurrencyResponse revertExchange(Long id, User user);
+
 }

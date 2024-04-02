@@ -10,4 +10,6 @@ public interface CurrencyExchangeService {
     ExchangeCurrencyResponse exchangeCurrency(ExchangeCurrencyRequest exchangeCurrencyRequest, User user);
 
     Page<CurrencyExchangeResponse> getExchangesHistoryForUser(int pageNo, int pageSize, User user);
+
+    ExchangeCurrencyResponse revertExchange(Long id, User user);
 }

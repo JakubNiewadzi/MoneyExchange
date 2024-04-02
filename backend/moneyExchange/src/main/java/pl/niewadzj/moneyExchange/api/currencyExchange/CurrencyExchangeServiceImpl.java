@@ -27,6 +27,9 @@ import pl.niewadzj.moneyExchange.exceptions.account.AccountNotFoundException;
 import pl.niewadzj.moneyExchange.exceptions.account.NotEnoughMoneyException;
 import pl.niewadzj.moneyExchange.exceptions.currency.CurrencyNotFoundException;
 import pl.niewadzj.moneyExchange.exceptions.currencyAccount.CurrencyAccountNotFoundException;
+import pl.niewadzj.moneyExchange.exceptions.currencyExchange.CurrencyExchangeNotFoundException;
+import pl.niewadzj.moneyExchange.exceptions.currencyExchange.NotEligibleToRevertException;
+import pl.niewadzj.moneyExchange.exceptions.currencyExchange.TooLateToRevertException;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -60,13 +63,9 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
                 .getExchangeRate()
                 .divide(currencyToDecrease.getExchangeRate(), 6, RoundingMode.DOWN);
 
-        BigDecimal decreasedCurrencyBalance = decreaseCurrency(account, currencyToDecrease, exchangeCurrencyRequest.amount());
-
         BigDecimal amountToIncrease = exchangeCurrencyRequest
                 .amount()
                 .divide(exchangeRate, 2, RoundingMode.DOWN);
-
-        BigDecimal increasedCurrencyBalance = increaseCurrency(account, currencyToIncrease, amountToIncrease);
 
         CurrencyExchange currencyExchange = CurrencyExchange.builder()
                 .account(account)
@@ -76,8 +75,16 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
                 .increasedCurrency(currencyToIncrease)
                 .amountDecreased(exchangeCurrencyRequest.amount())
                 .amountIncreased(amountToIncrease)
-                .currencyExchangeStatus(CurrencyExchangeStatus.SUCCESSFUL)
+                .currencyExchangeStatus(CurrencyExchangeStatus.PENDING)
                 .build();
+
+        currencyExchange = currencyExchangeRepository.saveAndFlush(currencyExchange);
+
+        BigDecimal decreasedCurrencyBalance = decreaseCurrency(account, currencyToDecrease, exchangeCurrencyRequest.amount());
+
+        BigDecimal increasedCurrencyBalance = increaseCurrency(account, currencyToIncrease, amountToIncrease);
+
+        currencyExchange.setCurrencyExchangeStatus(CurrencyExchangeStatus.SUCCESSFUL);
 
         currencyExchangeRepository.saveAndFlush(currencyExchange);
 
@@ -106,22 +113,78 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
                 pageable).map(currencyExchangeMapper);
     }
 
+    @Override
+    @Transactional
+    public ExchangeCurrencyResponse revertExchange(Long id, User user) {
+        Account account = accountRepository.findByAccountOwner(user)
+                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+
+        CurrencyExchange currencyExchange = currencyExchangeRepository.findById(id)
+                .orElseThrow(() -> new CurrencyExchangeNotFoundException(id));
+
+        if (!currencyExchange.getAccount()
+                .equals(account)) {
+            throw new NotEligibleToRevertException();
+        }
+
+        if (currencyExchange.getExchangeDateTime()
+                .plusHours(1)
+                .isBefore(LocalDateTime.now())) {
+            throw new TooLateToRevertException();
+        }
+
+        BigDecimal revertedExchangeRate = BigDecimal.ONE
+                .divide(currencyExchange.getExchangeRate(), 6, RoundingMode.DOWN);
+
+        CurrencyExchange revertedExchange = CurrencyExchange.builder()
+                .currencyExchangeStatus(CurrencyExchangeStatus.PENDING)
+                .exchangeRate(revertedExchangeRate)
+                .decreasedCurrency(currencyExchange.getIncreasedCurrency())
+                .increasedCurrency(currencyExchange.getDecreasedCurrency())
+                .amountIncreased(currencyExchange.getAmountDecreased())
+                .amountDecreased(currencyExchange.getAmountIncreased())
+                .account(account)
+                .exchangeDateTime(LocalDateTime.now())
+                .build();
+
+        revertedExchange = currencyExchangeRepository.saveAndFlush(revertedExchange);
+
+        BigDecimal decreasedCurrencyBalance = decreaseCurrency(account, revertedExchange.getDecreasedCurrency(), revertedExchange.getAmountDecreased());
+        BigDecimal increasedCurrencyBalance = increaseCurrency(account, revertedExchange.getIncreasedCurrency(), revertedExchange.getAmountIncreased());
+
+        currencyExchange.setCurrencyExchangeStatus(CurrencyExchangeStatus.REVERTED);
+
+        currencyExchangeRepository.saveAndFlush(currencyExchange);
+
+        revertedExchange.setCurrencyExchangeStatus(CurrencyExchangeStatus.SUCCESSFUL);
+
+        currencyExchangeRepository.saveAndFlush(revertedExchange);
+
+        return ExchangeCurrencyResponse.builder()
+                .decreasedCurrencyId(revertedExchange.getDecreasedCurrency().getId())
+                .decreasedCurrencyCode(revertedExchange.getDecreasedCurrency().getCode())
+                .decreasedCurrencyBalance(decreasedCurrencyBalance)
+                .increasedCurrencyId(revertedExchange.getIncreasedCurrency().getId())
+                .increasedCurrencyCode(revertedExchange.getIncreasedCurrency().getCode())
+                .increasedCurrencyBalance(increasedCurrencyBalance)
+                .transactionDateTime(revertedExchange.getExchangeDateTime())
+                .build();
+    }
+
     private BigDecimal decreaseCurrency(Account account, Currency currencyToDecrease, BigDecimal amount) {
         CurrencyAccount currencyAccount = currencyAccountRepository
                 .findByCurrencyAndAccount(currencyToDecrease, account)
                 .orElseThrow(() -> new CurrencyAccountNotFoundException(account.getId(), currencyToDecrease.getId()));
 
-        if (currencyAccount
-                .getBalance()
+        if (currencyAccount.getBalance()
                 .subtract(amount)
                 .compareTo(BigDecimal.ZERO) < 0.00) {
 
             throw new NotEnoughMoneyException();
         }
-        currencyAccount
-                .setBalance(currencyAccount
-                        .getBalance()
-                        .subtract(amount));
+        currencyAccount.setBalance(currencyAccount
+                .getBalance()
+                .subtract(amount));
 
         currencyAccountRepository.saveAndFlush(currencyAccount);
 
@@ -135,10 +198,9 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
 
         currencyAccount.setCurrencyAccountStatus(CurrencyAccountStatus.ACTIVE);
 
-        currencyAccount
-                .setBalance(currencyAccount
-                        .getBalance()
-                        .add(amount));
+        currencyAccount.setBalance(currencyAccount
+                .getBalance()
+                .add(amount));
 
         currencyAccountRepository.saveAndFlush(currencyAccount);
 

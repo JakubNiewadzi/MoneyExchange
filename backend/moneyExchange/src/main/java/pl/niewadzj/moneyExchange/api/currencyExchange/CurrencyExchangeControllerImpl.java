@@ -20,6 +20,7 @@ import pl.niewadzj.moneyExchange.entities.user.User;
 import static pl.niewadzj.moneyExchange.api.currencyExchange.constants.CurrencyExchangeMappings.CURRENCY_EXCHANGE_MAPPING;
 import static pl.niewadzj.moneyExchange.api.currencyExchange.constants.CurrencyExchangeMappings.EXCHANGE_CURRENCY_MAPPING;
 import static pl.niewadzj.moneyExchange.api.currencyExchange.constants.CurrencyExchangeMappings.GET_EXCHANGES_FOR_USER;
+import static pl.niewadzj.moneyExchange.api.currencyExchange.constants.CurrencyExchangeMappings.REVERT_EXCHANGE;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,6 +42,13 @@ public class CurrencyExchangeControllerImpl implements CurrencyExchangeControlle
                                                                            @RequestParam(defaultValue = "10", required = false) int pageSize,
                                                                            @AuthenticationPrincipal User user) {
         return currencyExchangeService.getExchangesHistoryForUser(pageNo, pageSize, user);
+    }
+
+    @Override
+    @PostMapping(REVERT_EXCHANGE)
+    public final ExchangeCurrencyResponse revertExchange(@RequestParam Long id,
+                                                         @AuthenticationPrincipal User user) {
+        return currencyExchangeService.revertExchange(id, user);
     }
 
 

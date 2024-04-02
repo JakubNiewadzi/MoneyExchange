@@ -5,6 +5,6 @@ public enum CurrencyExchangeStatus {
     PENDING,
     SUCCESSFUL,
     FAILED,
-    REVERSED
+    REVERTED
 
 }
