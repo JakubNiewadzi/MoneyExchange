@@ -49,7 +49,7 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
     @Override
     @Transactional
     public ExchangeCurrencyResponse exchangeCurrency(ExchangeCurrencyRequest exchangeCurrencyRequest, User user) {
-        log.debug("Performing transaction: {}", exchangeCurrencyRequest);
+        log.debug("Performing currency exchange: {}", exchangeCurrencyRequest);
         Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
 
@@ -81,7 +81,6 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
         currencyExchange = currencyExchangeRepository.saveAndFlush(currencyExchange);
 
         BigDecimal decreasedCurrencyBalance = decreaseCurrency(account, currencyToDecrease, exchangeCurrencyRequest.amount());
-
         BigDecimal increasedCurrencyBalance = increaseCurrency(account, currencyToIncrease, amountToIncrease);
 
         currencyExchange.setCurrencyExchangeStatus(CurrencyExchangeStatus.SUCCESSFUL);
