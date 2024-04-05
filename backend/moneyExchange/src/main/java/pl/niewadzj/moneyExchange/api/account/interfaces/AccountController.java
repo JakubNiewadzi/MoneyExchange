@@ -13,4 +13,5 @@ public interface AccountController {
     List<CurrencyAccountResponse> getActiveCurrencyAccounts(User user);
 
     AccountResponse getAccountByAccountNumber(String accountNumber, User user);
+    AccountResponse getAccountForUser(User user);
 }

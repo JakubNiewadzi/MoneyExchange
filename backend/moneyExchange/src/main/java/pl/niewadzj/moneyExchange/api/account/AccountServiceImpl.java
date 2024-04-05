@@ -96,6 +96,17 @@ public class AccountServiceImpl implements AccountService {
                 .build();
     }
 
+    @Override
+    public final AccountResponse getAccountForUser(User user) {
+        final Account account = accountRepository.findByAccountOwner(user)
+                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+
+        return AccountResponse.builder()
+                .id(account.getId())
+                .accountNumber(account.getAccountNumber())
+                .build();
+    }
+
     private String generateAccountNumber() {
         Random random = new Random();
         StringBuilder accountNumberBuilder = new StringBuilder();

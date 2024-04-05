@@ -16,6 +16,7 @@ import pl.niewadzj.moneyExchange.entities.user.User;
 import java.util.List;
 
 import static pl.niewadzj.moneyExchange.api.account.constants.AccountMappings.ACCOUNT_MAPPING;
+import static pl.niewadzj.moneyExchange.api.account.constants.AccountMappings.GET_ACCOUNT;
 import static pl.niewadzj.moneyExchange.api.account.constants.AccountMappings.GET_ACCOUNT_BY_NUMBER;
 import static pl.niewadzj.moneyExchange.api.account.constants.AccountMappings.GET_ACTIVE_ACCOUNTS;
 import static pl.niewadzj.moneyExchange.api.account.constants.AccountMappings.GET_CURRENCY_ACCOUNTS;
@@ -44,6 +45,12 @@ public class AccountControllerImpl implements AccountController {
     @GetMapping(GET_ACCOUNT_BY_NUMBER)
     public final AccountResponse getAccountByAccountNumber(@RequestParam String accountNumber, @AuthenticationPrincipal User user) {
         return accountService.getAccountByAccountNumber(accountNumber);
+    }
+
+    @Override
+    @GetMapping(GET_ACCOUNT)
+    public final AccountResponse getAccountForUser(@AuthenticationPrincipal User user) {
+        return accountService.getAccountForUser(user);
     }
 
 }

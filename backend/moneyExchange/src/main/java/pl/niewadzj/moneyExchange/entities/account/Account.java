@@ -1,5 +1,6 @@
 package pl.niewadzj.moneyExchange.entities.account;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -32,6 +33,7 @@ public class Account {
 
     @NotNull(message = NUMBER_NULL_MSG)
     @Size(min = ACCOUNT_NUMBER_SIZE, max = ACCOUNT_NUMBER_SIZE)
+    @Column(unique = true)
     private String accountNumber;
 
     @OneToOne

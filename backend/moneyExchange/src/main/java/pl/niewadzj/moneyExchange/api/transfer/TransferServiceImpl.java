@@ -2,9 +2,13 @@ package pl.niewadzj.moneyExchange.api.transfer;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.niewadzj.moneyExchange.api.transfer.interfaces.TransferService;
+import pl.niewadzj.moneyExchange.api.transfer.mapper.TransferMapper;
+import pl.niewadzj.moneyExchange.api.transfer.records.MakeTransferResponse;
 import pl.niewadzj.moneyExchange.api.transfer.records.TransferRequest;
 import pl.niewadzj.moneyExchange.api.transfer.records.TransferResponse;
 import pl.niewadzj.moneyExchange.entities.account.Account;
@@ -25,12 +29,14 @@ import pl.niewadzj.moneyExchange.exceptions.currencyAccount.CurrencyAccountNotFo
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class TransferServiceImpl implements TransferService {
 
+    private final TransferMapper transferMapper;
     private final AccountRepository accountRepository;
     private final CurrencyRepository currencyRepository;
     private final TransferRepository transferRepository;
@@ -38,7 +44,7 @@ public class TransferServiceImpl implements TransferService {
 
     @Override
     @Transactional
-    public TransferResponse makeTransfer(TransferRequest transferRequest, User user) {
+    public MakeTransferResponse makeTransfer(TransferRequest transferRequest, User user) {
         log.debug("Performing transfer: {}", transferRequest);
         Account providerAccount = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
@@ -80,13 +86,52 @@ public class TransferServiceImpl implements TransferService {
         transfer.setTransferStatus(TransferStatus.SUCCESSFUL);
         transferRepository.saveAndFlush(transfer);
 
-        return TransferResponse
+        return MakeTransferResponse
                 .builder()
                 .currencyProvidedCode(providerCurrency.getCode())
                 .amountProvided(transferRequest.amountProvided())
                 .currencyReceivedCode(receiverCurrency.getCode())
                 .amountReceived(amountReceived)
                 .build();
+    }
+
+    @Override
+    public List<TransferResponse> getTransfersForUser(int pageNo, int pageSize, User user) {
+        log.debug("Getting transfers for user: {}", user);
+        Account account = accountRepository.findByAccountOwner(user)
+                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+        return transferRepository.findByProviderAccountOrReceiverAccount(account, account, pageable)
+                .map(transferMapper)
+                .getContent();
+    }
+
+    @Override
+    public List<TransferResponse> getTransfersForReceiverUser(int pageNo, int pageSize, User user) {
+        log.debug("Getting transfers for receiver user: {}", user);
+        Account account = accountRepository.findByAccountOwner(user)
+                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+        return transferRepository.findByReceiverAccount(account, pageable)
+                .map(transferMapper)
+                .getContent();
+    }
+
+    @Override
+    public List<TransferResponse> getTransfersForProviderUser(int pageNo, int pageSize, User user) {
+        log.debug("Getting transfers for provider user: {}", user);
+        Account account = accountRepository.findByAccountOwner(user)
+                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+        return transferRepository.findByProviderAccount(account, pageable)
+                .map(transferMapper)
+                .getContent();
     }
 
     private void decreaseCurrency(Account account, Currency currencyToDecrease, BigDecimal amount) {

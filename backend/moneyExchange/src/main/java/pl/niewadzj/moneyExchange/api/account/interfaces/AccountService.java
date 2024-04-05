@@ -15,4 +15,6 @@ public interface AccountService {
     List<CurrencyAccountResponse> getActiveCurrencyAccounts(User user);
 
     AccountResponse getAccountByAccountNumber(String accountNumber);
+
+    AccountResponse getAccountForUser(User user);
 }

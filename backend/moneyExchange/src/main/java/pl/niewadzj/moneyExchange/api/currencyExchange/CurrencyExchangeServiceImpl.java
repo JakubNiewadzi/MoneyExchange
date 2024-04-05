@@ -2,7 +2,6 @@ package pl.niewadzj.moneyExchange.api.currencyExchange;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -34,6 +33,7 @@ import pl.niewadzj.moneyExchange.exceptions.currencyExchange.TooLateToRevertExce
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -99,7 +99,7 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
     }
 
     @Override
-    public Page<CurrencyExchangeResponse> getExchangesHistoryForUser(int pageNo, int pageSize, User user) {
+    public List<CurrencyExchangeResponse> getExchangesHistoryForUser(int pageNo, int pageSize, User user) {
         log.debug("Getting exchange history for user: {}", user);
 
         Account account = accountRepository.findByAccountOwner(user)
@@ -108,8 +108,9 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
 
         return currencyExchangeRepository.findByAccountAndCurrencyExchangeStatus(account,
-                CurrencyExchangeStatus.SUCCESSFUL,
-                pageable).map(currencyExchangeMapper);
+                        CurrencyExchangeStatus.SUCCESSFUL,
+                        pageable).map(currencyExchangeMapper)
+                .getContent();
     }
 
     @Override
