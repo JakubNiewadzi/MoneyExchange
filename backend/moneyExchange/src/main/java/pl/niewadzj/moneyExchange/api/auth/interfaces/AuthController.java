@@ -10,4 +10,6 @@ public interface AuthController {
 
     TokenResponse login(LoginRequest loginRequest);
 
+    TokenResponse refreshAuthToken(String refreshToken);
+
 }

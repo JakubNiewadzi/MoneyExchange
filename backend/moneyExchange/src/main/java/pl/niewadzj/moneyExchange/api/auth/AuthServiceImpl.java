@@ -36,8 +36,6 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public TokenResponse register(RegistrationRequest registrationRequest) {
         log.debug("Registering user: {}", registrationRequest);
-        System.out.println("USer repo: " + userRepository);
-        log.info("Repo: {}", userRepository);
         checkIfUserExists(registrationRequest.email());
 
         User user = User.builder()
@@ -81,6 +79,12 @@ public class AuthServiceImpl implements AuthService {
                 .authToken(authToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    @Override
+    public final TokenResponse refreshAuthToken(String refreshToken) {
+        log.debug("Generating auth token, with refresh token: {}", refreshToken);
+        return null;
     }
 
     private void checkIfUserExists(String email) {
