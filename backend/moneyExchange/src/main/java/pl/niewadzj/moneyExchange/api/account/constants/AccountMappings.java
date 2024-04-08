@@ -7,6 +7,7 @@ public final class AccountMappings {
     public static final String GET_ACTIVE_ACCOUNTS = "/getActiveCurrencyAccounts";
     public static final String GET_ACCOUNT_BY_NUMBER = "/getAccountByNumber";
     public static final String GET_ACCOUNT = "/getAccount";
+    public static final String GET_ACCOUNTS = "/getAccounts";
 
     private AccountMappings() {
     }

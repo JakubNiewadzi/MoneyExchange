@@ -2,8 +2,11 @@ package pl.niewadzj.moneyExchange.api.account;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.niewadzj.moneyExchange.api.account.interfaces.AccountService;
+import pl.niewadzj.moneyExchange.api.account.mapper.AccountMapper;
 import pl.niewadzj.moneyExchange.api.account.records.AccountResponse;
 import pl.niewadzj.moneyExchange.api.currencyAccount.mapper.CurrencyAccountMapper;
 import pl.niewadzj.moneyExchange.api.currencyAccount.records.CurrencyAccountResponse;
@@ -29,6 +32,7 @@ import static pl.niewadzj.moneyExchange.entities.account.constants.AccountConsta
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
 
+    private final AccountMapper accountMapper;
     private final AccountRepository accountRepository;
     private final CurrencyRepository currencyRepository;
     private final CurrencyAccountMapper currencyAccountMapper;
@@ -62,7 +66,7 @@ public class AccountServiceImpl implements AccountService {
     public final List<CurrencyAccountResponse> getCurrencyAccounts(User user) {
         log.debug("Fetching all currency accounts for user {}", user);
         final Account account = accountRepository.findByAccountOwner(user)
-                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+                .orElseThrow(() -> new AccountNotFoundException(user));
 
         return account.getAccountBalance()
                 .stream()
@@ -74,7 +78,7 @@ public class AccountServiceImpl implements AccountService {
     public final List<CurrencyAccountResponse> getActiveCurrencyAccounts(User user) {
         log.debug("Fetching all currency accounts for user {}", user);
         final Account account = accountRepository.findByAccountOwner(user)
-                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+                .orElseThrow(() -> new AccountNotFoundException(user));
 
         return account.getAccountBalance()
                 .stream()
@@ -83,28 +87,30 @@ public class AccountServiceImpl implements AccountService {
                 .toList();
     }
 
-
-    //TODO change account not found exception and overload constructor
     @Override
     public final AccountResponse getAccountByAccountNumber(String accountNumber) {
         final Account account = accountRepository.findByAccountNumber(accountNumber)
-                .orElseThrow(() -> new AccountNotFoundException("123"));
+                .orElseThrow(() -> new AccountNotFoundException(accountNumber));
 
-        return AccountResponse.builder()
-                .id(account.getId())
-                .accountNumber(account.getAccountNumber())
-                .build();
+        return accountMapper.apply(account);
     }
 
     @Override
     public final AccountResponse getAccountForUser(User user) {
         final Account account = accountRepository.findByAccountOwner(user)
-                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+                .orElseThrow(() -> new AccountNotFoundException(user));
 
-        return AccountResponse.builder()
-                .id(account.getId())
-                .accountNumber(account.getAccountNumber())
-                .build();
+        return accountMapper.apply(account);
+    }
+
+    @Override
+    public final List<AccountResponse> getAccounts(int pageNo, int pageSize) {
+        log.debug("Getting page with accounts");
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+        return accountRepository.findAll(pageable)
+                .map(accountMapper)
+                .getContent();
     }
 
     private String generateAccountNumber() {

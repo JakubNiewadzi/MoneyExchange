@@ -47,7 +47,7 @@ public class TransferServiceImpl implements TransferService {
     public MakeTransferResponse makeTransfer(TransferRequest transferRequest, User user) {
         log.debug("Performing transfer: {}", transferRequest);
         Account providerAccount = accountRepository.findByAccountOwner(user)
-                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+                .orElseThrow(() -> new AccountNotFoundException(user));
 
         Account receiverAccount = accountRepository.findByAccountNumber(transferRequest.receiverAccountNumber())
                 .orElseThrow(() -> new AccountNotFoundException(transferRequest.receiverAccountNumber()));
@@ -99,7 +99,7 @@ public class TransferServiceImpl implements TransferService {
     public List<TransferResponse> getTransfersForUser(int pageNo, int pageSize, User user) {
         log.debug("Getting transfers for user: {}", user);
         Account account = accountRepository.findByAccountOwner(user)
-                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+                .orElseThrow(() -> new AccountNotFoundException(user));
 
         Pageable pageable = PageRequest.of(pageNo, pageSize);
 
@@ -112,7 +112,7 @@ public class TransferServiceImpl implements TransferService {
     public List<TransferResponse> getTransfersForReceiverUser(int pageNo, int pageSize, User user) {
         log.debug("Getting transfers for receiver user: {}", user);
         Account account = accountRepository.findByAccountOwner(user)
-                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+                .orElseThrow(() -> new AccountNotFoundException(user));
 
         Pageable pageable = PageRequest.of(pageNo, pageSize);
 
@@ -125,7 +125,7 @@ public class TransferServiceImpl implements TransferService {
     public List<TransferResponse> getTransfersForProviderUser(int pageNo, int pageSize, User user) {
         log.debug("Getting transfers for provider user: {}", user);
         Account account = accountRepository.findByAccountOwner(user)
-                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+                .orElseThrow(() -> new AccountNotFoundException(user));
 
         Pageable pageable = PageRequest.of(pageNo, pageSize);
 

@@ -51,7 +51,7 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
     public ExchangeCurrencyResponse exchangeCurrency(ExchangeCurrencyRequest exchangeCurrencyRequest, User user) {
         log.debug("Performing currency exchange: {}", exchangeCurrencyRequest);
         Account account = accountRepository.findByAccountOwner(user)
-                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+                .orElseThrow(() -> new AccountNotFoundException(user));
 
         Currency currencyToDecrease = currencyRepository.findById(exchangeCurrencyRequest.currencyFromId())
                 .orElseThrow(() -> new CurrencyNotFoundException(exchangeCurrencyRequest.currencyFromId()));
@@ -103,7 +103,7 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
         log.debug("Getting exchange history for user: {}", user);
 
         Account account = accountRepository.findByAccountOwner(user)
-                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+                .orElseThrow(() -> new AccountNotFoundException(user));
 
         Pageable pageable = PageRequest.of(pageNo, pageSize);
 
@@ -117,7 +117,7 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
     @Transactional
     public ExchangeCurrencyResponse revertExchange(Long id, User user) {
         Account account = accountRepository.findByAccountOwner(user)
-                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+                .orElseThrow(() -> new AccountNotFoundException(user));
 
         CurrencyExchange currencyExchange = currencyExchangeRepository.findById(id)
                 .orElseThrow(() -> new CurrencyExchangeNotFoundException(id));

@@ -17,4 +17,6 @@ public interface AccountService {
     AccountResponse getAccountByAccountNumber(String accountNumber);
 
     AccountResponse getAccountForUser(User user);
+
+    List<AccountResponse> getAccounts(int pageNo, int pageSize);
 }

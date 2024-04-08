@@ -40,7 +40,7 @@ public class CurrencyAccountServiceImpl implements CurrencyAccountService {
     public final BalanceResponse depositToAccount(TransactionRequest transactionRequest, User user) {
         log.debug("Depositing onto account for user {}", user);
         Account account = accountRepository.findByAccountOwner(user)
-                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+                .orElseThrow(() -> new AccountNotFoundException(user));
 
         Currency currencyToIncrease = currencyRepository.findById(transactionRequest
                 .currencyId()).orElseThrow(() -> new CurrencyNotFoundException(transactionRequest.currencyId()));
@@ -69,7 +69,7 @@ public class CurrencyAccountServiceImpl implements CurrencyAccountService {
     public final BalanceResponse withdrawFromAccount(TransactionRequest transactionRequest, User user) {
         log.debug("Withdrawing from account for user {}", user);
         Account account = accountRepository.findByAccountOwner(user)
-                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+                .orElseThrow(() -> new AccountNotFoundException(user));
 
         Currency currencyToIncrease = currencyRepository.findById(transactionRequest.currencyId())
                 .orElseThrow(() -> new CurrencyNotFoundException(transactionRequest.currencyId()));
@@ -101,7 +101,7 @@ public class CurrencyAccountServiceImpl implements CurrencyAccountService {
     public final CurrencyAccountResponse getCurrencyAccountByCurrencyId(Long currencyId, User user) {
         log.debug("Fetching currency account for currency with id {}", currencyId);
         final Account account = accountRepository.findByAccountOwner(user)
-                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+                .orElseThrow(() -> new AccountNotFoundException(user));
 
         final Currency currency = currencyRepository.findById(currencyId)
                 .orElseThrow(() -> new CurrencyAccountNotFoundException(account.getId(), currencyId));
@@ -114,7 +114,7 @@ public class CurrencyAccountServiceImpl implements CurrencyAccountService {
     @Override
     public final void suspendCurrencyAccount(Long currencyId, User user) {
         final Account account = accountRepository.findByAccountOwner(user)
-                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+                .orElseThrow(() -> new AccountNotFoundException(user));
 
         final Currency currency = currencyRepository.findById(currencyId)
                 .orElseThrow(() -> new CurrencyNotFoundException(currencyId));
@@ -134,7 +134,7 @@ public class CurrencyAccountServiceImpl implements CurrencyAccountService {
     @Override
     public final void activateSuspendedCurrencyAccount(Long currencyId, User user) {
         final Account account = accountRepository.findByAccountOwner(user)
-                .orElseThrow(() -> new AccountNotFoundException(user.getEmail()));
+                .orElseThrow(() -> new AccountNotFoundException(user));
 
         final Currency currency = currencyRepository.findById(currencyId)
                 .orElseThrow(() -> new CurrencyNotFoundException(currencyId));

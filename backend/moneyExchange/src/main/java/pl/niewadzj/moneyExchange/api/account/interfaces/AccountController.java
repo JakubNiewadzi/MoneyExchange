@@ -9,9 +9,8 @@ import java.util.List;
 public interface AccountController {
 
     List<CurrencyAccountResponse> getCurrencyAccounts(User user);
-
     List<CurrencyAccountResponse> getActiveCurrencyAccounts(User user);
-
     AccountResponse getAccountByAccountNumber(String accountNumber, User user);
     AccountResponse getAccountForUser(User user);
+    List<AccountResponse> getAllAccounts(int pageNo, int pageSize);
 }
