@@ -6,6 +6,7 @@ public final class CurrencyAccountConstants {
     public static final String CURRENCY_JOIN = "currency_id";
     public static final String ACCOUNT_JOIN = "account_id";
 
-    private CurrencyAccountConstants(){}
+    private CurrencyAccountConstants() {
+    }
 
 }

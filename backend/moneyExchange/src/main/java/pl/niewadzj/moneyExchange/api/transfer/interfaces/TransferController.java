@@ -12,7 +12,9 @@ public interface TransferController {
     MakeTransferResponse makeTransfer(TransferRequest transferRequest, User user);
 
     List<TransferResponse> getTransfersForUser(int pageNo, int pageSize, User user);
+
     List<TransferResponse> getTransfersForProviderUser(int pageNo, int pageSize, User user);
+
     List<TransferResponse> getTransfersForReceiverUser(int pageNo, int pageSize, User user);
 
 }

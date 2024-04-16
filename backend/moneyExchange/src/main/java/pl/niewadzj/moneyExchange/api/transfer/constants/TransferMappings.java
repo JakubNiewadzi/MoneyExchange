@@ -8,6 +8,7 @@ public final class TransferMappings {
     public static final String GET_TRANSFERS_FOR_RECEIVER = "getTransfersForReceiver";
     public static final String GET_TRANSFERS_FOR_PROVIDER = "getTransfersForProvider";
 
-    private TransferMappings(){}
+    private TransferMappings() {
+    }
 
 }

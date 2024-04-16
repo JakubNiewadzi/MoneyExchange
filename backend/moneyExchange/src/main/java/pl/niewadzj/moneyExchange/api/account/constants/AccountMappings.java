@@ -9,6 +9,7 @@ public final class AccountMappings {
     public static final String GET_ACCOUNT = "/getAccount";
     public static final String GET_ACCOUNTS = "/getAccounts";
 
+
     private AccountMappings() {
     }
 }

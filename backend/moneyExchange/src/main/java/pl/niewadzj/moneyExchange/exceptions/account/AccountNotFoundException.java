@@ -8,7 +8,7 @@ public class AccountNotFoundException extends NotFoundException {
         super(String.format("Account for user email %s could not have been found", user.getEmail()));
     }
 
-    public AccountNotFoundException(String accountNumber){
+    public AccountNotFoundException(String accountNumber) {
         super(String.format("Account with number %s could not have been found", accountNumber));
     }
 }

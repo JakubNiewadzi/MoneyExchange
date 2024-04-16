@@ -15,6 +15,8 @@ import pl.niewadzj.moneyExchange.entities.user.User;
 
 import java.util.List;
 
+import static pl.niewadzj.moneyExchange.api.account.constants.AccountConstants.PAGE_NUMBER;
+import static pl.niewadzj.moneyExchange.api.account.constants.AccountConstants.PAGE_SIZE;
 import static pl.niewadzj.moneyExchange.api.account.constants.AccountMappings.ACCOUNT_MAPPING;
 import static pl.niewadzj.moneyExchange.api.account.constants.AccountMappings.GET_ACCOUNT;
 import static pl.niewadzj.moneyExchange.api.account.constants.AccountMappings.GET_ACCOUNTS;
@@ -56,8 +58,8 @@ public class AccountControllerImpl implements AccountController {
 
     @Override
     @GetMapping(GET_ACCOUNTS)
-    public final List<AccountResponse> getAllAccounts(@RequestParam(defaultValue = "0", required = false) int pageNo,
-                                                      @RequestParam(defaultValue = "10", required = false) int pageSize) {
+    public final List<AccountResponse> getAllAccounts(@RequestParam(defaultValue = PAGE_NUMBER, required = false) int pageNo,
+                                                      @RequestParam(defaultValue = PAGE_SIZE, required = false) int pageSize) {
         return accountService.getAccounts(pageNo, pageSize);
     }
 

@@ -4,6 +4,7 @@ public final class TransferConstants {
 
     public static final String TRANSFER_TABLE_NAME = "transfers";
 
-    private TransferConstants(){}
+    private TransferConstants() {
+    }
 
 }

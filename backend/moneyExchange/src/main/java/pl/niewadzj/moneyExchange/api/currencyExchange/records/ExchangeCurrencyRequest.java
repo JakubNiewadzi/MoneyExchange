@@ -6,14 +6,20 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
+import static pl.niewadzj.moneyExchange.api.currencyExchange.constants.CurrencyExchangeConstants.AMOUNT_FRACTION;
+import static pl.niewadzj.moneyExchange.api.currencyExchange.constants.CurrencyExchangeConstants.AMOUNT_INTEGER;
+import static pl.niewadzj.moneyExchange.api.currencyExchange.constants.CurrencyExchangeConstants.AMOUNT_MIN_VALUE;
+import static pl.niewadzj.moneyExchange.api.currencyExchange.constants.CurrencyExchangeConstants.AMOUNT_NULL_MSG;
+import static pl.niewadzj.moneyExchange.api.currencyExchange.constants.CurrencyExchangeConstants.ID_NULL_MSG;
+
 public record ExchangeCurrencyRequest(
-        @NotNull
+        @NotNull(message = ID_NULL_MSG)
         Long currencyFromId,
-        @NotNull
+        @NotNull(message = ID_NULL_MSG)
         Long currencyToId,
-        @NotNull
-        @DecimalMin(value = "0.0")
-        @Digits(integer = 10, fraction = 2)
+        @NotNull(message = AMOUNT_NULL_MSG)
+        @DecimalMin(value = AMOUNT_MIN_VALUE)
+        @Digits(integer = AMOUNT_INTEGER, fraction = AMOUNT_FRACTION)
         BigDecimal amount
 ) {
 }
