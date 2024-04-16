@@ -18,13 +18,14 @@ import pl.niewadzj.moneyExchange.entities.user.User;
 import java.util.List;
 
 import static pl.niewadzj.moneyExchange.entities.account.constants.AccountConstants.ACCOUNT_NUMBER_SIZE;
+import static pl.niewadzj.moneyExchange.entities.account.constants.AccountConstants.ACCOUNT_TABLE_NAME;
 import static pl.niewadzj.moneyExchange.entities.account.constants.AccountConstants.NUMBER_NULL_MSG;
 
 @Data
 @Entity
 @SuperBuilder
 @NoArgsConstructor
-@Table(name = "accounts")
+@Table(name = ACCOUNT_TABLE_NAME)
 public class Account {
 
     @Id
@@ -39,7 +40,7 @@ public class Account {
     @OneToOne
     private User accountOwner;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = ACCOUNT_TABLE_NAME)
     private List<CurrencyAccount> accountBalance;
 
 }

@@ -17,11 +17,16 @@ import pl.niewadzj.moneyExchange.entities.currency.Currency;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import static pl.niewadzj.moneyExchange.entities.constants.EntitiesConstants.AMOUNT_SCALE;
+import static pl.niewadzj.moneyExchange.entities.constants.EntitiesConstants.CURRENCY_PRECISION;
+import static pl.niewadzj.moneyExchange.entities.constants.EntitiesConstants.EXCHANGE_RATE_SCALE;
+import static pl.niewadzj.moneyExchange.entities.currencyExchange.constants.CurrencyExchangeConstants.CURRENCY_EXCHANGE_TABLE_NAME;
+
 @Data
 @Entity
 @SuperBuilder
 @NoArgsConstructor
-@Table(name = "currency_exchanges")
+@Table(name = CURRENCY_EXCHANGE_TABLE_NAME)
 public class CurrencyExchange {
 
     @Id
@@ -33,11 +38,11 @@ public class CurrencyExchange {
     private Currency increasedCurrency;
     @ManyToOne
     private Account account;
-    @Column(precision = 12, scale = 6)
+    @Column(precision = CURRENCY_PRECISION, scale = EXCHANGE_RATE_SCALE)
     private BigDecimal exchangeRate;
-    @Column(precision = 12, scale = 2)
+    @Column(precision = CURRENCY_PRECISION, scale = AMOUNT_SCALE)
     private BigDecimal amountDecreased;
-    @Column(precision = 12, scale = 2)
+    @Column(precision = CURRENCY_PRECISION, scale = AMOUNT_SCALE)
     private BigDecimal amountIncreased;
     private LocalDateTime exchangeDateTime;
     @Enumerated(EnumType.STRING)

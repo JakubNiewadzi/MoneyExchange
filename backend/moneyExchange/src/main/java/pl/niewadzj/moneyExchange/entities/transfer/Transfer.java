@@ -17,11 +17,16 @@ import pl.niewadzj.moneyExchange.entities.currency.Currency;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import static pl.niewadzj.moneyExchange.entities.constants.EntitiesConstants.AMOUNT_SCALE;
+import static pl.niewadzj.moneyExchange.entities.constants.EntitiesConstants.CURRENCY_PRECISION;
+import static pl.niewadzj.moneyExchange.entities.constants.EntitiesConstants.EXCHANGE_RATE_SCALE;
+import static pl.niewadzj.moneyExchange.entities.transfer.constants.TransferConstants.TRANSFER_TABLE_NAME;
+
 @Data
 @Entity
 @SuperBuilder
 @NoArgsConstructor
-@Table(name = "transfers")
+@Table(name = TRANSFER_TABLE_NAME)
 public class Transfer {
 
     @Id
@@ -36,11 +41,11 @@ public class Transfer {
     @ManyToOne
     private Currency receiverCurrency;
     private LocalDateTime transferDateTime;
-    @Column(precision = 12, scale = 2)
+    @Column(precision = CURRENCY_PRECISION, scale = AMOUNT_SCALE)
     private BigDecimal currencyProvided;
-    @Column(precision = 12, scale = 2)
+    @Column(precision = CURRENCY_PRECISION, scale = AMOUNT_SCALE)
     private BigDecimal currencyReceived;
-    @Column(precision = 12, scale = 6)
+    @Column(precision = CURRENCY_PRECISION, scale = EXCHANGE_RATE_SCALE)
     private BigDecimal exchangeRate;
     @Enumerated(EnumType.STRING)
     private TransferStatus transferStatus;

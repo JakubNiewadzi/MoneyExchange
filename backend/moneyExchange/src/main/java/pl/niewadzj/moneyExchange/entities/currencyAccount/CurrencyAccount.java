@@ -18,24 +18,31 @@ import pl.niewadzj.moneyExchange.entities.currency.Currency;
 
 import java.math.BigDecimal;
 
+import static pl.niewadzj.moneyExchange.entities.constants.EntitiesConstants.AMOUNT_SCALE;
+import static pl.niewadzj.moneyExchange.entities.constants.EntitiesConstants.CURRENCY_PRECISION;
+import static pl.niewadzj.moneyExchange.entities.currencyAccount.constants.CurrencyAccountConstants.ACCOUNT_JOIN;
+import static pl.niewadzj.moneyExchange.entities.currencyAccount.constants.CurrencyAccountConstants.CURRENCY_ACCOUNT_TABLE_NAME;
+import static pl.niewadzj.moneyExchange.entities.currencyAccount.constants.CurrencyAccountConstants.CURRENCY_JOIN;
+
+
 @Data
 @Entity
 @SuperBuilder
 @NoArgsConstructor
-@Table(name = "currency_accounts")
+@Table(name = CURRENCY_ACCOUNT_TABLE_NAME)
 public class CurrencyAccount {
 
     @Id
     @GeneratedValue
     private Long id;
-    @Column(precision = 12, scale = 2)
+    @Column(precision = CURRENCY_PRECISION, scale = AMOUNT_SCALE)
     private BigDecimal balance;
 
     @ManyToOne
-    @JoinColumn(name = "currency_id")
+    @JoinColumn(name = CURRENCY_JOIN)
     private Currency currency;
     @ManyToOne
-    @JoinColumn(name = "account_id")
+    @JoinColumn(name = ACCOUNT_JOIN)
     private Account account;
     @Enumerated(EnumType.STRING)
     private CurrencyAccountStatus currencyAccountStatus;
