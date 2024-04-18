@@ -11,7 +11,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import pl.niewadzj.moneyExchange.entities.account.Account;
 import pl.niewadzj.moneyExchange.entities.currency.Currency;
@@ -25,7 +28,9 @@ import static pl.niewadzj.moneyExchange.entities.currencyAccount.constants.Curre
 import static pl.niewadzj.moneyExchange.entities.currencyAccount.constants.CurrencyAccountConstants.CURRENCY_JOIN;
 
 
-@Data
+@Getter
+@Setter
+@ToString
 @Entity
 @SuperBuilder
 @NoArgsConstructor

@@ -9,7 +9,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import pl.niewadzj.moneyExchange.entities.account.Account;
 import pl.niewadzj.moneyExchange.entities.currency.Currency;
@@ -22,7 +25,9 @@ import static pl.niewadzj.moneyExchange.entities.constants.EntitiesConstants.CUR
 import static pl.niewadzj.moneyExchange.entities.constants.EntitiesConstants.EXCHANGE_RATE_SCALE;
 import static pl.niewadzj.moneyExchange.entities.currencyExchange.constants.CurrencyExchangeConstants.CURRENCY_EXCHANGE_TABLE_NAME;
 
-@Data
+@Getter
+@Setter
+@ToString
 @Entity
 @SuperBuilder
 @NoArgsConstructor

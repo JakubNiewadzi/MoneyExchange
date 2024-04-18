@@ -6,7 +6,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
@@ -17,7 +20,9 @@ import static pl.niewadzj.moneyExchange.entities.constants.EntitiesConstants.EXC
 import static pl.niewadzj.moneyExchange.entities.currency.constants.CurrencyConstants.CURRENCY_TABLE_NAME;
 
 
-@Data
+@Getter
+@Setter
+@ToString
 @Entity
 @SuperBuilder
 @NoArgsConstructor

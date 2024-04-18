@@ -9,7 +9,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,7 +24,9 @@ import java.util.List;
 
 import static pl.niewadzj.moneyExchange.entities.user.constants.UserConstants.USER_TABLE;
 
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @SuperBuilder
 @Entity
