@@ -82,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public final TokenResponse refreshAuthToken(String refreshToken) {
+    public TokenResponse refreshAuthToken(String refreshToken) {
         log.debug("Generating auth token, with refresh token: {}", refreshToken);
         return null;
     }
