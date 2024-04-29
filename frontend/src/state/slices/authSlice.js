@@ -19,6 +19,7 @@ const authSlice = createSlice({
             state.refreshToken = action.payload.refreshToken
             state.email = action.payload.email
             state.isLoggedIn = true
+
         },
         logout: (state) => {
             state.authToken = initialState.authToken

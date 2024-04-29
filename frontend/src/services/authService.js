@@ -1,16 +1,23 @@
 import {authApi} from "../api/authApi";
-import {getTableSortLabelUtilityClass} from "@mui/material";
 
 export const login = async (loginRequest) => {
     const tokenResponse = await authApi.login(loginRequest)
 
-    const tokens = {
-        authToken: tokenResponse.data.authToken,
-        refreshToken: tokenResponse.data.refreshToken
+    if (tokenResponse) {
+        return {
+            authToken: tokenResponse?.data?.authToken,
+            refreshToken: tokenResponse?.data?.refreshToken
+        }
     }
+}
 
-    if (tokens.authToken && tokens.refreshToken) {
-        return tokens
+export const register = async (registerRequest) => {
+    const tokenResponse = await authApi.register(registerRequest)
+
+    if (tokenResponse) {
+        return {
+            authToken: tokenResponse?.data?.authToken,
+            refreshToken: tokenResponse?.data?.refreshToken
+        }
     }
-
 }

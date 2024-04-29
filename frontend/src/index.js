@@ -10,6 +10,7 @@ import {store} from "./state/Store";
 import {ProtectedRoute} from "./routes/ProtectedRoute";
 import {TestPage} from "./pages/TestPage";
 import {NotFoundPage} from "./pages/NotFoundPage";
+import {RegisterPage} from "./pages/RegisterPage";
 
 
 const router = createBrowserRouter([
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
     {
         path: "/login",
         element: <LoginPage/>
+    },
+    {
+        path: "/register",
+        element: <RegisterPage/>
     },
     {
         path: "*",

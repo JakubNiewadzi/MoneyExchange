@@ -2,9 +2,10 @@ import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router";
 import Button from "@mui/material/Button";
-import {Container, Input, InputLabel, TextField} from "@mui/material";
+import {InputLabel, TextField} from "@mui/material";
 import {login} from "../services/authService";
 import {performLogin} from "../state/slices/authSlice";
+import {FormContainer} from "../components/FormContainer";
 
 export const LoginPage = () => {
     const [email, setEmail] = useState('')
@@ -36,7 +37,6 @@ export const LoginPage = () => {
             valid = false
             setPasswordError("Password is required")
         }
-        console.log(valid)
         return valid
     }
 
@@ -44,7 +44,7 @@ export const LoginPage = () => {
         e.preventDefault()
         if (validateForm()) {
             const tokens = await login({email: email, password: password})
-            dispatch(performLogin({authToken: tokens.authToken, refreshToken: tokens.refreshToken, email: email}))
+            if(tokens !== undefined) dispatch(performLogin({authToken: tokens?.authToken, refreshToken: tokens?.refreshToken, email: email}))
         }
     }
 
@@ -54,9 +54,7 @@ export const LoginPage = () => {
         name === "email" ? setEmail(data) : setPassword(data)
     }
 
-    return <form onSubmit={handleSubmit}>
-        <Container className="flex justify-center items-center h-screen">
-            <Container className="w-96 max-w-full bg-gray-200 p-8 rounded-sm shadow-md">
+    return <FormContainer handleSubmit={handleSubmit}>
                 <h2 className="text-center text-2xl font-semibold mb-4">Login</h2>
                 <InputLabel className="mb-2">Email</InputLabel>
                 <TextField className="w-full"
@@ -80,7 +78,5 @@ export const LoginPage = () => {
                 <Button type="submit" variant="contained" className="bg-black mt-4 w-full">
                     Login
                 </Button>
-            </Container>
-        </Container>
-    </form>
+    </FormContainer>
 }
