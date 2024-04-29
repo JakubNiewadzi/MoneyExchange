@@ -19,9 +19,7 @@ export const LoginPage = () => {
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
 
     useEffect(() => {
-        if (isLoggedIn === true) {
-            navigate("/")
-        }
+        if (isLoggedIn) navigate("/")
     }, [isLoggedIn]);
 
 
@@ -44,7 +42,11 @@ export const LoginPage = () => {
         e.preventDefault()
         if (validateForm()) {
             const tokens = await login({email: email, password: password})
-            if(tokens !== undefined) dispatch(performLogin({authToken: tokens?.authToken, refreshToken: tokens?.refreshToken, email: email}))
+            if (tokens !== undefined) dispatch(performLogin({
+                authToken: tokens?.authToken,
+                refreshToken: tokens?.refreshToken,
+                email: email
+            }))
         }
     }
 
@@ -55,28 +57,28 @@ export const LoginPage = () => {
     }
 
     return <FormContainer handleSubmit={handleSubmit}>
-                <h2 className="text-center text-2xl font-semibold mb-4">Login</h2>
-                <InputLabel className="mb-2">Email</InputLabel>
-                <TextField className="w-full"
-                           name="email"
-                           placeholder="Give us your email"
-                           value={email}
-                           onChange={handleChange}
-                           error={!!emailError}
-                           helperText={emailError}
-                           focused/>
-                <InputLabel className="mb-2 mt-4">Password</InputLabel>
-                <TextField className="w-full"
-                           name="password"
-                           type="password"
-                           placeholder="Give us your password :<"
-                           value={password}
-                           onChange={handleChange}
-                           error={!!passwordError}
-                           helperText={passwordError}
-                           focused/>
-                <Button type="submit" variant="contained" className="bg-black mt-4 w-full">
-                    Login
-                </Button>
+        <h2 className="text-center text-2xl font-semibold mb-4">Login</h2>
+        <InputLabel className="mb-2">Email</InputLabel>
+        <TextField className="w-full"
+                   name="email"
+                   placeholder="Give us your email"
+                   value={email}
+                   onChange={handleChange}
+                   error={!!emailError}
+                   helperText={emailError}
+                   focused/>
+        <InputLabel className="mb-2 mt-4">Password</InputLabel>
+        <TextField className="w-full"
+                   name="password"
+                   type="password"
+                   placeholder="Give us your password :<"
+                   value={password}
+                   onChange={handleChange}
+                   error={!!passwordError}
+                   helperText={passwordError}
+                   focused/>
+        <Button type="submit" variant="contained" className="bg-black mt-4 w-full">
+            Login
+        </Button>
     </FormContainer>
 }

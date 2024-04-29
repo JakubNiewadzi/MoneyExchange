@@ -1,12 +1,15 @@
 import {FormContainer} from "../components/FormContainer";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {InputLabel, TextField} from "@mui/material";
 import Button from "@mui/material/Button";
 import {register} from "../services/authService";
 import {performLogin} from "../state/slices/authSlice";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {useNavigate} from "react-router";
 
 export const RegisterPage = () => {
+    const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
+    const navigate = useNavigate()
     const [registrationRequest, setRegistrationRequest] = useState({
         firstName: '',
         lastName: '',
@@ -31,6 +34,10 @@ export const RegisterPage = () => {
         name !== 'repeatPassword' ? setRegistrationRequest({...registrationRequest, [name]: data}) : setRepeatPassword(data)
     }
 
+    useEffect(() => {
+        if (isLoggedIn) navigate('/')
+    }, [isLoggedIn]);
+    
     const validateForm = () => {
         let valid = true
         return valid
