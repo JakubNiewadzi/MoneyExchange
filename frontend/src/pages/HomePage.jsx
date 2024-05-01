@@ -1,3 +1,7 @@
+import {Navbar} from "../components/Navbar";
+
 export const HomePage = () => {
-    return <>Domek</>
+    return <div><Navbar/>
+
+    </div>
 }

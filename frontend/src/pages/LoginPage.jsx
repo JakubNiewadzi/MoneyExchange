@@ -6,6 +6,7 @@ import {InputLabel, TextField} from "@mui/material";
 import {login} from "../services/authService";
 import {performLogin} from "../state/slices/authSlice";
 import {FormContainer} from "../components/FormContainer";
+import {NavLink} from "react-router-dom";
 
 export const LoginPage = () => {
     const [email, setEmail] = useState('')
@@ -56,7 +57,7 @@ export const LoginPage = () => {
         name === "email" ? setEmail(data) : setPassword(data)
     }
 
-    return <FormContainer handleSubmit={handleSubmit}>
+    return <FormContainer handleSubmit={handleSubmit} className="bg-black">
         <h2 className="text-center text-2xl font-semibold mb-4">Login</h2>
         <InputLabel className="mb-2">Email</InputLabel>
         <TextField className="w-full"
@@ -77,8 +78,13 @@ export const LoginPage = () => {
                    error={!!passwordError}
                    helperText={passwordError}
                    focused/>
-        <Button type="submit" variant="contained" className="bg-black mt-4 w-full">
-            Login
-        </Button>
+        <div className='flex flex-row mb-2 justify-between'>
+            <Button type="submit" variant="contained" className="bg-darkBlue mt-4 w-2/5">
+                Login
+            </Button>
+            <Button component={NavLink} to="/" variant="contained" className="bg-lightBlue mt-4 w-2/5">
+                Back
+            </Button>
+        </div>
     </FormContainer>
 }

@@ -6,6 +6,7 @@ import {register} from "../services/authService";
 import {performLogin} from "../state/slices/authSlice";
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router";
+import {NavLink} from "react-router-dom";
 
 export const RegisterPage = () => {
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
@@ -106,8 +107,13 @@ export const RegisterPage = () => {
                    error={!!errors.repeatPassword}
                    helperText={errors.repeatPassword}
                    focused/>
-        <Button type="submit" variant="contained" className="bg-black mt-4 w-full">
-            Submit
-        </Button>
+        <div className='flex flex-row mb-2 justify-between'>
+            <Button type="submit" variant="contained" className="bg-darkBlue mt-4 w-2/5">
+                Register
+            </Button>
+            <Button component={NavLink} to="/" variant="contained" className="bg-lightBlue mt-4 w-2/5">
+                Back
+            </Button>
+        </div>
     </FormContainer>
 }
