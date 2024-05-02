@@ -10,7 +10,10 @@ import pl.niewadzj.moneyExchange.entities.currency.Currency;
 import pl.niewadzj.moneyExchange.entities.currency.interfaces.CurrencyRepository;
 import pl.niewadzj.moneyExchange.exceptions.currency.CurrencyNotFoundException;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -41,6 +44,24 @@ public class CurrencyServiceImpl implements CurrencyService {
 
         return currencyMapper
                 .apply(currency);
+    }
+
+    @Override
+    public List<CurrencyResponse> getExchangeRatesByCurrency(Long id) {
+        BigDecimal exchangeRate = currencyRepository
+                .findById(id)
+                .orElseThrow(() -> new CurrencyNotFoundException(id))
+                .getExchangeRate();
+
+        List<Currency> currencyResponses = currencyRepository
+                .findAll();
+
+        currencyResponses.forEach(currency -> currency.setExchangeRate(currency.getExchangeRate()
+                .divide(exchangeRate, 6, RoundingMode.DOWN)));
+
+        return currencyResponses.stream()
+                .map(currencyMapper)
+                .toList();
     }
 
 }

@@ -9,4 +9,6 @@ public interface CurrencyService {
     List<CurrencyResponse> getCurrencies();
 
     CurrencyResponse getCurrency(Long id);
+
+    List<CurrencyResponse> getExchangeRatesByCurrency(Long id);
 }
