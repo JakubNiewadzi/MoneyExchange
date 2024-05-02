@@ -48,7 +48,7 @@ export const RegisterPage = () => {
         e.preventDefault()
         if(validateForm()){
             const tokens = await register(registrationRequest)
-            if (tokens !== undefined) dispatchEvent(dispatch(performLogin({authToken: tokens?.authToken, refreshToken: tokens?.refreshToken, email: registrationRequest.email})))
+            if (tokens !== undefined) dispatch(performLogin({authToken: tokens?.authToken, refreshToken: tokens?.refreshToken, email: registrationRequest.email}))
         }
     }
 

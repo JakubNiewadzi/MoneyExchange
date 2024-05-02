@@ -13,7 +13,7 @@ export const login = async (loginRequest) => {
 
 export const register = async (registerRequest) => {
     const tokenResponse = await authApi.register(registerRequest)
-
+    console.log(tokenResponse)
     if (tokenResponse) {
         return {
             authToken: tokenResponse?.data?.authToken,

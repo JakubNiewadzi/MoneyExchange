@@ -4,10 +4,16 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import {NavLink} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {logout} from "../state/slices/authSlice";
 
 export const Navbar = () => {
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
+    const dispatch = useDispatch()
+
+    const handleLogout = () => {
+        dispatch(logout())
+    }
 
     return <Box>
         <AppBar className="bg-customBlue" position="static">
@@ -31,7 +37,7 @@ export const Navbar = () => {
                     {!isLoggedIn ?
                         (<><Button component={NavLink} to="/login" color="inherit">Sign in</Button>
                             <Button component={NavLink} to="/register" color="inherit">Sign up</Button></>) :
-                        (<Button component={NavLink} to="/logout" color="inherit">Logout</Button>)}
+                        (<Button onClick={handleLogout} color="inherit">Logout</Button>)}
 
                 </div>
             </Toolbar>
