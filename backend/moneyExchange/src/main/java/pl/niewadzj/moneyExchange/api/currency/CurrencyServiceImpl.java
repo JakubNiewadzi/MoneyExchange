@@ -2,6 +2,7 @@ package pl.niewadzj.moneyExchange.api.currency;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import pl.niewadzj.moneyExchange.api.currency.interfaces.CurrencyService;
 import pl.niewadzj.moneyExchange.api.currency.mapper.CurrencyMapper;
@@ -13,7 +14,6 @@ import pl.niewadzj.moneyExchange.exceptions.currency.CurrencyNotFoundException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -29,7 +29,7 @@ public class CurrencyServiceImpl implements CurrencyService {
         log.debug("Fetching all currencies from database");
 
         return currencyRepository
-                .findAll()
+                .findAll(Sort.by(Sort.Direction.ASC, "id"))
                 .stream().map(currencyMapper)
                 .toList();
     }
@@ -47,14 +47,14 @@ public class CurrencyServiceImpl implements CurrencyService {
     }
 
     @Override
-    public List<CurrencyResponse> getExchangeRatesByCurrency(Long id) {
+    public final List<CurrencyResponse> getExchangeRatesByCurrency(Long id) {
         BigDecimal exchangeRate = currencyRepository
                 .findById(id)
                 .orElseThrow(() -> new CurrencyNotFoundException(id))
                 .getExchangeRate();
 
         List<Currency> currencyResponses = currencyRepository
-                .findAll();
+                .findAll(Sort.by(Sort.Direction.ASC, "id"));
 
         currencyResponses.forEach(currency -> currency.setExchangeRate(currency.getExchangeRate()
                 .divide(exchangeRate, 6, RoundingMode.DOWN)));

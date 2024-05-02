@@ -26,10 +26,10 @@ export const Navbar = () => {
                     </div>
                     <div className="ml-6 items-center">
                         <div>
+                            <Button color="inherit">Home</Button>
                             <Button color="inherit">My accounts</Button>
                             <Button color="inherit">Exchange currencies</Button>
                             <Button color="inherit">Transfer money</Button>
-                            <Button color="inherit">Exchange rates</Button>
                         </div>
                     </div>
                 </div>

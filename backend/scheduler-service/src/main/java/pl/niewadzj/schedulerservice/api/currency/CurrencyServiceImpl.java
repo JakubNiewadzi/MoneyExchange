@@ -27,7 +27,7 @@ public class CurrencyServiceImpl implements CurrencyService {
             return;
         }
 
-        currencies.add(Currency.builder()
+        currencies.addFirst(Currency.builder()
                 .name("Polski złoty")
                 .code("PLN")
                 .exchangeRate(BigDecimal.valueOf(1.0f))

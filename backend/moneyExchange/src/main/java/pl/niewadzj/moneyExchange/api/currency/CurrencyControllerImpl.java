@@ -28,6 +28,7 @@ public class CurrencyControllerImpl implements CurrencyController {
     public final List<CurrencyResponse> getCurrencies() {
         return currencyService.getCurrencies();
     }
+
     @Override
     @GetMapping(GET_ONE_MAPPING)
     public final CurrencyResponse getCurrency(@RequestParam Long id) {
@@ -36,7 +37,7 @@ public class CurrencyControllerImpl implements CurrencyController {
 
     @Override
     @GetMapping(GET_WITH_EXCHANGE_RATE)
-    public List<CurrencyResponse> getExchangeRatesByCurrency(@RequestParam Long id) {
+    public final List<CurrencyResponse> getExchangeRatesByCurrency(@RequestParam Long id) {
         return currencyService.getExchangeRatesByCurrency(id);
     }
 
