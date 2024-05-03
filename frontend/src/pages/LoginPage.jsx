@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {useNavigate} from "react-router";
+import {useLocation, useNavigate} from "react-router";
 import Button from "@mui/material/Button";
 import {InputLabel, TextField} from "@mui/material";
 import {login} from "../services/authService";
@@ -17,10 +17,12 @@ export const LoginPage = () => {
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const location = useLocation()
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
 
     useEffect(() => {
-        if (isLoggedIn) navigate("/")
+        if (isLoggedIn)
+            location?.state?.prevUrl ? navigate(location.state.prevUrl) : navigate("/")
     }, [isLoggedIn]);
 
 
@@ -42,11 +44,12 @@ export const LoginPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (validateForm()) {
-            const tokens = await login({email: email, password: password})
-            if (tokens !== undefined) dispatch(performLogin({
-                authToken: tokens?.authToken,
-                refreshToken: tokens?.refreshToken,
-                email: email
+            const authData = await login({email: email, password: password})
+            if (authData !== undefined) dispatch(performLogin({
+                authToken: authData?.authToken,
+                refreshToken: authData?.refreshToken,
+                email: email,
+                accountNumber: authData?.accountNumber
             }))
         }
     }

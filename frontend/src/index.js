@@ -11,6 +11,7 @@ import {ProtectedRoute} from "./routes/ProtectedRoute";
 import {TestPage} from "./pages/TestPage";
 import {NotFoundPage} from "./pages/NotFoundPage";
 import {RegisterPage} from "./pages/RegisterPage";
+import {MyAccountsPage} from "./pages/MyAccountsPage";
 
 
 const router = createBrowserRouter([
@@ -35,8 +36,8 @@ const router = createBrowserRouter([
         element: <ProtectedRoute/>,
         children: [
             {
-                path: "test",
-                element: <TestPage/>
+                path: "myAccounts",
+                element: <MyAccountsPage/>
             }
         ]
     }

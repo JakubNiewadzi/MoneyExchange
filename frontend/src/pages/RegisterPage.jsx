@@ -47,8 +47,13 @@ export const RegisterPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         if(validateForm()){
-            const tokens = await register(registrationRequest)
-            if (tokens !== undefined) dispatch(performLogin({authToken: tokens?.authToken, refreshToken: tokens?.refreshToken, email: registrationRequest.email}))
+            const authData = await register(registrationRequest)
+            if (authData !== undefined) dispatch(performLogin({
+                authToken: authData?.authToken,
+                refreshToken: authData?.refreshToken,
+                email: registrationRequest.email,
+                accountNumber: authData?.accountNumber
+            }))
         }
     }
 
