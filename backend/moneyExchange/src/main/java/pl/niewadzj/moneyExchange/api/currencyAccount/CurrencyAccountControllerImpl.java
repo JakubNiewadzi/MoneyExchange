@@ -19,7 +19,7 @@ import pl.niewadzj.moneyExchange.api.currencyAccount.records.CurrencyAccountResp
 import pl.niewadzj.moneyExchange.api.currencyAccount.records.TransactionRequest;
 import pl.niewadzj.moneyExchange.entities.user.User;
 
-import static pl.niewadzj.moneyExchange.api.currencyAccount.constants.CurrencyAccountMappings.ACTIVATE_SUSPENDED_ACCOUNT_MAPPING;
+import static pl.niewadzj.moneyExchange.api.currencyAccount.constants.CurrencyAccountMappings.ACTIVATE_ACCOUNT_MAPPING;
 import static pl.niewadzj.moneyExchange.api.currencyAccount.constants.CurrencyAccountMappings.CURRENCY_ACCOUNT_MAPPING;
 import static pl.niewadzj.moneyExchange.api.currencyAccount.constants.CurrencyAccountMappings.DEPOSIT_MAPPING;
 import static pl.niewadzj.moneyExchange.api.currencyAccount.constants.CurrencyAccountMappings.GET_CURRENCY_ACCOUNT;
@@ -62,9 +62,9 @@ public class CurrencyAccountControllerImpl implements CurrencyAccountController 
     }
 
     @Override
-    @PatchMapping(ACTIVATE_SUSPENDED_ACCOUNT_MAPPING)
-    public final void activateSuspendedCurrencyAccount(@RequestParam Long currencyId, @AuthenticationPrincipal User user) {
-        currencyAccountService.activateSuspendedCurrencyAccount(currencyId, user);
+    @PatchMapping(ACTIVATE_ACCOUNT_MAPPING)
+    public final void activateCurrencyAccount(@RequestParam Long currencyId, @AuthenticationPrincipal User user) {
+        currencyAccountService.activateCurrencyAccount(currencyId, user);
     }
 
 

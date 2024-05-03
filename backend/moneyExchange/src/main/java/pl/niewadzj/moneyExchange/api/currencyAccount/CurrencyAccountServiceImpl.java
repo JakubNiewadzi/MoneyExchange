@@ -21,7 +21,7 @@ import pl.niewadzj.moneyExchange.exceptions.account.NotEnoughMoneyException;
 import pl.niewadzj.moneyExchange.exceptions.currency.CurrencyNotFoundException;
 import pl.niewadzj.moneyExchange.exceptions.currencyAccount.CurrencyAccountNotActiveException;
 import pl.niewadzj.moneyExchange.exceptions.currencyAccount.CurrencyAccountNotFoundException;
-import pl.niewadzj.moneyExchange.exceptions.currencyAccount.CurrencyAccountNotSuspendedException;
+import pl.niewadzj.moneyExchange.exceptions.currencyAccount.CurrencyAccountAlreadyActive;
 import pl.niewadzj.moneyExchange.exceptions.currencyAccount.CurrencyAccountSuspendedException;
 
 import java.math.BigDecimal;
@@ -132,7 +132,7 @@ public class CurrencyAccountServiceImpl implements CurrencyAccountService {
     }
 
     @Override
-    public final void activateSuspendedCurrencyAccount(Long currencyId, User user) {
+    public final void activateCurrencyAccount(Long currencyId, User user) {
         final Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user));
 
@@ -142,8 +142,8 @@ public class CurrencyAccountServiceImpl implements CurrencyAccountService {
         CurrencyAccount currencyAccount = currencyAccountRepository.findByCurrencyAndAccount(currency, account)
                 .orElseThrow(() -> new CurrencyAccountNotFoundException(account.getId(), currencyId));
 
-        if (currencyAccount.getCurrencyAccountStatus() != CurrencyAccountStatus.SUSPENDED) {
-            throw new CurrencyAccountNotSuspendedException();
+        if (currencyAccount.getCurrencyAccountStatus() == CurrencyAccountStatus.ACTIVE) {
+            throw new CurrencyAccountAlreadyActive();
         }
 
         currencyAccount.setCurrencyAccountStatus(CurrencyAccountStatus.ACTIVE);

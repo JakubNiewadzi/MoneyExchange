@@ -7,7 +7,7 @@ public final class CurrencyAccountMappings {
     public static final String WITHDRAW_MAPPING = "/withdraw";
     public static final String GET_CURRENCY_ACCOUNT = "/getCurrencyAccount";
     public static final String SUSPEND_ACCOUNT_MAPPING = "/suspendCurrencyAccount";
-    public static final String ACTIVATE_SUSPENDED_ACCOUNT_MAPPING = "activateSuspendedCurrencyAccount";
+    public static final String ACTIVATE_ACCOUNT_MAPPING = "/activateCurrencyAccount";
 
     private CurrencyAccountMappings() {
     }

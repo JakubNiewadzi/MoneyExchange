@@ -4,14 +4,10 @@ import {accountApi} from "../../api/accountApi";
 export const fetchCurrencyAccounts = createAsyncThunk(
     'currencyAccounts/fetchCurrencyAccounts',
     async (args) => {
-        console.log(args.token)
-        console.log(args.isFilterActive)
-        if (args.isFilterActive) {
-            console.log("eaeae")
+        if (!args.isFilterActive) {
             const response = await accountApi.getCurrencyAccounts(args.token)
             return response.data
         }
-        console.log("eaeaegfdgdfdgf")
         const response = await accountApi.getActiveCurrencyAccounts(args.token)
         return response.data
     }

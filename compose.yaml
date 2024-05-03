@@ -14,8 +14,8 @@ services:
       timeout: 5s
       retries: 5
     networks:
-     - money-exchange-net
-     
+      - money-exchange-net
+
   backend:
     container_name: money-exchange-backend
     build:
@@ -32,7 +32,7 @@ services:
       postgres:
         condition: service_healthy
     networks:
-     - money-exchange-net
+      - money-exchange-net
 
   scheduler:
     container_name: money-exchange-scheduler
@@ -50,7 +50,7 @@ services:
       postgres:
         condition: service_healthy
     networks:
-     - money-exchange-net
+      - money-exchange-net
 
   frontend:
     container_name: money-exchange-frontend
@@ -60,7 +60,10 @@ services:
     ports:
       - 3000:80
     networks:
-     - money-exchange-net
+      - money-exchange-net
+    depends_on:
+      - backend
+      - scheduler
 
   proxy:
     container_name: money-exchange-proxy
@@ -73,7 +76,7 @@ services:
       - scheduler
       - frontend
     networks:
-     - money-exchange-net
+      - money-exchange-net
 
 networks:
   money-exchange-net:

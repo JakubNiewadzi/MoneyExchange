@@ -15,6 +15,6 @@ public interface CurrencyAccountService {
 
     void suspendCurrencyAccount(Long currencyId, User user);
 
-    void activateSuspendedCurrencyAccount(Long currencyId, User user);
+    void activateCurrencyAccount(Long currencyId, User user);
 
 }

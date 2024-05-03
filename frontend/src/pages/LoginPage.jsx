@@ -61,7 +61,7 @@ export const LoginPage = () => {
     }
 
     return <FormContainer handleSubmit={handleSubmit} className="bg-black">
-        <h2 className="text-center text-2xl font-semibold mb-4">Login</h2>
+        <h2 className="text-center text-2xl font-semibold mb-4">Sign in</h2>
         <InputLabel className="mb-2">Email</InputLabel>
         <TextField className="w-full"
                    name="email"
@@ -83,7 +83,7 @@ export const LoginPage = () => {
                    focused/>
         <div className='flex flex-row mb-2 justify-between'>
             <Button type="submit" variant="contained" className="bg-darkBlue mt-4 w-2/5">
-                Login
+                Sign in
             </Button>
             <Button component={NavLink} to="/" variant="contained" className="bg-lightBlue mt-4 w-2/5">
                 Back
