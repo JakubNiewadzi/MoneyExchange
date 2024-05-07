@@ -40,6 +40,7 @@ export const MyAccountsPage = () => {
         setReload(!reload)
     }
 
+
     return <div className='flex justify-center'>
         <div className='w-11/12 mt-8 mb-8 flex flex-col bg-darkBlue p-8 text-3xl
         text-white rounded-lg shadow-lg'>
@@ -73,7 +74,7 @@ export const MyAccountsPage = () => {
                             </thead>
                             <tbody>
                             {currencyAccounts.map(currencyAccount =>
-                                <CurrencyAccountRecord currencyId={currencyAccount.currencyId}
+                                <CurrencyAccountRecord key={currencyAccount.currencyId} currencyId={currencyAccount.currencyId}
                                                        code={currencyAccount.currencyCode}
                                                        balance={currencyAccount.balance}
                                                        status={currencyAccount.status}

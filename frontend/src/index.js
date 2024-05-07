@@ -8,10 +8,10 @@ import {LoginPage} from "./pages/LoginPage";
 import {Provider} from "react-redux";
 import {store} from "./state/Store";
 import {ProtectedRoute} from "./routes/ProtectedRoute";
-import {TestPage} from "./pages/TestPage";
 import {NotFoundPage} from "./pages/NotFoundPage";
 import {RegisterPage} from "./pages/RegisterPage";
 import {MyAccountsPage} from "./pages/MyAccountsPage";
+import {TransactionForm} from "./forms/TransactionForm";
 
 
 const router = createBrowserRouter([
@@ -37,7 +37,22 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "myAccounts",
-                element: <MyAccountsPage/>
+                children: [
+                    {
+                        element: <MyAccountsPage/>,
+                        index: true
+                    },
+                    {
+                        path: "deposit/:id",
+                        element: <TransactionForm action="Deposit"/>,
+                        index: false
+                    },
+                    {
+                        path: "withdraw/:id",
+                        element: <TransactionForm action="Withdraw"/>,
+                        index: false
+                    },
+                ]
             }
         ]
     }

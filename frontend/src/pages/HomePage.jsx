@@ -31,19 +31,21 @@ export const HomePage = () => {
             <div className='w-full mt-8 mb-4 flex justify-center bg-darkBlue p-8'>
                 Currency exchange rates
             </div>
+            {status === 'loading' ?
+                <div className='w-full mt-14 flex justify-center p-8'>
+                    <CircularProgress size={120}/>
+                </div> : ''}
             <ul>
-                {status === 'succeeded' ? <div className='w-full flex p-4 flex-wrap justify-around max-w-full'>
-                        {currencies.map((currency) =>
-                            <CurrencyCard name={currency.name}
-                                          code={currency.code}
-                                          exchangeRate={currency.exchangeRate.toFixed(6)}
-                                          id={currency.id}
-                                          onClick={handleClick}/>
-                        )}
-                    </div> :
-                    <div className='w-full mt-14 flex justify-center p-8'>
-                        <CircularProgress size={120}/>
-                    </div>}
+                <div className='w-full flex p-4 flex-wrap justify-around max-w-full'>
+                    {currencies.map((currency) =>
+                        <CurrencyCard key={currency.id}
+                                      name={currency.name}
+                                      code={currency.code}
+                                      exchangeRate={currency.exchangeRate.toFixed(6)}
+                                      id={currency.id}
+                                      onClick={handleClick}/>
+                    )}
+                </div>
             </ul>
         </div>
     </div>
