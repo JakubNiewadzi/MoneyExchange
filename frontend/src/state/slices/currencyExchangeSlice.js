@@ -12,7 +12,7 @@ export const fetchCurrencyExchangeHistory = createAsyncThunk(
 const initialState = {
     currencyExchangeHistory: [],
     status: 'idle',
-    error: null
+    error: null,
 }
 
 const currencyExchangeSlice = createSlice({

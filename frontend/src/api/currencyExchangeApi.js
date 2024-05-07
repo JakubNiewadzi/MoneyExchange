@@ -27,5 +27,17 @@ export const currencyExchangeApi = {
                 Authorization: bearerAuth(token)
             }
         })
+    },
+    getExchanges(token, pageNumber, pageSize) {
+        console.log("Getting exchanges history for a user")
+        return currencyExchangeClient.get("/getExchanges", {
+            params: {
+                pagNo: pageNumber,
+                pageSize: pageSize
+            },
+            headers: {
+                Authorization: bearerAuth(token)
+            }
+        })
     }
 }
