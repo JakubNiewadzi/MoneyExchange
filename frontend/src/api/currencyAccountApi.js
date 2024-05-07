@@ -15,5 +15,16 @@ export const currencyAccountApi = {
             }
         })
     },
+    suspendCurrencyAccount(token, id) {
+        console.log("Suspending currency account with id: " + id)
+        return accountAccountClient.patch("/suspendCurrencyAccount", null, {
+            params: {
+                currencyId: id
+            },
+            headers: {
+                Authorization: bearerAuth(token)
+            }
+        })
+    },
 
 }
