@@ -74,9 +74,7 @@ public class AccountServiceImpl implements AccountService {
                 .map(currencyAccountMapper)
                 .sorted(Comparator.comparing(CurrencyAccountResponse::status))
                 .sorted(Comparator.comparing(CurrencyAccountResponse::balance)
-                        .reversed()
-                        .thenComparing(CurrencyAccountResponse::status)
-                        .reversed())
+                        .thenComparing(CurrencyAccountResponse::status))
                 .toList();
     }
 
