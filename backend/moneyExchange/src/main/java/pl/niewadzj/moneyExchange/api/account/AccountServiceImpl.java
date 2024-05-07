@@ -21,6 +21,7 @@ import pl.niewadzj.moneyExchange.entities.user.User;
 import pl.niewadzj.moneyExchange.exceptions.account.AccountNotFoundException;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -71,6 +72,11 @@ public class AccountServiceImpl implements AccountService {
         return account.getAccountBalance()
                 .stream()
                 .map(currencyAccountMapper)
+                .sorted(Comparator.comparing(CurrencyAccountResponse::status))
+                .sorted(Comparator.comparing(CurrencyAccountResponse::balance)
+                        .reversed()
+                        .thenComparing(CurrencyAccountResponse::status)
+                        .reversed())
                 .toList();
     }
 
