@@ -12,6 +12,7 @@ import {NotFoundPage} from "./pages/NotFoundPage";
 import {RegisterPage} from "./pages/RegisterPage";
 import {MyAccountsPage} from "./pages/MyAccountsPage";
 import {TransactionForm} from "./forms/TransactionForm";
+import {ExchangeCurrenciesPage} from "./pages/ExchangeCurrenciesPage";
 
 
 const router = createBrowserRouter([
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
                         index: false
                     },
                 ]
+            },
+            {
+                path: "exchangeCurrencies",
+                element: <ExchangeCurrenciesPage/>
             }
         ]
     }

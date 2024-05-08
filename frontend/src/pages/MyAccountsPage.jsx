@@ -4,20 +4,22 @@ import {fetchCurrencyAccounts} from "../state/slices/currencyAccountsSlice";
 import {Checkbox, CircularProgress} from "@mui/material";
 import {CurrencyAccountRecord} from "../components/CurrencyAccountRecord";
 import {currencyAccountApi} from "../api/currencyAccountApi";
+import Cookies from "js-cookie";
 
 export const MyAccountsPage = () => {
 
     const currencyAccounts = useSelector(state => state.currencyAccount.currencyAccounts)
-    const authToken = useSelector(state => state.auth.authToken)
     const accountNumber = useSelector(state => state.auth.accountNumber)
     const status = useSelector(state => state.currencyAccount.status)
 
     const [activeFilter, setActiveFilter] = useState(false)
     const [reload, setReload] = useState(false)
 
+    const authToken = Cookies.get('authToken')
     const dispatch = useDispatch()
 
     useEffect(() => {
+        console.log(authToken)
         dispatch(fetchCurrencyAccounts(
             {
                 token: authToken,

@@ -47,7 +47,6 @@ export const LoginPage = () => {
             const authData = await login({email: email, password: password})
             if (authData !== undefined) dispatch(performLogin({
                 authToken: authData?.authToken,
-                refreshToken: authData?.refreshToken,
                 email: email,
                 accountNumber: authData?.accountNumber
             }))

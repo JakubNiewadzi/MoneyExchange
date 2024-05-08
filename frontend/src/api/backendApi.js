@@ -1,4 +1,7 @@
 import axios from "axios";
+import Cookies from "js-cookie";
+
+const REFRESH_ENDPOINT = "/api/v1/auth/refresh"
 
 export const backendApi = (url) => {
     const client = axios.create({
@@ -9,13 +12,27 @@ export const backendApi = (url) => {
         }
     })
 
-    client.interceptors.response.use((response) =>{
+    client.interceptors.response.use((response) => {
         return response;
-    }, function (error) {
+    }, async (error) => {
         console.log('An error occurred while calling backend', error)
-        if (error.response){
-            if (error.response.status === 404){
-                return {status: error.response.status}
+        if (error.response) {
+            if (error.response.status === 404) {
+                return {
+                    status: error.response.status
+                }
+            } else if (error.response.status === 401) {
+                const refreshToken = Cookies.get("refreshToken")
+                await axios.get(process.env.REACT_APP_API_BACKEND_URL + REFRESH_ENDPOINT,
+                    {
+                        params: {
+                            refreshToken: refreshToken
+                        }
+                    }).then(res => Cookies.set("refreshToken", res))
+                    .catch(refreshError => {
+                        console.error('Error refreshing token:', refreshError);
+                        return Promise.reject(error);
+                    })
             }
         }
     })

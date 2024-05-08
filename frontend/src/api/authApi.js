@@ -1,6 +1,8 @@
 import {backendApi} from "./backendApi";
 
-const authClient = backendApi("/api/v1/auth")
+const AUTH_ENDPOINT = "/api/v1/auth"
+
+const authClient = backendApi(AUTH_ENDPOINT)
 
 export const authApi = {
     login(loginRequest) {

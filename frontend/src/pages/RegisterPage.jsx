@@ -50,7 +50,6 @@ export const RegisterPage = () => {
             const authData = await register(registrationRequest)
             if (authData !== undefined) dispatch(performLogin({
                 authToken: authData?.authToken,
-                refreshToken: authData?.refreshToken,
                 email: registrationRequest.email,
                 accountNumber: authData?.accountNumber
             }))

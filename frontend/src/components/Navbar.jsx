@@ -7,6 +7,7 @@ import {NavLink} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {logout} from "../state/slices/authSlice";
 import {useNavigate} from "react-router";
+import Cookies from "js-cookie";
 
 export const Navbar = () => {
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
@@ -14,6 +15,8 @@ export const Navbar = () => {
     const navigate = useNavigate()
 
     const handleLogout = () => {
+        Cookies.remove("refreshToken")
+        Cookies.remove("authToken")
         dispatch(logout())
         navigate("/")
     }
