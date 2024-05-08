@@ -28,7 +28,7 @@ export const HomePage = () => {
 
     return <div><Navbar/>
         <div className='text-3xl text-white'>
-            <div className='w-full mt-8 mb-4 flex justify-center bg-darkBlue p-8'>
+            <div className='w-full mt-8 mb-4 flex justify-center bg-darkGray p-8'>
                 Currency exchange rates
             </div>
             {status === 'loading' ?

@@ -59,32 +59,30 @@ export const LoginPage = () => {
         name === "email" ? setEmail(data) : setPassword(data)
     }
 
-    return <FormContainer handleSubmit={handleSubmit} className="bg-black">
+    return <FormContainer handleSubmit={handleSubmit}>
         <h2 className="text-center text-2xl font-semibold mb-4">Sign in</h2>
-        <InputLabel className="mb-2">Email</InputLabel>
-        <TextField className="w-full"
-                   name="email"
-                   placeholder="Give us your email"
-                   value={email}
-                   onChange={handleChange}
-                   error={!!emailError}
-                   helperText={emailError}
-                   focused/>
-        <InputLabel className="mb-2 mt-4">Password</InputLabel>
-        <TextField className="w-full"
-                   name="password"
-                   type="password"
-                   placeholder="Give us your password :<"
-                   value={password}
-                   onChange={handleChange}
-                   error={!!passwordError}
-                   helperText={passwordError}
-                   focused/>
-        <div className='flex flex-row mb-2 justify-between'>
-            <Button type="submit" variant="contained" className="bg-darkBlue mt-4 w-2/5">
+        <div className="mb-2 font-semibold">Email</div>
+        <input type="text"
+               className="border w-full bg-lightGray border-lightGray rounded-md py-2 px-4 focus:outline-none focus:border-customBlue"
+               name="email"
+               placeholder="Give us your email"
+               value={email}
+               onChange={handleChange}
+        />
+
+        <div className="mb-2 mt-4 font-semibold">Password</div>
+        <input className="border w-full bg-lightGray border-lightGray rounded-md py-2 px-4 focus:outline-none focus:border-customBlue"
+               name="password"
+               type="password"
+               placeholder="Give us your password :<"
+               value={password}
+               onChange={handleChange}
+        />
+        <div className='flex flex-row my-2 justify-between'>
+            <Button type="submit" variant="contained" className="bg-darkGray mt-4 w-2/5">
                 Sign in
             </Button>
-            <Button component={NavLink} to="/" variant="contained" className="bg-lightBlue mt-4 w-2/5">
+            <Button component={NavLink} to="/" variant="contained" className="bg-lightGray mt-4 w-2/5">
                 Back
             </Button>
         </div>

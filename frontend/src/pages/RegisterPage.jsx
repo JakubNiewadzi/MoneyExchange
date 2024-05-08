@@ -60,62 +60,47 @@ export const RegisterPage = () => {
         <h2 className="text-center text-2xl font-semibold mb-4">Register</h2>
         <div className='flex flex-row mb-2 justify-between'>
             <div className='flex flex-col'>
-                <InputLabel className="mb-2">First Name</InputLabel>
-                <TextField className="w-full"
+                <div className="mb-2 font-semibold">First Name</div>
+                <input className="border w-full bg-lightGray border-lightGray rounded-md py-2 px-4 focus:outline-none focus:border-darkGray"
                            name="firstName"
                            placeholder="Give us your name"
                            value={registrationRequest.firstName}
-                           onChange={handleChange}
-                           error={!!errors.firstName}
-                           helperText={errors.firstName}
-                           focused/>
+                           onChange={handleChange}/>
             </div>
             <div className='flex flex-col'>
-            <InputLabel className="mb-2">Last Name</InputLabel>
-            <TextField className="w-full"
-                       name="lastName"
+                <div className="mb-2 font-semibold">Last Name</div>
+                <input className="border w-full bg-lightGray border-lightGray rounded-md py-2 px-4 focus:outline-none focus:border-darkGray"
+                           name="lastName"
                        placeholder="Give us your last name"
                        value={registrationRequest.lastName}
-                       onChange={handleChange}
-                       error={!!errors.lastName}
-                       helperText={errors.lastName}
-                       focused/>
+                       onChange={handleChange}/>
             </div>
         </div>
-        <InputLabel className="mb-2 mt-4">Email</InputLabel>
-        <TextField className="w-full"
+        <div className="mb-2 mt-4 font-semibold">Email</div>
+        <input className="border w-full bg-lightGray border-lightGray rounded-md py-2 px-4 focus:outline-none focus:border-customBlue"
                    name="email"
                    placeholder="Give us your email"
                    value={registrationRequest.email}
-                   onChange={handleChange}
-                   error={!!errors.email}
-                   helperText={errors.email}
-                   focused/>
-        <InputLabel className="mb-2 mt-4">Password</InputLabel>
-        <TextField className="w-full"
+                   onChange={handleChange}/>
+        <div className="mb-2 mt-4 font-semibold">Password</div>
+        <input className="border w-full bg-lightGray border-lightGray rounded-md py-2 px-4 focus:outline-none focus:border-customBlue"
                    name="password"
                    type="password"
                    placeholder="Give us your password :<"
                    value={registrationRequest.password}
-                   onChange={handleChange}
-                   error={!!errors.password}
-                   helperText={errors.password}
-                   focused/>
-        <InputLabel className="mb-2 mt-4">Repeat Password</InputLabel>
-        <TextField className="w-full"
+                   onChange={handleChange}/>
+        <div className="mb-2 mt-4 font-semibold">Repeat password</div>
+        <input className="border w-full bg-lightGray border-lightGray rounded-md py-2 px-4 focus:outline-none focus:border-customBlue"
                    name="repeatPassword"
                    type="password"
                    placeholder="Give us your password :<"
                    value={repeatPassword}
-                   onChange={handleChange}
-                   error={!!errors.repeatPassword}
-                   helperText={errors.repeatPassword}
-                   focused/>
-        <div className='flex flex-row mb-2 justify-between'>
-            <Button type="submit" variant="contained" className="bg-darkBlue mt-4 w-2/5">
+                   onChange={handleChange}/>
+        <div className='flex flex-row mt-4 mb-2s justify-between'>
+            <Button type="submit" variant="contained" className="bg-darkGray mt-4 w-2/5">
                 Register
             </Button>
-            <Button component={NavLink} to="/" variant="contained" className="bg-lightBlue mt-4 w-2/5">
+            <Button component={NavLink} to="/" variant="contained" className="bg-lightGray mt-4 w-2/5">
                 Back
             </Button>
         </div>

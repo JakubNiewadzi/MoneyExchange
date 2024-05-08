@@ -22,7 +22,7 @@ export const Navbar = () => {
     }
 
     return <Box>
-        <AppBar className="bg-customBlue" position="static">
+        <AppBar className="bg-darkGray" position="static">
             <Toolbar className="flex justify-between">
                 <div className='flex h-full'>
                     <div className="items-center">
@@ -34,7 +34,7 @@ export const Navbar = () => {
                         <div>
                             <Button component={NavLink} to="/" color="inherit">Home</Button>
                             <Button component={NavLink} to="/myAccounts" color="inherit">My accounts</Button>
-                            <Button color="inherit">Exchange currencies</Button>
+                            <Button component={NavLink} to="/exchangeCurrencies" color="inherit">Exchange currencies</Button>
                             <Button color="inherit">Transfer money</Button>
                         </div>
                     </div>

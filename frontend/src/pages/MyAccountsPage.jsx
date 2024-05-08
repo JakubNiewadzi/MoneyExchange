@@ -44,7 +44,7 @@ export const MyAccountsPage = () => {
 
 
     return <div className='flex justify-center'>
-        <div className='w-11/12 mt-8 mb-8 flex flex-col bg-darkBlue p-8 text-3xl
+        <div className='w-11/12 mt-8 mb-8 flex flex-col bg-darkGray p-8 text-3xl
         text-white rounded-lg shadow-lg'>
             <div className='flex flex-row justify-between'>
                 <div>Currencies for account with number</div>
@@ -58,7 +58,7 @@ export const MyAccountsPage = () => {
             <div className='mt-8 relative overflow-x-auto'>
                 {status === 'succeeded' ? currencyAccounts.length !== 0 ?
                         <table className='table-auto min-w-full text-left rtl:text-right'>
-                            <thead className='uppercase bg-customBlue'>
+                            <thead className='uppercase bg-darkGray'>
                             <tr>
                                 <th scope="col" className="px-6 py-3">
                                     Code
