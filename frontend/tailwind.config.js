@@ -5,6 +5,9 @@ module.exports = {
   ],
   important: "#root",
   theme: {
+    fontFamily: {
+      sans: ['Arial'],
+    },
     extend: {
       colors: {
         background: '#18191a',

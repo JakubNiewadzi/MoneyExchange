@@ -1,10 +1,9 @@
-export const CurrencyCard = ({name, code, exchangeRate, id, onClick}) => {
-    ///TODO: complete rework cause its ugly
-    return <li key={id} className="flex flex-col justify-center align-middle bg-darkBlue p-4 items-center m-4
-    w-80 h-64 hover:bg-lightBlue rounded-lg cursor-pointer shadow-lg ring-2 ring-opacity-40"
+export const CurrencyCard = ({code, exchangeRate, id, onClick}) => {
+    return <li key={id} className="flex flex-col justify-center align-middle bg-darkGray items-center
+    w-40 h-24 hover:bg-lightGray cursor-pointer ring-1.5 ring-background"
                onClick={() => onClick(id)}>
-        <span className="mb-4">
-           Code: {code}
+        <span className="mb-2">
+           {code}
         </span>
         <span>
             Rates: {exchangeRate}

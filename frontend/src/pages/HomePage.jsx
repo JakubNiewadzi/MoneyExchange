@@ -7,46 +7,29 @@ import {CircularProgress} from "@mui/material";
 
 export const HomePage = () => {
 
-    const calculatingCurrency = useSelector(state => state.currency.calculatingCurrency)
-    const currencies = useSelector(state => state.currency.currencies)
-    const status = useSelector(state => state.currency.status)
-    const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
     const accountNumber = useSelector(state => state.auth.accountNumber)
 
-    const [exchangeRateCalculator, setExchangeRateCalculator] = useState(calculatingCurrency)
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        dispatch(fetchCurrencies(exchangeRateCalculator))
-    }, [exchangeRateCalculator]);
-
-    const handleClick = (currencyId) => {
-        if (currencyId !== exchangeRateCalculator) {
-            setExchangeRateCalculator(currencyId)
-        }
-    }
-
-    return <div><Navbar/>
-        <div className='text-3xl text-white'>
-            <div className='w-full mt-8 mb-4 flex justify-center bg-darkGray p-8'>
-                Currency exchange rates
+    return <div className='bg-background'><Navbar/>
+        <div className='w-full h-[25vh]'></div>
+        <div className='w-full h-[50vh] flex bg-darkGray p-8'>
+            <div className='text-4xl font-bold w-2/5 text-right'>Welcome to the<b className='text-blue-300'> MODERN </b>money
+                exchanging experience.
             </div>
-            {status === 'loading' ?
-                <div className='w-full mt-14 flex justify-center p-8'>
-                    <CircularProgress size={120}/>
-                </div> : ''}
-            <ul>
-                <div className='w-full flex p-4 flex-wrap justify-around max-w-full'>
-                    {currencies.map((currency) =>
-                        <CurrencyCard key={currency.id}
-                                      name={currency.name}
-                                      code={currency.code}
-                                      exchangeRate={currency.exchangeRate.toFixed(6)}
-                                      id={currency.id}
-                                      onClick={handleClick}/>
-                    )}
-                </div>
-            </ul>
+            <div className='text-4xl font-bold w-2/5'></div>
+        </div>
+        <div className='w-full h-[50vh] flex p-8'>
+            <div className='text-4xl font-bold w-3/5'></div>
+            <div className='text-4xl font-bold w-1/4'> Manage <b className='text-blue-300'>ANY</b> currency you can
+                imagine.
+            </div>
+        </div>
+        <div className='w-full h-[50vh] flex bg-darkGray p-8'>
+            <div className='text-4xl font-bold w-2/5 text-right'>Mismanaged your account? You can revert any exchange made by mistake up to <b className='text-blue-300'>ONE
+                HOUR</b> after making it
+            </div>
+            <div className='text-4xl font-bold w-2/5'></div>
         </div>
     </div>
 }
