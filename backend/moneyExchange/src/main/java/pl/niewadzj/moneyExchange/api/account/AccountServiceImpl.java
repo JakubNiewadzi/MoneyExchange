@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import pl.niewadzj.moneyExchange.api.account.interfaces.AccountService;
 import pl.niewadzj.moneyExchange.api.account.mapper.AccountMapper;
 import pl.niewadzj.moneyExchange.api.account.records.AccountResponse;
+import pl.niewadzj.moneyExchange.api.account.records.AccountUserInfoResponse;
 import pl.niewadzj.moneyExchange.api.currencyAccount.mapper.CurrencyAccountMapper;
 import pl.niewadzj.moneyExchange.api.currencyAccount.records.CurrencyAccountResponse;
 import pl.niewadzj.moneyExchange.entities.account.Account;
@@ -72,9 +73,9 @@ public class AccountServiceImpl implements AccountService {
         return account.getAccountBalance()
                 .stream()
                 .map(currencyAccountMapper)
-                .sorted(Comparator.comparing(CurrencyAccountResponse::status))
                 .sorted(Comparator.comparing(CurrencyAccountResponse::balance)
-                        .thenComparing(CurrencyAccountResponse::status))
+                        .thenComparing(CurrencyAccountResponse::status)
+                        .reversed())
                 .toList();
     }
 
@@ -100,11 +101,17 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public final AccountResponse getAccountForUser(User user) {
+    public final AccountUserInfoResponse getAccountForUser(User user) {
         final Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user));
 
-        return accountMapper.apply(account);
+        return AccountUserInfoResponse.builder()
+                .id(account.getId())
+                .accountNumber(account.getAccountNumber())
+                .email(user.getEmail())
+                .firstName(user.getFirstName())
+                .lastName(user.getFirstName())
+                .build();
     }
 
     @Override

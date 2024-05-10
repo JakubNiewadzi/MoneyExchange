@@ -1,6 +1,7 @@
 package pl.niewadzj.moneyExchange.api.account.interfaces;
 
 import pl.niewadzj.moneyExchange.api.account.records.AccountResponse;
+import pl.niewadzj.moneyExchange.api.account.records.AccountUserInfoResponse;
 import pl.niewadzj.moneyExchange.api.currencyAccount.records.CurrencyAccountResponse;
 import pl.niewadzj.moneyExchange.entities.user.User;
 
@@ -16,7 +17,7 @@ public interface AccountService {
 
     AccountResponse getAccountByAccountNumber(String accountNumber);
 
-    AccountResponse getAccountForUser(User user);
+    AccountUserInfoResponse getAccountForUser(User user);
 
     List<AccountResponse> getAccounts(int pageNo, int pageSize);
 }

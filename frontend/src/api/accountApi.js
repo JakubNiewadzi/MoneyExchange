@@ -4,7 +4,7 @@ import {bearerAuth} from "./bearerAuth";
 const accountClient = backendApi("/api/v1/account")
 
 export const accountApi = {
-    getLoggedIn(token) {
+    getAccount(token) {
         console.log("Getting singed in user account")
         return accountClient.get('/getAccount', {
             headers: {

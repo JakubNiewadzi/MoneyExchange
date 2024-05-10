@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import {useNavigate, useParams} from "react-router";
 import {useSelector} from "react-redux";
 import {currencyAccountApi} from "../api/currencyAccountApi";
+import Cookies from "js-cookie";
 
 export const TransactionForm = ({action}) => {
 
@@ -12,7 +13,7 @@ export const TransactionForm = ({action}) => {
     const [amountError, setAmountError] = useState('')
 
     const params = useParams()
-    const authToken = useSelector(state => state.auth.authToken)
+    const authToken = Cookies.get('authToken')
     const navigate = useNavigate()
 
 
@@ -31,22 +32,17 @@ export const TransactionForm = ({action}) => {
 
     return <FormContainer handleSubmit={onSubmit}>
         <h2 className="text-center text-2xl font-semibold mb-4">{action}</h2>
-        <InputLabel className="mb-2">Amount of money</InputLabel>
-        <TextField type='number'
-                   className="w-full"
-                   name="amount"
-                   placeholder="123.33"
-                   value={amount}
-                   onChange={handleChange}
-                   error={!!amountError}
-                   helperText={amountError}
-                   focused
-                   inputProps={{
-                       maxLength: 13,
-                       step: "0.01",
-                       min: "0"
-                   }}/>
-        <Button type="submit" variant="contained" className="bg-darkBlue mt-4 w-full">
+        <div className="mb-2 font-semibold">Amount of money</div>
+        <input type="number"
+               className="border w-full bg-lightGray border-lightGray rounded-md py-2 px-4 focus:outline-none focus:border-background"
+               name="amount"
+               placeholder="123.33"
+               value={amount}
+               onChange={handleChange}
+               step='0.01'
+               min='0'
+        />
+        <Button type="submit"  variant="contained" className="bg-darkGray mt-4 w-full">
             Submit
         </Button>
     </FormContainer>

@@ -15,15 +15,19 @@ export const CurrencyAccountRecord = ({currencyId, code, balance, status, onActi
         <th className="px-6 py-4">
             {status}
         </th>
-        <th className="px-6 py-4">
+        <th className="flex justify-center px-6 py-4">
             {status === 'ACTIVE' ? (
-                <div className='flex justify-between'>
-                    <Button onClick={() => navigate(`deposit/${currencyId}`)} variant="contained" className="bg-darkGray w-1/4">Deposit</Button>
-                    <Button onClick={() => navigate(`withdraw/${currencyId}`)} variant="contained" className="bg-darkGray w-1/4">Withdraw</Button>
-                    <Button onClick={() => onSuspend(currencyId)} variant="contained" className="bg-lightGray w-1/4">Suspend</Button>
+                <div className='flex w-3/4 justify-between'>
+                    <Button onClick={() => navigate(`deposit/${currencyId}`)} variant="contained"
+                            className="bg-darkGray w-1/4">Deposit</Button>
+                    <Button onClick={() => navigate(`withdraw/${currencyId}`)} variant="contained"
+                            className="bg-darkGray w-1/4">Withdraw</Button>
+                    <Button onClick={() => onSuspend(currencyId)} variant="contained"
+                            className="bg-lightGray w-1/4">Suspend</Button>
 
                 </div>
-            ) :<div className='flex justify-center'> <Button onClick={() => onActivate(currencyId)} variant="contained" className="bg-darkGray w-full">Activate</Button> </div>
+            ) : <div className='flex w-3/4 justify-center'><Button onClick={() => onActivate(currencyId)} variant="contained"
+                                                             className="bg-darkGray w-full">Activate</Button></div>
             }
 
         </th>

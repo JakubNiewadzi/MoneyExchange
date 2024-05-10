@@ -1,11 +1,27 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {accountApi} from "../../api/accountApi";
 
 const SLICE_NAME = 'auth'
 
+export const fetchAccountInfo = createAsyncThunk(
+    'auth/fetchAccountInfo',
+    async (token) =>  {
+        console.log("wchodzi")
+        const response = await accountApi
+            .getAccount(token)
+
+        return response.data
+    }
+)
+
 const initialState = {
-    email: null,
+    status: 'idle',
+    error: null,
     isLoggedIn: false,
-    accountNumber: null
+    email: null,
+    accountNumber: null,
+    firstName: null,
+    lastName: null
 }
 
 
@@ -13,19 +29,32 @@ const authSlice = createSlice({
     name: SLICE_NAME,
     initialState,
     reducers: {
-        performLogin: (state, action) => {
-            state.email = action.payload.email
-            state.isLoggedIn = true
-            state.accountNumber = action.payload.accountNumber
-
-        },
         logout: (state) => {
             state.email = initialState.email
             state.isLoggedIn = initialState.isLoggedIn
             state.accountNumber = initialState.accountNumber
+            state.firstName = initialState.firstName
+            state.lastName = initialState.lastName
         }
+    },
+    extraReducers: builder => {
+        builder.addCase(fetchAccountInfo.pending, state => {
+            state.status = 'loading'
+        })
+        builder.addCase(fetchAccountInfo.fulfilled, (state, action) => {
+            state.status = 'succeeded'
+            state.isLoggedIn = true
+            state.email = action.payload.email
+            state.accountNumber = action.payload.accountNumber
+            state.firstName = action.payload.firstName
+            state.lastName = action.payload.lastName
+        })
+        builder.addCase(fetchAccountInfo.rejected, (state, action) => {
+            state.status = 'failed'
+            state.error = action.error.message;
+        })
     }
 })
 
-export const {performLogin, logout} = authSlice.actions
+export const {logout} = authSlice.actions
 export const authReducer = authSlice.reducer

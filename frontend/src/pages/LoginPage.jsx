@@ -2,11 +2,11 @@ import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useLocation, useNavigate} from "react-router";
 import Button from "@mui/material/Button";
-import {InputLabel, TextField} from "@mui/material";
 import {login} from "../services/authService";
-import {performLogin} from "../state/slices/authSlice";
+import {fetchAccountInfo, performLogin} from "../state/slices/authSlice";
 import {FormContainer} from "../components/FormContainer";
 import {NavLink} from "react-router-dom";
+import Cookies from "js-cookie";
 
 export const LoginPage = () => {
     const [email, setEmail] = useState('')
@@ -25,7 +25,7 @@ export const LoginPage = () => {
             location?.state?.prevUrl ? navigate(location.state.prevUrl) : navigate("/")
     }, [isLoggedIn]);
 
-
+    console.log(isLoggedIn)
     const validateForm = () => {
         let valid = true
         setEmailError('')
@@ -44,12 +44,11 @@ export const LoginPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (validateForm()) {
-            const authData = await login({email: email, password: password})
-            if (authData !== undefined) dispatch(performLogin({
-                authToken: authData?.authToken,
-                email: email,
-                accountNumber: authData?.accountNumber
-            }))
+            await login({email: email, password: password})
+            const authToken = Cookies.get("authToken")
+            if (authToken !== undefined) {
+                console.log("eo")
+                dispatch(fetchAccountInfo(authToken))}
         }
     }
 
@@ -71,18 +70,19 @@ export const LoginPage = () => {
         />
 
         <div className="mb-2 mt-4 font-semibold">Password</div>
-        <input className="border w-full bg-lightGray border-lightGray rounded-md py-2 px-4 focus:outline-none focus:border-customBlue"
-               name="password"
-               type="password"
-               placeholder="Give us your password :<"
-               value={password}
-               onChange={handleChange}
+        <input
+            className="border w-full bg-lightGray border-lightGray rounded-md py-2 px-4 focus:outline-none focus:border-customBlue"
+            name="password"
+            type="password"
+            placeholder="Give us your password :<"
+            value={password}
+            onChange={handleChange}
         />
-        <div className='flex flex-row my-2 justify-between'>
-            <Button type="submit" variant="contained" className="bg-darkGray mt-4 w-2/5">
+        <div className='flex md:flex-row flex-col my-2 w-full justify-between'>
+            <Button type="submit" variant="contained" className="bg-darkGray mt-4 md:w-2/5">
                 Sign in
             </Button>
-            <Button component={NavLink} to="/" variant="contained" className="bg-lightGray mt-4 w-2/5">
+            <Button component={NavLink} to="/" variant="contained" className="bg-lightGray mt-4 md:w-2/5">
                 Back
             </Button>
         </div>

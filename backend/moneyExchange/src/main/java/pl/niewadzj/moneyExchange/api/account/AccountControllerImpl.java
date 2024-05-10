@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.niewadzj.moneyExchange.api.account.interfaces.AccountController;
 import pl.niewadzj.moneyExchange.api.account.interfaces.AccountService;
 import pl.niewadzj.moneyExchange.api.account.records.AccountResponse;
+import pl.niewadzj.moneyExchange.api.account.records.AccountUserInfoResponse;
 import pl.niewadzj.moneyExchange.api.currencyAccount.records.CurrencyAccountResponse;
 import pl.niewadzj.moneyExchange.entities.user.User;
 
@@ -52,7 +53,7 @@ public class AccountControllerImpl implements AccountController {
 
     @Override
     @GetMapping(GET_ACCOUNT)
-    public final AccountResponse getAccountForUser(@AuthenticationPrincipal User user) {
+    public final AccountUserInfoResponse getAccountForUser(@AuthenticationPrincipal User user) {
         return accountService.getAccountForUser(user);
     }
 

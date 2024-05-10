@@ -7,7 +7,7 @@ export const currencyApi = {
         console.log("Getting all currencies")
         return currencyClient.get('/getAll')
     },
-    getWithExchangeRate(id){
+    getWithExchangeRate(id) {
         console.log("Getting with exchange rate")
         return currencyClient.get('/getWithExchangeRate', {
             params: {

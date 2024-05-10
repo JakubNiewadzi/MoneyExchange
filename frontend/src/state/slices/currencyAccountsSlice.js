@@ -29,7 +29,10 @@ const currencyAccountSlice = createSlice({
     reducers: {
         releaseCurrencyAccounts: (state) => {
             state.currencyAccounts = initialState.currencyAccounts
-            state.activeFilter = initialState.activeFilter
+            state.isFilterActive = initialState.isFilterActive
+        },
+        changeFilter: (state) => {
+            state.isFilterActive = !state.isFilterActive
         }
     },
     extraReducers: builder => {
@@ -50,5 +53,5 @@ const currencyAccountSlice = createSlice({
     }
 })
 
-export const {releaseCurrencyAccounts} = currencyAccountSlice.actions
+export const {releaseCurrencyAccounts, changeFilter} = currencyAccountSlice.actions
 export const currencyAccountsReducer = currencyAccountSlice.reducer

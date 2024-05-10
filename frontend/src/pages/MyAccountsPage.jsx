@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {fetchCurrencyAccounts} from "../state/slices/currencyAccountsSlice";
+import {changeFilter, fetchCurrencyAccounts} from "../state/slices/currencyAccountsSlice";
 import {Checkbox, CircularProgress} from "@mui/material";
 import {CurrencyAccountRecord} from "../components/CurrencyAccountRecord";
 import {currencyAccountApi} from "../api/currencyAccountApi";
@@ -11,11 +11,16 @@ export const MyAccountsPage = () => {
     const currencyAccounts = useSelector(state => state.currencyAccount.currencyAccounts)
     const accountNumber = useSelector(state => state.auth.accountNumber)
     const status = useSelector(state => state.currencyAccount.status)
+    const isFilterActive = useSelector(state => state.currencyAccount.isFilterActive)
 
-    const [activeFilter, setActiveFilter] = useState(false)
+    const [activeFilter, setActiveFilter] = useState(isFilterActive)
     const [reload, setReload] = useState(false)
 
+    console.log(isFilterActive)
+    console.log(activeFilter)
+
     const authToken = Cookies.get('authToken')
+
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -30,6 +35,7 @@ export const MyAccountsPage = () => {
 
     const onChangeFilter = () => {
         setActiveFilter(!activeFilter)
+        dispatch(changeFilter())
     }
 
     const onActivate = async (currencyId) => {
@@ -44,13 +50,13 @@ export const MyAccountsPage = () => {
 
 
     return <div className='flex justify-center'>
-        <div className='w-11/12 mt-8 mb-8 flex flex-col bg-darkGray p-8 text-3xl
-        text-white rounded-lg shadow-lg'>
+        <div className='w-11/12 mt-56 mb-8 flex flex-col bg-darkGray p-8 text-3xl
+        rounded-lg shadow-lg'>
             <div className='flex flex-row justify-between'>
                 <div>Currencies for account with number</div>
                 <div>
                     Only active accounts
-                    <Checkbox className='text-white' onClick={onChangeFilter}/>
+                    <Checkbox checked={activeFilter} className='text-white' onClick={onChangeFilter}/>
                 </div>
             </div>
             <div className='text-3xl mt-4 mb-8 font-bold'>{accountNumber} </div>
@@ -76,7 +82,8 @@ export const MyAccountsPage = () => {
                             </thead>
                             <tbody>
                             {currencyAccounts.map(currencyAccount =>
-                                <CurrencyAccountRecord key={currencyAccount.currencyId} currencyId={currencyAccount.currencyId}
+                                <CurrencyAccountRecord key={currencyAccount.currencyId}
+                                                       currencyId={currencyAccount.currencyId}
                                                        code={currencyAccount.currencyCode}
                                                        balance={currencyAccount.balance}
                                                        status={currencyAccount.status}

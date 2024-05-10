@@ -6,7 +6,7 @@ export const ProtectedRoute = () => {
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
     const location = useLocation()
 
-    if(!isLoggedIn){
+    if (!isLoggedIn) {
         return <Navigate to={"/login"} state={{prevUrl: location.pathname}}/>
     }
 

@@ -1,5 +1,4 @@
 import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
@@ -62,7 +61,7 @@ export const Navbar = () => {
         navigate("/")
     }
 
-    return <Box position="fixed">
+    return <div className="absolute">
         <AppBar className="bg-darkGray">
             <Toolbar className="flex justify-between ">
                 <div className='flex h-full'>
@@ -83,8 +82,10 @@ export const Navbar = () => {
                 </div>
                 <div>
                     {visible ?
-                        <Button color="inherit" onClick={() => setVisible(!visible)}><MdArrowDropUp size={30} /></Button> :
-                        <Button color="inherit" onClick={() => setVisible(!visible)}><MdArrowDropDown size={30} /> </Button>
+                        <Button className='rounded-full' color="inherit" onClick={() => setVisible(!visible)}><MdArrowDropUp
+                            size={30}/></Button> :
+                        <Button className='rounded-full' color="inherit" onClick={() => setVisible(!visible)}><MdArrowDropDown size={30}/>
+                        </Button>
                     }
                     {!isLoggedIn ?
                         (<><Button component={NavLink} to="/login" color="inherit">Sign in</Button>
@@ -93,7 +94,7 @@ export const Navbar = () => {
                 </div>
             </Toolbar>
         </AppBar>
-        {visible ? <div className="overflow-hidden fixed flex mt-16 w-full">
+        {visible ? <div className="overflow-hidden fixed z-50 flex mt-16 w-full">
             <div className="flex" id="banner-content" style={{transform: `translateX(${offset}px)`}}>
                 {currencies.map((currency) =>
                     <CurrencyCard key={currency.id}
@@ -110,5 +111,5 @@ export const Navbar = () => {
         {/*        <CircularProgress size={40}/>*/}
         {/*    </div> : ''}*/}
 
-    </Box>
+    </div>
 }
