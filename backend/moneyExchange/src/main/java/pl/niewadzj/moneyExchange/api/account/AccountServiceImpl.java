@@ -39,6 +39,7 @@ public class AccountServiceImpl implements AccountService {
     private final CurrencyRepository currencyRepository;
     private final CurrencyAccountMapper currencyAccountMapper;
     private final CurrencyAccountRepository currencyAccountRepository;
+    private final Random random = new Random(0);
 
     @Override
     public final void createAccount(User owner) {
@@ -89,6 +90,8 @@ public class AccountServiceImpl implements AccountService {
                 .stream()
                 .filter(currencyAccount -> currencyAccount.getCurrencyAccountStatus() == CurrencyAccountStatus.ACTIVE)
                 .map(currencyAccountMapper)
+                .sorted(Comparator.comparing(CurrencyAccountResponse::balance)
+                        .reversed())
                 .toList();
     }
 
@@ -125,7 +128,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     private String generateAccountNumber() {
-        Random random = new Random();
         StringBuilder accountNumberBuilder = new StringBuilder();
 
         for (int i = 0; i < ACCOUNT_NUMBER_SIZE; i++) {

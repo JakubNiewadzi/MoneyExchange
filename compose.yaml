@@ -16,24 +16,6 @@ services:
     networks:
       - money-exchange-net
 
-  backend:
-    container_name: money-exchange-backend
-    build:
-      context: ./backend/moneyExchange
-      dockerfile: backend.dockerfile
-    environment:
-      - POSTGRES_USER=backend
-      - POSTGRES_PASSWORD=admin
-      - DATABASE_URL=jdbc:postgresql://money-exchange-database:5432/backend
-      - DATABASE_DDL=update
-    ports:
-      - 8080:8080
-    depends_on:
-      postgres:
-        condition: service_healthy
-    networks:
-      - money-exchange-net
-
   scheduler:
     container_name: money-exchange-scheduler
     build:
@@ -46,8 +28,38 @@ services:
       - DATABASE_DDL=update
     ports:
       - 7111:7111
+    healthcheck:
+      test: wget -qO- http://localhost:7111/actuator/health | grep '"status":"UP"' || exit 1
+      interval: 15s
+      timeout: 5s
+      retries: 10
     depends_on:
       postgres:
+        condition: service_healthy
+    networks:
+      - money-exchange-net
+
+  backend:
+    container_name: money-exchange-backend
+    build:
+      context: ./backend/moneyExchange
+      dockerfile: backend.dockerfile
+    environment:
+      - POSTGRES_USER=backend
+      - POSTGRES_PASSWORD=admin
+      - DATABASE_URL=jdbc:postgresql://money-exchange-database:5432/backend
+      - DATABASE_DDL=update
+    ports:
+      - 8080:8080
+    healthcheck:
+      test: wget -qO- http://localhost:8080/actuator/health | grep '"status":"UP"' || exit 1
+      interval: 15s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      postgres:
+        condition: service_healthy
+      scheduler:
         condition: service_healthy
     networks:
       - money-exchange-net
@@ -62,8 +74,11 @@ services:
     networks:
       - money-exchange-net
     depends_on:
-      - backend
-      - scheduler
+      scheduler:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+
 
   proxy:
     container_name: money-exchange-proxy

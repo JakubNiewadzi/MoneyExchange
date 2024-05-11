@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -22,6 +23,7 @@ import java.util.List;
 import static pl.niewadzj.moneyExchange.entities.account.constants.AccountConstants.ACCOUNT_MAP_NAME;
 import static pl.niewadzj.moneyExchange.entities.account.constants.AccountConstants.ACCOUNT_NUMBER_SIZE;
 import static pl.niewadzj.moneyExchange.entities.account.constants.AccountConstants.ACCOUNT_TABLE_NAME;
+import static pl.niewadzj.moneyExchange.entities.account.constants.AccountConstants.JOIN_COLUMN_NAME;
 import static pl.niewadzj.moneyExchange.entities.account.constants.AccountConstants.NUMBER_NULL_MSG;
 
 @Getter
@@ -43,6 +45,7 @@ public class Account {
     private String accountNumber;
 
     @OneToOne
+    @JoinColumn(name = JOIN_COLUMN_NAME)
     private User accountOwner;
 
     @OneToMany(mappedBy = ACCOUNT_MAP_NAME)
