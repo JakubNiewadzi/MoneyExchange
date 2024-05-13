@@ -5,7 +5,7 @@ const SLICE_NAME = 'auth'
 
 export const fetchAccountInfo = createAsyncThunk(
     'auth/fetchAccountInfo',
-    async (token) =>  {
+    async (token) => {
         const response = await accountApi
             .getAccount(token)
 

@@ -29,9 +29,9 @@ export const backendApi = (url) => {
                             refreshToken: refreshToken
                         }
                     }).then(res => {
-                        console.log(res)
-                        Cookies.set("authToken", res?.data?.authToken)
-                    })
+                    console.log(res)
+                    Cookies.set("authToken", res?.data?.authToken)
+                })
                     .catch(refreshError => {
                         console.error('Error refreshing token:', refreshError);
                         Cookies.remove("authToken")

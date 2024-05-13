@@ -31,7 +31,11 @@ const initialState = {
 const currencySlice = createSlice({
     name: SLICE_NAME,
     initialState,
-    reducers: {},
+    reducers: {
+        setCurrencies: (state, action) => {
+            state.currencies = action.payload
+        },
+    },
     extraReducers: builder => {
         builder
             .addCase(fetchCurrencies.pending, (state) => {
@@ -51,4 +55,5 @@ const currencySlice = createSlice({
     }
 })
 
+export const {setCurrencies} = currencySlice.actions
 export const currencyReducer = currencySlice.reducer

@@ -2,8 +2,12 @@ package pl.niewadzj.schedulerservice.api.currency;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import pl.niewadzj.schedulerservice.api.currency.interfaces.CurrencyService;
+import pl.niewadzj.schedulerservice.api.currency.mapper.CurrencyMapper;
+import pl.niewadzj.schedulerservice.api.currency.records.CurrencyResponse;
 import pl.niewadzj.schedulerservice.entities.currency.Currency;
 import pl.niewadzj.schedulerservice.entities.currency.interfaces.CurrencyRepository;
 
@@ -12,18 +16,23 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static pl.niewadzj.schedulerservice.constants.WebSocketConstants.CURRENCIES_ENDPOINT;
+import static pl.niewadzj.schedulerservice.constants.WebSocketConstants.TOPIC;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class CurrencyServiceImpl implements CurrencyService {
 
+    private final CurrencyMapper currencyMapper;
     private final CurrencyRepository currencyRepository;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     @Override
     public void addExchangeRates(List<Currency> currencies) {
         log.debug("Posting currencies to database: {}", currencies);
 
-        if (!currencyRepository.findAll().isEmpty()){
+        if (!currencyRepository.findAll().isEmpty()) {
             return;
         }
 
@@ -34,7 +43,10 @@ public class CurrencyServiceImpl implements CurrencyService {
                 .rateDate(LocalDateTime.now())
                 .build());
 
-        currencyRepository.saveAllAndFlush(currencies);
+        currencies = currencyRepository
+                .findAll(Sort.by(Sort.Direction.ASC, "id"));
+
+        broadcastCurrencyUpdate(currencies);
     }
 
     @Override
@@ -53,6 +65,18 @@ public class CurrencyServiceImpl implements CurrencyService {
                 currencyRepository.saveAndFlush(currency);
             }
         });
+
+        currencies = currencyRepository
+                .findAll(Sort.by(Sort.Direction.ASC, "id"));
+        broadcastCurrencyUpdate(currencies);
+    }
+
+    private void broadcastCurrencyUpdate(List<Currency> currencies) {
+        List<CurrencyResponse> currencyResponses = currencies.stream()
+                .map(currencyMapper)
+                .toList();
+        log.debug("Broadcasting currency update");
+        simpMessagingTemplate.convertAndSend(String.format("%s%s", TOPIC, CURRENCIES_ENDPOINT), currencyResponses);
     }
 
 }

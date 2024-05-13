@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {useLocation, useNavigate} from "react-router";
 import Button from "@mui/material/Button";
 import {login} from "../services/authService";
-import {fetchAccountInfo, performLogin} from "../state/slices/authSlice";
+import {fetchAccountInfo} from "../state/slices/authSlice";
 import {FormContainer} from "../components/FormContainer";
 import {NavLink} from "react-router-dom";
 import Cookies from "js-cookie";
@@ -48,7 +48,8 @@ export const LoginPage = () => {
             const authToken = Cookies.get("authToken")
             if (authToken !== undefined) {
                 console.log("eo")
-                dispatch(fetchAccountInfo(authToken))}
+                dispatch(fetchAccountInfo(authToken))
+            }
         }
     }
 

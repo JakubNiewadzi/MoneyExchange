@@ -1,5 +1,4 @@
 import {authApi} from "../api/authApi";
-import {accountApi} from "../api/accountApi";
 import Cookies from 'js-cookie'
 
 export const login = async (loginRequest) => {

@@ -2,7 +2,7 @@ import {FormContainer} from "../components/FormContainer";
 import {useEffect, useState} from "react";
 import Button from "@mui/material/Button";
 import {register} from "../services/authService";
-import {fetchAccountInfo, performLogin} from "../state/slices/authSlice";
+import {fetchAccountInfo} from "../state/slices/authSlice";
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router";
 import {NavLink} from "react-router-dom";
@@ -53,7 +53,8 @@ export const RegisterPage = () => {
             await register(registrationRequest)
             const authToken = Cookies.get("authToken")
             if (authToken !== undefined) {
-                dispatch(fetchAccountInfo(authToken))}
+                dispatch(fetchAccountInfo(authToken))
+            }
         }
     }
 

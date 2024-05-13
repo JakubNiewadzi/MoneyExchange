@@ -47,12 +47,12 @@ export const ExchangeCurrenciesPage = () => {
 
         if (nextCurrencyAccountOne?.status === 'SUSPENDED') {
             setErrorOne('This account is suspended!')
-        }else {
+        } else {
             setErrorOne('')
         }
         if (nextCurrencyAccountTwo?.status === 'SUSPENDED') {
             setErrorTwo('This account is suspended!')
-        }else{
+        } else {
             setErrorTwo('')
         }
 
@@ -79,9 +79,9 @@ export const ExchangeCurrenciesPage = () => {
 
         if (name === 'amount-from') {
             setCurrencyOneAmount(value)
-            if(currencyOneAccount.balance - value < 0){
+            if (currencyOneAccount.balance - value < 0) {
                 setErrorOne("You do not have enough money on this account!")
-            }else{
+            } else {
                 setErrorOne("")
             }
             setCurrencyTwoAmount((value * currencies.find(element => element.id === currencyOne)?.exchangeRate
@@ -90,9 +90,9 @@ export const ExchangeCurrenciesPage = () => {
             setCurrencyTwoAmount(value)
             setCurrencyOneAmount((value * currencies.find(element => element.id === currencyTwo).exchangeRate
                 / currencies.find(element => element.id === currencyOne)?.exchangeRate).toFixed(2))
-            if(currencyOneAccount.balance - currencyOneAmount < 0){
+            if (currencyOneAccount.balance - currencyOneAmount < 0) {
                 setErrorOne("You do not have enough money on this account!")
-            }else{
+            } else {
                 setErrorOne("")
             }
         }
@@ -106,7 +106,7 @@ export const ExchangeCurrenciesPage = () => {
 
     const onExchange = async () => {
         const response = await currencyExchangeApi.exchangeCurrency(authToken, currencyOne, currencyTwo, currencyOneAmount)
-        if(response!==undefined){
+        if (response !== undefined) {
             navigate("/myAccounts")
         }
     }

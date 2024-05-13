@@ -41,7 +41,8 @@ export const HomePage = () => {
                         </div>
                     </div>
                 </div>
-                <div className='hidden text-4xl md:flex justify-center items-center font-bold md:w-3/5 mt-8 md:mt-0 md:text-center'>
+                <div
+                    className='hidden text-4xl md:flex justify-center items-center font-bold md:w-3/5 mt-8 md:mt-0 md:text-center'>
                     <img src={register} className='h-full' alt='register view'/>
                 </div>
             </div>

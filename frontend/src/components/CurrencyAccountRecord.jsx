@@ -26,8 +26,10 @@ export const CurrencyAccountRecord = ({currencyId, code, balance, status, onActi
                             className="bg-lightGray w-1/4">Suspend</Button>
 
                 </div>
-            ) : <div className='flex w-3/4 justify-center'><Button onClick={() => onActivate(currencyId)} variant="contained"
-                                                             className="bg-darkGray w-full">Activate</Button></div>
+            ) : <div className='flex w-3/4 justify-center'><Button onClick={() => onActivate(currencyId)}
+                                                                   variant="contained"
+                                                                   className="bg-darkGray w-full">Activate</Button>
+            </div>
             }
 
         </th>

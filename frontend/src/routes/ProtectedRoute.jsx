@@ -16,7 +16,7 @@ export const ProtectedRoute = () => {
         const refreshToken = Cookies.get('refreshToken')
         if (authToken && refreshToken) {
             dispatch(fetchAccountInfo(authToken))
-        }else{
+        } else {
             dispatch(logout())
             navigate("/")
         }

@@ -1,9 +1,7 @@
 import {FormContainer} from "../components/FormContainer";
-import {InputLabel, TextField} from "@mui/material";
 import {useState} from "react";
 import Button from "@mui/material/Button";
 import {useNavigate, useParams} from "react-router";
-import {useSelector} from "react-redux";
 import {currencyAccountApi} from "../api/currencyAccountApi";
 import Cookies from "js-cookie";
 
@@ -42,7 +40,7 @@ export const TransactionForm = ({action}) => {
                step='0.01'
                min='0'
         />
-        <Button type="submit"  variant="contained" className="bg-darkGray mt-4 w-full">
+        <Button type="submit" variant="contained" className="bg-darkGray mt-4 w-full">
             Submit
         </Button>
     </FormContainer>
