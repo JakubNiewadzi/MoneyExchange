@@ -6,12 +6,11 @@ const currencyExchangeClient = backendApi("/api/v1/currencyExchange")
 export const currencyExchangeApi = {
     exchangeCurrency(token, currencyFromId, currencyToId, amount) {
         console.log(`Exchanging currency from ${currencyFromId} to ${currencyToId}`)
-        return currencyExchangeClient.post("/exchangeCurrency", null, {
-            params: {
-                currencyFromId: currencyToId,
-                currencyToId: currencyToId,
-                amount: amount
-            },
+        return currencyExchangeClient.post("/exchangeCurrency", {
+            currencyFromId: currencyFromId,
+            currencyToId: currencyToId,
+            amount: amount
+        }, {
             headers: {
                 Authorization: bearerAuth(token)
             }

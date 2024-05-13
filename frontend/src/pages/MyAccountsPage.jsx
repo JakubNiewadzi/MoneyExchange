@@ -95,7 +95,7 @@ export const MyAccountsPage = () => {
                         You do not have any currency accounts open
                     </span> :
                     <div className='w-full mt-14 flex justify-center p-8'>
-                        <CircularProgress size={120}/>
+                        <CircularProgress className='text-white' size={120}/>
                     </div>
                 }
             </div>
