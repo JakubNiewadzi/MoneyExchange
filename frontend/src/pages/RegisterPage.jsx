@@ -23,8 +23,10 @@ export const RegisterPage = () => {
         lastName: '',
         email: '',
         password: '',
-        repeatPassword: ''
+        repeatPassword: '',
+        fetchError: ''
     })
+
 
     const [repeatPassword, setRepeatPassword] = useState('')
 
@@ -50,10 +52,14 @@ export const RegisterPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (validateForm()) {
-            await register(registrationRequest)
+            const tokenResponse = await register(registrationRequest)
+            console.log(tokenResponse)
             const authToken = Cookies.get("authToken")
             if (authToken !== undefined) {
                 dispatch(fetchAccountInfo(authToken))
+            }
+            if(tokenResponse.status === 400 && typeof tokenResponse.data ==='string'){
+                setErrors({...errors, fetchError: tokenResponse.data});
             }
         }
     }
@@ -103,7 +109,8 @@ export const RegisterPage = () => {
             placeholder="Give us your password :<"
             value={repeatPassword}
             onChange={handleChange}/>
-        <div className='flex flex-col md:flex-row mt-4 mb-2 md:justify-between'>
+        <div className='text-red-500 font-semibold mt-2'>{errors.fetchError}</div>
+        <div className='flex flex-col md:flex-row mb-2 md:justify-between'>
             <Button type="submit" variant="contained" className="bg-darkGray mt-4 md:w-1/3">
                 Register
             </Button>

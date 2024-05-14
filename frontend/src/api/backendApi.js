@@ -38,6 +38,8 @@ export const backendApi = (url) => {
                         Cookies.remove("refreshToken")
                         return Promise.reject(error);
                     })
+            }else {
+                return error.response
             }
         }
     })

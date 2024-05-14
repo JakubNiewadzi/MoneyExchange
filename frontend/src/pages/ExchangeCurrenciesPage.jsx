@@ -79,9 +79,11 @@ export const ExchangeCurrenciesPage = () => {
             value = value.slice(0, -1);
         }
 
+        console.log(currencyOneAccount)
+
         if (name === 'amount-from') {
             setCurrencyOneAmount(value)
-            if (currencyOneAccount.balance - value < 0) {
+            if (currencyOneAccount?.balance - value < 0) {
                 setErrorOne("You do not have enough money on this account!")
             } else {
                 setErrorOne("")
@@ -92,7 +94,7 @@ export const ExchangeCurrenciesPage = () => {
             setCurrencyTwoAmount(value)
             setCurrencyOneAmount((value * currencies.find(element => element.id === currencyTwo).exchangeRate
                 / currencies.find(element => element.id === currencyOne)?.exchangeRate).toFixed(2))
-            if (currencyOneAccount.balance - currencyOneAmount < 0) {
+            if (currencyOneAccount?.balance - currencyOneAmount < 0) {
                 setErrorOne("You do not have enough money on this account!")
             } else {
                 setErrorOne("")
@@ -115,11 +117,11 @@ export const ExchangeCurrenciesPage = () => {
 
     return <div className='flex flex-col justify-center bg'>
         <div
-            className='flex flex-col bg-darkGray w-full space items-center h-[50vh] justify-center rounded-lg shadow-lg mt-48'>
-            <div className='text-3xl font-semibold'>Exchange your currencies, cause it's what this site is all
+            className='flex flex-col bg-darkGray w-full space items-center py-8 justify-center rounded-lg shadow-lg mt-48'>
+            <div className='text-3xl font-semibold text-center'>Exchange your currencies, cause it's what this site is all
                 about.
             </div>
-            <div className='flex mt-8 md:flex-row flex-col w-1/2 justify-around'>
+            <div className='flex mt-8 md:flex-row flex-col w-1/2 md:justify-around md:items-stretch items-center'>
                 <div className='flex flex-col w-2/5'>
                     <label>From:</label>
                     <Select
@@ -132,7 +134,7 @@ export const ExchangeCurrenciesPage = () => {
                         })}
                     </Select>
                 </div>
-                <div className='flex items-end'>
+                <div className='flex items-end md:mx-2 mx-0 md:my-0 mt-6'>
                     <Button
                         className="text-white w-1/12 h-3/4 bg-background rounded-full ring ring-blue-400"
                         onClick={onSwitch}><FaArrowsRotate size={25}/></Button>
@@ -150,7 +152,7 @@ export const ExchangeCurrenciesPage = () => {
                     </Select>
                 </div>
             </div>
-            <div className='flex mt-8 md:flex-row flex-col w-1/2 justify-around'>
+            <div className='flex mt-8 md:flex-row flex-col w-1/2 md:justify-around md:items-stretch items-center'>
                 <div className='flex flex-col w-2/5'>
                     <label>This amount of money:</label>
                     <input
@@ -166,7 +168,7 @@ export const ExchangeCurrenciesPage = () => {
                         <span className='text-red-500 font-semibold mt-2'>{errorOne}</span> :
                         ''}
                 </div>
-                <div className="flex items-center w-1/10 font-semibold text-sm">Converts to:</div>
+                <div className="flex items-center w-1/10 md:my-0 my-6 font-semibold text-sm">Converts to:</div>
                 <div className='flex flex-col w-2/5'>
                     <label>This amount of money:</label>
                     <input
@@ -184,7 +186,7 @@ export const ExchangeCurrenciesPage = () => {
             </div>
             <div className='mt-8 flex w-1/2 justify-center'>
                 <Button onClick={onExchange}
-                        className="text-white text-lg font-semibold w-1/6 bg-background rounded-full ring ring-blue-400">Convert!</Button>
+                        className="text-white text-lg font-semibold bg-background rounded-full ring ring-blue-400">Convert!</Button>
             </div>
         </div>
         <div className='flex flex-col w-full space items-center h-[40vh] rounded-lg p-10 text-3xl font-semibold'>
