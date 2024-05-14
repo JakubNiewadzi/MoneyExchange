@@ -18,7 +18,6 @@ export const ProtectedRoute = () => {
             dispatch(fetchAccountInfo(authToken))
         } else {
             dispatch(logout())
-            navigate("/")
         }
 
     }, []);

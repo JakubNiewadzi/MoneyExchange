@@ -50,7 +50,6 @@ export const CurrencyBanner = ({visible}) => {
         const socket = new SockJS(process.env.REACT_APP_API_WEBSOCKET_URL + "/currencyUpdates")
         const client = Stomp.over(socket)
 
-
         client.connect({}, () => {
             {
                 console.log('Websocket connection established');

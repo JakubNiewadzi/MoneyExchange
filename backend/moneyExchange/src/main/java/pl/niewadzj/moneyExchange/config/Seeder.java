@@ -53,13 +53,16 @@ public class Seeder implements CommandLineRunner {
 
 
     private List<User> createSampleUsers() {
-        authService.register(new RegistrationRequest("Jan", "Kowalski", "#Silnehaslo1", "jan.kowalski@gmail.com"));
-        authService.register(new RegistrationRequest("Alice", "Smith", "#Silnehaslo1", "alice.smith@example.com"));
-        authService.register(new RegistrationRequest("Bob", "Johnson", "#Silnehaslo1", "bob.johnson@example.com"));
-        authService.register(new RegistrationRequest("Emily", "Davis", "#Silnehaslo1", "emily.davis@example.com"));
-        authService.register(new RegistrationRequest("Michael", "Brown", "#Silnehaslo1", "michael.brown@example.com"));
-        authService.register(new RegistrationRequest("Sophia", "Wilson", "#Silnehaslo1", "sophia.wilson@example.com"));
+        try {
+            authService.register(new RegistrationRequest("Jan", "Kowalski", "#Silnehaslo1", "jan.kowalski@gmail.com"));
+            authService.register(new RegistrationRequest("Alice", "Smith", "#Silnehaslo1", "alice.smith@example.com"));
+            authService.register(new RegistrationRequest("Bob", "Johnson", "#Silnehaslo1", "bob.johnson@example.com"));
+            authService.register(new RegistrationRequest("Emily", "Davis", "#Silnehaslo1", "emily.davis@example.com"));
+            authService.register(new RegistrationRequest("Michael", "Brown", "#Silnehaslo1", "michael.brown@example.com"));
+            authService.register(new RegistrationRequest("Sophia", "Wilson", "#Silnehaslo1", "sophia.wilson@example.com"));
+        }catch(Exception e){
 
+        }
         User admin = userRepository.findByEmail("jan.kowalski@gmail.com").orElseThrow();
         admin.setRole(UserRole.ADMIN);
 

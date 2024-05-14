@@ -43,6 +43,8 @@ public class CurrencyServiceImpl implements CurrencyService {
                 .rateDate(LocalDateTime.now())
                 .build());
 
+        currencyRepository.saveAllAndFlush(currencies);
+
         currencies = currencyRepository
                 .findAll(Sort.by(Sort.Direction.ASC, "id"));
 
