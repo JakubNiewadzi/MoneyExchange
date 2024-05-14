@@ -14,6 +14,7 @@ export const LoginPage = () => {
 
     const [emailError, setEmailError] = useState('')
     const [passwordError, setPasswordError] = useState('')
+    const [fetchError, setFetchError] = useState('')
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -44,11 +45,14 @@ export const LoginPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (validateForm()) {
-            await login({email: email, password: password})
+            const tokenInfo  = await login({email: email, password: password})
             const authToken = Cookies.get("authToken")
             if (authToken !== undefined) {
-                console.log("eo")
                 dispatch(fetchAccountInfo(authToken))
+            }
+            console.log(tokenInfo)
+            if (tokenInfo?.status === 404){
+                setFetchError("Account with this email does not exist")
             }
         }
     }
@@ -69,7 +73,7 @@ export const LoginPage = () => {
                value={email}
                onChange={handleChange}
         />
-
+        <div>{emailError}</div>
         <div className="mb-2 mt-4 font-semibold">Password</div>
         <input
             className="border w-full bg-lightGray border-lightGray rounded-md py-2 px-4 focus:outline-none focus:border-customBlue"
@@ -79,7 +83,9 @@ export const LoginPage = () => {
             value={password}
             onChange={handleChange}
         />
-        <div className='flex md:flex-row flex-col my-2 w-full justify-between'>
+        <div>{passwordError}</div>
+        <div className='text-red-500 font-semibold mt-2'>{fetchError}</div>
+        <div className='flex md:flex-row flex-col mb-2 w-full justify-between'>
             <Button type="submit" variant="contained" className="bg-darkGray mt-4 md:w-2/5">
                 Sign in
             </Button>

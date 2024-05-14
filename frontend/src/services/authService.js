@@ -8,6 +8,8 @@ export const login = async (loginRequest) => {
         Cookies.set("refreshToken", tokenResponse?.data?.refreshToken)
         Cookies.set("authToken", tokenResponse?.data?.authToken)
     }
+
+    return tokenResponse
 }
 
 export const register = async (registerRequest) => {
@@ -16,4 +18,6 @@ export const register = async (registerRequest) => {
         Cookies.set("refreshToken", tokenResponse?.data?.refreshToken)
         Cookies.set("authToken", tokenResponse?.data?.authToken)
     }
+
+    return tokenResponse
 }
