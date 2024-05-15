@@ -5,22 +5,22 @@ export const fetchCurrencyAccounts = createAsyncThunk(
     'currencyAccounts/fetchCurrencyAccounts',
     async (args) => {
         if (!args.isFilterActive) {
-            const response = await accountApi.getCurrencyAccounts(args.token)
+            const response = await accountApi.getCurrencyAccounts(args.token);
             return response.data
         }
-        const response = await accountApi.getActiveCurrencyAccounts(args.token)
+        const response = await accountApi.getActiveCurrencyAccounts(args.token);
         return response.data
     }
-)
+);
 
-const SLICE_NAME = 'currencyAccount'
+const SLICE_NAME = 'currencyAccount';
 
 const initialState = {
     currencyAccounts: [],
     isFilterActive: false,
     status: 'idle',
     error: null
-}
+};
 
 
 const currencyAccountSlice = createSlice({
@@ -28,30 +28,30 @@ const currencyAccountSlice = createSlice({
     initialState,
     reducers: {
         releaseCurrencyAccounts: (state) => {
-            state.currencyAccounts = initialState.currencyAccounts
-            state.isFilterActive = initialState.isFilterActive
+            state.currencyAccounts = initialState.currencyAccounts;
+            state.isFilterActive = initialState.isFilterActive;
         },
         changeFilter: (state) => {
-            state.isFilterActive = !state.isFilterActive
+            state.isFilterActive = !state.isFilterActive;
         }
     },
     extraReducers: builder => {
         builder
             .addCase(fetchCurrencyAccounts.pending, (state) => {
-                state.status = 'loading'
+                state.status = 'loading';
             })
             .addCase(fetchCurrencyAccounts.fulfilled, (state, action) => {
-                state.status = 'succeeded'
-                state.currencyAccounts = action.payload
+                state.status = 'succeeded';
+                state.currencyAccounts = action.payload;
             })
             .addCase(fetchCurrencyAccounts.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
-                state.currencyAccounts = initialState.currencyAccounts
-                state.isFilterActive = initialState.isFilterActive
+                state.currencyAccounts = initialState.currencyAccounts;
+                state.isFilterActive = initialState.isFilterActive;
             })
     }
-})
+});
 
-export const {releaseCurrencyAccounts, changeFilter} = currencyAccountSlice.actions
-export const currencyAccountsReducer = currencyAccountSlice.reducer
+export const {releaseCurrencyAccounts, changeFilter} = currencyAccountSlice.actions;
+export const currencyAccountsReducer = currencyAccountSlice.reducer;

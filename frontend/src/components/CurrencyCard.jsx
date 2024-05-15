@@ -10,4 +10,4 @@ export const CurrencyCard = ({code, exchangeRate, id, onClick}) => {
         </span>
     </li>
 
-}
+};

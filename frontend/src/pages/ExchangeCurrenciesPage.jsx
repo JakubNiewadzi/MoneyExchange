@@ -10,42 +10,43 @@ import {useNavigate} from "react-router";
 
 export const ExchangeCurrenciesPage = () => {
 
-    const currencies = useSelector(state => state.currency.currencies)
-    const currencyAccounts = useSelector(state => state.currencyAccount.currencyAccounts)
-    const [currencyOne, setCurrencyOne] = useState(1)
-    const [currencyTwo, setCurrencyTwo] = useState(2)
+    const currencies = useSelector(state => state.currency.currencies);
+    const currencyAccounts = useSelector(state => state.currencyAccount.currencyAccounts);
+    const [currencyOne, setCurrencyOne] = useState(1);
+    const [currencyTwo, setCurrencyTwo] = useState(2);
 
-    const [currencyOneAccount, setCurrencyOneAccount] = useState(currencyAccounts.find(currencyAccount => currencyAccount.currencyId === currencyOne))
-    const [currencyTwoAccount, setCurrencyTwoAccount] = useState(currencyAccounts.find(currencyAccount => currencyAccount.currencyId === currencyTwo))
+    const [currencyOneAccount, setCurrencyOneAccount] = useState(currencyAccounts.find(currencyAccount =>
+        currencyAccount.currencyId === currencyOne));
+    const [currencyTwoAccount, setCurrencyTwoAccount] = useState(currencyAccounts.find(currencyAccount =>
+        currencyAccount.currencyId === currencyTwo));
 
-    const [currencyOneAmount, setCurrencyOneAmount] = useState(10.00)
-    const [currencyTwoAmount, setCurrencyTwoAmount] = useState('')
+    const [currencyOneAmount, setCurrencyOneAmount] = useState(10.00);
+    const [currencyTwoAmount, setCurrencyTwoAmount] = useState('');
 
-    const [errorOne, setErrorOne] = useState('')
-    const [errorTwo, setErrorTwo] = useState('')
+    const [errorOne, setErrorOne] = useState('');
+    const [errorTwo, setErrorTwo] = useState('');
 
     //console.log(currencies)
-    console.log(currencyAccounts)
 
-    const authToken = Cookies.get('authToken')
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+    const authToken = Cookies.get('authToken');
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
-        const name = e.target.name
-        const value = e.target.value
-        name === 'select-one' ? setCurrencyOne(value) : setCurrencyTwo(value)
-    }
+        const name = e.target.name;
+        const value = e.target.value;
+        name === 'select-one' ? setCurrencyOne(value) : setCurrencyTwo(value);
+    };
 
     useEffect(() => {
         setCurrencyTwoAmount((currencyOneAmount * currencies.find(element => element.id === currencyOne)?.exchangeRate
-            / currencies.find(element => element.id === currencyTwo)?.exchangeRate).toFixed(2))
+            / currencies.find(element => element.id === currencyTwo)?.exchangeRate).toFixed(2));
 
-        const nextCurrencyAccountOne = currencyAccounts.find(currencyAccount => currencyAccount.currencyId === currencyOne)
-        const nextCurrencyAccountTwo = currencyAccounts.find(currencyAccount => currencyAccount.currencyId === currencyTwo)
+        const nextCurrencyAccountOne = currencyAccounts.find(currencyAccount => currencyAccount.currencyId === currencyOne);
+        const nextCurrencyAccountTwo = currencyAccounts.find(currencyAccount => currencyAccount.currencyId === currencyTwo);
 
-        setCurrencyOneAccount(nextCurrencyAccountOne)
-        setCurrencyTwoAccount(nextCurrencyAccountTwo)
+        setCurrencyOneAccount(nextCurrencyAccountOne);
+        setCurrencyTwoAccount(nextCurrencyAccountTwo);
 
         if (nextCurrencyAccountOne?.status === 'SUSPENDED') {
             setErrorOne('This account is suspended!')
@@ -72,48 +73,48 @@ export const ExchangeCurrenciesPage = () => {
 
 
     const handleInputChange = (e) => {
-        const name = e.target.name
-        let value = e.target.value
+        const name = e.target.name;
+        let value = e.target.value;
 
         if (!/^\d*\.?\d{0,2}$/.test(value) && !isNaN(value)) {
             value = value.slice(0, -1);
         }
 
-        console.log(currencyOneAccount)
+        console.log(currencyOneAccount);
 
         if (name === 'amount-from') {
-            setCurrencyOneAmount(value)
+            setCurrencyOneAmount(value);
             if (currencyOneAccount?.balance - value < 0) {
                 setErrorOne("You do not have enough money on this account!")
             } else {
                 setErrorOne("")
             }
             setCurrencyTwoAmount((value * currencies.find(element => element.id === currencyOne)?.exchangeRate
-                / currencies.find(element => element.id === currencyTwo)?.exchangeRate).toFixed(2))
+                / currencies.find(element => element.id === currencyTwo)?.exchangeRate).toFixed(2));
         } else {
-            setCurrencyTwoAmount(value)
+            setCurrencyTwoAmount(value);
             setCurrencyOneAmount((value * currencies.find(element => element.id === currencyTwo).exchangeRate
-                / currencies.find(element => element.id === currencyOne)?.exchangeRate).toFixed(2))
+                / currencies.find(element => element.id === currencyOne)?.exchangeRate).toFixed(2));
             if (currencyOneAccount?.balance - currencyOneAmount < 0) {
-                setErrorOne("You do not have enough money on this account!")
+                setErrorOne("You do not have enough money on this account!");
             } else {
-                setErrorOne("")
+                setErrorOne("");
             }
         }
-    }
+    };
 
     const onSwitch = () => {
-        const newCurrencyOne = currencyTwo
-        setCurrencyTwo(currencyOne)
-        setCurrencyOne(newCurrencyOne)
-    }
+        const newCurrencyOne = currencyTwo;
+        setCurrencyTwo(currencyOne);
+        setCurrencyOne(newCurrencyOne);
+    };
 
     const onExchange = async () => {
-        const response = await currencyExchangeApi.exchangeCurrency(authToken, currencyOne, currencyTwo, currencyOneAmount)
+        const response = await currencyExchangeApi.exchangeCurrency(authToken, currencyOne, currencyTwo, currencyOneAmount);
         if (response !== undefined) {
-            navigate("/myAccounts")
+            navigate("/myAccounts");
         }
-    }
+    };
 
     return <div className='flex flex-col justify-center bg'>
         <div
@@ -121,8 +122,8 @@ export const ExchangeCurrenciesPage = () => {
             <div className='text-3xl font-semibold text-center'>Exchange your currencies, cause it's what this site is all
                 about.
             </div>
-            <div className='flex mt-8 md:flex-row flex-col w-1/2 md:justify-around md:items-stretch items-center'>
-                <div className='flex flex-col w-2/5'>
+            <div className='flex mt-8 md:flex-row flex-col md:w-1/2 w-full md:justify-around md:items-stretch items-center'>
+                <div className='flex flex-col md:w-2/5 w-4/5'>
                     <label>From:</label>
                     <Select
                         name='select-one'
@@ -139,7 +140,7 @@ export const ExchangeCurrenciesPage = () => {
                         className="text-white w-1/12 h-3/4 bg-background rounded-full ring ring-blue-400"
                         onClick={onSwitch}><FaArrowsRotate size={25}/></Button>
                 </div>
-                <div className='flex flex-col w-2/5'>
+                <div className='flex flex-col md:w-2/5 w-4/5'>
                     <label>To:</label>
                     <Select
                         name='select-two'
@@ -152,8 +153,8 @@ export const ExchangeCurrenciesPage = () => {
                     </Select>
                 </div>
             </div>
-            <div className='flex mt-8 md:flex-row flex-col w-1/2 md:justify-around md:items-stretch items-center'>
-                <div className='flex flex-col w-2/5'>
+            <div className='flex mt-8 md:flex-row flex-col md:w-1/2 w-full md:justify-around md:items-stretch items-center'>
+                <div className='flex flex-col md:w-2/5 w-4/5'>
                     <label>This amount of money:</label>
                     <input
                         className="border appearance-none w-full bg-lightGray border-lightGray rounded-md py-2 px-4 focus:outline-none focus:ring ring-background focus:border-background"
@@ -169,7 +170,7 @@ export const ExchangeCurrenciesPage = () => {
                         ''}
                 </div>
                 <div className="flex items-center w-1/10 md:my-0 my-6 font-semibold text-sm">Converts to:</div>
-                <div className='flex flex-col w-2/5'>
+                <div className='flex flex-col md:w-2/5 w-4/5'>
                     <label>This amount of money:</label>
                     <input
                         className="border appearance-none w-full bg-lightGray border-lightGray rounded-md py-2 px-4 focus:outline-none focus:ring ring-background"
@@ -194,4 +195,4 @@ export const ExchangeCurrenciesPage = () => {
         </div>
     </div>
 
-}
+};

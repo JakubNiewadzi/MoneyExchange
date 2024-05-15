@@ -8,23 +8,20 @@ import Cookies from "js-cookie";
 
 export const MyAccountsPage = () => {
 
-    const currencyAccounts = useSelector(state => state.currencyAccount.currencyAccounts)
-    const accountNumber = useSelector(state => state.auth.accountNumber)
-    const status = useSelector(state => state.currencyAccount.status)
-    const isFilterActive = useSelector(state => state.currencyAccount.isFilterActive)
+    const currencyAccounts = useSelector(state => state.currencyAccount.currencyAccounts);
+    const accountNumber = useSelector(state => state.auth.accountNumber);
+    const status = useSelector(state => state.currencyAccount.status);
+    const isFilterActive = useSelector(state => state.currencyAccount.isFilterActive);
 
-    const [activeFilter, setActiveFilter] = useState(isFilterActive)
-    const [reload, setReload] = useState(false)
+    const [activeFilter, setActiveFilter] = useState(isFilterActive);
+    const [reload, setReload] = useState(false);
 
-    console.log(isFilterActive)
-    console.log(activeFilter)
+    const authToken = Cookies.get('authToken');
 
-    const authToken = Cookies.get('authToken')
-
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        console.log(authToken)
+        console.log(authToken);
         dispatch(fetchCurrencyAccounts(
             {
                 token: authToken,
@@ -34,19 +31,19 @@ export const MyAccountsPage = () => {
     }, [activeFilter, reload]);
 
     const onChangeFilter = () => {
-        setActiveFilter(!activeFilter)
-        dispatch(changeFilter())
-    }
+        setActiveFilter(!activeFilter);
+        dispatch(changeFilter());
+    };
 
     const onActivate = async (currencyId) => {
-        await currencyAccountApi.activateCurrencyAccount(authToken, currencyId)
-        setReload(!reload)
-    }
+        await currencyAccountApi.activateCurrencyAccount(authToken, currencyId);
+        setReload(!reload);
+    };
 
     const onSuspend = async (currencyId) => {
-        await currencyAccountApi.suspendCurrencyAccount(authToken, currencyId)
-        setReload(!reload)
-    }
+        await currencyAccountApi.suspendCurrencyAccount(authToken, currencyId);
+        setReload(!reload);
+    };
 
 
     return <div className='flex justify-center'>
@@ -101,4 +98,4 @@ export const MyAccountsPage = () => {
             </div>
         </div>
     </div>
-}
+};

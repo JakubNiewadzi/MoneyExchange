@@ -1,11 +1,11 @@
 import {backendApi} from "./backendApi";
 import {bearerAuth} from "./bearerAuth";
 
-const accountClient = backendApi("/api/v1/account")
+const accountClient = backendApi("/api/v1/account");
 
 export const accountApi = {
     getAccount(token) {
-        console.log("Getting singed in user account")
+        console.log("Getting singed in user account");
         return accountClient.get('/getAccount', {
             headers: {
                 Authorization: bearerAuth(token)
@@ -13,7 +13,7 @@ export const accountApi = {
         })
     },
     getCurrencyAccounts(token) {
-        console.log("Getting currency accounts for signed in user")
+        console.log("Getting currency accounts for signed in user");
         return accountClient.get('/getCurrencyAccounts', {
             headers: {
                 Authorization: bearerAuth(token)
@@ -21,11 +21,11 @@ export const accountApi = {
         })
     },
     getActiveCurrencyAccounts(token) {
-        console.log("Getting active currency accounts for signed in user")
+        console.log("Getting active currency accounts for signed in user");
         return accountClient.get('/getActiveCurrencyAccounts', {
             headers: {
                 Authorization: bearerAuth(token)
             }
         })
     },
-}
+};

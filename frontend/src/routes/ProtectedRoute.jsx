@@ -6,18 +6,18 @@ import Cookies from "js-cookie";
 import {fetchAccountInfo, logout} from "../state/slices/authSlice";
 
 export const ProtectedRoute = () => {
-    const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
-    const location = useLocation()
+    const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
-        const authToken = Cookies.get('authToken')
-        const refreshToken = Cookies.get('refreshToken')
+        const authToken = Cookies.get('authToken');
+        const refreshToken = Cookies.get('refreshToken');
         if (authToken && refreshToken) {
-            dispatch(fetchAccountInfo(authToken))
+            dispatch(fetchAccountInfo(authToken));
         } else {
-            dispatch(logout())
+            dispatch(logout());
         }
 
     }, []);
@@ -30,4 +30,4 @@ export const ProtectedRoute = () => {
         <Navbar/>
         <Outlet/>
     </>
-}
+};

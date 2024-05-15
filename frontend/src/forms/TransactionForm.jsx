@@ -7,26 +7,26 @@ import Cookies from "js-cookie";
 
 export const TransactionForm = ({action}) => {
 
-    const [amount, setAmount] = useState(0.0)
-    const [amountError, setAmountError] = useState('')
+    const [amount, setAmount] = useState(0.0);
+    const [amountError, setAmountError] = useState('');
 
-    const params = useParams()
-    const authToken = Cookies.get('authToken')
-    const navigate = useNavigate()
+    const params = useParams();
+    const authToken = Cookies.get('authToken');
+    const navigate = useNavigate();
 
 
     const handleChange = (e) => {
-        const data = e.target.value
-        setAmount(data)
-    }
+        const data = e.target.value;
+        setAmount(data);
+    };
 
     const onSubmit = async (e) => {
-        e.preventDefault()
-        console.log(amount)
+        e.preventDefault();
+        console.log(amount);
         action === "Deposit" ? await currencyAccountApi.deposit(authToken, amount, params.id) :
-            await currencyAccountApi.withdraw(authToken, amount, params.id)
-        navigate("/myAccounts")
-    }
+            await currencyAccountApi.withdraw(authToken, amount, params.id);
+        navigate("/myAccounts");
+    };
 
     return <FormContainer handleSubmit={onSubmit}>
         <h2 className="text-center text-2xl font-semibold mb-4">{action}</h2>
@@ -45,4 +45,4 @@ export const TransactionForm = ({action}) => {
         </Button>
     </FormContainer>
 
-}
+};

@@ -9,13 +9,13 @@ import register from "../images/register.jpg"
 
 export const HomePage = () => {
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        const authToken = Cookies.get('authToken')
-        const refreshToken = Cookies.get('refreshToken')
+        const authToken = Cookies.get('authToken');
+        const refreshToken = Cookies.get('refreshToken');
         if (authToken && refreshToken) {
-            dispatch(fetchAccountInfo(authToken))
+            dispatch(fetchAccountInfo(authToken));
         }
     }, []);
 
@@ -60,4 +60,4 @@ export const HomePage = () => {
             <div className='text-4xl font-bold md:w-3/5 mt-8 md:mt-0'></div>
         </div>
     </div>
-}
+};

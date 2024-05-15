@@ -7,15 +7,15 @@ import {fetchCurrencies, setCurrencies} from "../state/slices/currencySlice";
 
 export const CurrencyBanner = ({visible}) => {
 
-    const calculatingCurrency = useSelector(state => state.currency.calculatingCurrency)
-    const currencies = useSelector(state => state.currency.currencies)
+    const calculatingCurrency = useSelector(state => state.currency.calculatingCurrency);
+    const currencies = useSelector(state => state.currency.currencies);
 
-    const [isConnected, setIsConnected] = useState(false)
+    const [isConnected, setIsConnected] = useState(false);
     const [offset, setOffset] = useState(0);
     const [contentWidth, setContentWidth] = useState(0);
-    const [exchangeRateCalculator, setExchangeRateCalculator] = useState(calculatingCurrency)
+    const [exchangeRateCalculator, setExchangeRateCalculator] = useState(calculatingCurrency);
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(fetchCurrencies(exchangeRateCalculator))
@@ -25,7 +25,7 @@ export const CurrencyBanner = ({visible}) => {
         if (currencyId !== exchangeRateCalculator) {
             setExchangeRateCalculator(currencyId)
         }
-    }
+    };
 
     useEffect(() => {
         if (currencies.length !== 0 && visible) {
@@ -47,24 +47,24 @@ export const CurrencyBanner = ({visible}) => {
     }, [currencies, contentWidth, visible]);
 
     useEffect(() => {
-        const socket = new SockJS(process.env.REACT_APP_API_WEBSOCKET_URL + "/currencyUpdates")
-        const client = Stomp.over(socket)
+        const socket = new SockJS(process.env.REACT_APP_API_WEBSOCKET_URL + "/currencyUpdates");
+        const client = Stomp.over(socket);
 
         client.connect({}, () => {
             {
                 console.log('Websocket connection established');
-                setIsConnected(true)
+                setIsConnected(true);
                 client.subscribe('/topic/currencyUpdates', (message) => {
-                    const receivedMessage = JSON.parse(message.body)
-                    dispatch(setCurrencies(receivedMessage))
+                    const receivedMessage = JSON.parse(message.body);
+                    dispatch(setCurrencies(receivedMessage));
                 })
             }
-        })
+        });
         
         return () =>{
             if(isConnected) {
-                client.disconnect()
-                setIsConnected(false)
+                client.disconnect();
+                setIsConnected(false);
             }
         }
     }, []);
@@ -82,4 +82,4 @@ export const CurrencyBanner = ({visible}) => {
             </div>
         </div> : <div></div>
     )
-}
+};

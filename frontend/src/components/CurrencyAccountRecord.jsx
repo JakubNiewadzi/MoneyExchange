@@ -3,7 +3,7 @@ import {useNavigate} from "react-router";
 
 export const CurrencyAccountRecord = ({currencyId, code, balance, status, onActivate, onSuspend}) => {
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     return <tr className="border-b bg-background">
         <th scope="row" className="px-6 py-4">
@@ -33,5 +33,5 @@ export const CurrencyAccountRecord = ({currencyId, code, balance, status, onActi
             }
 
         </th>
-    </tr>
+    </tr>;
 }

@@ -13,27 +13,27 @@ import {FaBell, FaRegUserCircle} from "react-icons/fa";
 import {CurrencyBanner} from "./CurrencyBanner";
 
 export const Navbar = () => {
-    const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
+    const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
 
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const [openAvatarDropdown, setOpenAvatarDropdown] = useState(false)
+    const [openAvatarDropdown, setOpenAvatarDropdown] = useState(false);
 
     const [visible, setVisible] = useState(true);
 
 
     const handleLogout = () => {
-        Cookies.remove("refreshToken")
-        Cookies.remove("authToken")
-        dispatch(logout())
-        navigate("/")
-    }
+        Cookies.remove("refreshToken");
+        Cookies.remove("authToken");
+        dispatch(logout());
+        navigate("/");
+    };
 
     const toggleAvatarDropdown = () => {
-        setOpenAvatarDropdown(!openAvatarDropdown)
-        console.log(openAvatarDropdown)
-    }
+        setOpenAvatarDropdown(!openAvatarDropdown);
+        console.log(openAvatarDropdown);
+    };
     return (
         <div className="absolute">
             <AppBar className="bg-darkGray">

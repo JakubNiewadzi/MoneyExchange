@@ -1,3 +1,3 @@
 export const bearerAuth = (token) => {
-    return `Bearer ${token}`
-}
+    return `Bearer ${token}`;
+};
