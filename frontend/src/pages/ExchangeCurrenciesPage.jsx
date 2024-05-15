@@ -80,8 +80,6 @@ export const ExchangeCurrenciesPage = () => {
             value = value.slice(0, -1);
         }
 
-        console.log(currencyOneAccount);
-
         if (name === 'amount-from') {
             setCurrencyOneAmount(value);
             if (currencyOneAccount?.balance - value < 0) {
@@ -116,7 +114,7 @@ export const ExchangeCurrenciesPage = () => {
         }
     };
 
-    return <div className='flex flex-col justify-center bg'>
+    return <div className='flex flex-col justify-center'>
         <div
             className='flex flex-col bg-darkGray w-full space items-center py-8 justify-center rounded-lg shadow-lg mt-48'>
             <div className='text-3xl font-semibold text-center'>Exchange your currencies, cause it's what this site is all

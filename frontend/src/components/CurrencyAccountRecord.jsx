@@ -5,7 +5,7 @@ export const CurrencyAccountRecord = ({currencyId, code, balance, status, onActi
 
     const navigate = useNavigate();
 
-    return <tr className="border-b bg-background">
+    return <tr className="border-b border-lightGray hover:bg-background">
         <th scope="row" className="px-6 py-4">
             {code}
         </th>
@@ -19,16 +19,16 @@ export const CurrencyAccountRecord = ({currencyId, code, balance, status, onActi
             {status === 'ACTIVE' ? (
                 <div className='flex w-3/4 justify-between'>
                     <Button onClick={() => navigate(`deposit/${currencyId}`)} variant="contained"
-                            className="bg-darkGray w-1/4">Deposit</Button>
+                            className="bg-background w-1/4">Deposit</Button>
                     <Button onClick={() => navigate(`withdraw/${currencyId}`)} variant="contained"
-                            className="bg-darkGray w-1/4">Withdraw</Button>
+                            className="bg-background w-1/4">Withdraw</Button>
                     <Button onClick={() => onSuspend(currencyId)} variant="contained"
                             className="bg-lightGray w-1/4">Suspend</Button>
 
                 </div>
             ) : <div className='flex w-3/4 justify-center'><Button onClick={() => onActivate(currencyId)}
                                                                    variant="contained"
-                                                                   className="bg-darkGray w-full">Activate</Button>
+                                                                   className="bg-background w-full">Activate</Button>
             </div>
             }
 

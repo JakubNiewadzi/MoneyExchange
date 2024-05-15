@@ -61,7 +61,7 @@ export const MyAccountsPage = () => {
             <div className='mt-8 relative overflow-x-auto'>
                 {status === 'succeeded' ? currencyAccounts.length !== 0 ?
                         <table className='table-auto min-w-full text-left rtl:text-right'>
-                            <thead className='uppercase bg-darkGray'>
+                            <thead className='bg-darkGray border-b-4 border-lightGray'>
                             <tr>
                                 <th scope="col" className="px-6 py-3">
                                     Code
