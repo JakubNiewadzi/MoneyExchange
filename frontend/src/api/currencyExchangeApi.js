@@ -29,9 +29,10 @@ export const currencyExchangeApi = {
     },
     getExchanges(token, pageNumber, pageSize) {
         console.log("Getting exchanges history for a user");
+        console.log(pageNumber, pageSize);
         return currencyExchangeClient.get("/getExchanges", {
             params: {
-                pagNo: pageNumber,
+                pageNo: pageNumber,
                 pageSize: pageSize
             },
             headers: {

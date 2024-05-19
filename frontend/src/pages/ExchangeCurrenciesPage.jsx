@@ -110,7 +110,7 @@ export const ExchangeCurrenciesPage = () => {
     const onExchange = async () => {
         const response = await currencyExchangeApi.exchangeCurrency(authToken, currencyOne, currencyTwo, currencyOneAmount);
         if (response !== undefined) {
-            navigate("/myAccounts");
+            navigate("/exchangeHistory");
         }
     };
 

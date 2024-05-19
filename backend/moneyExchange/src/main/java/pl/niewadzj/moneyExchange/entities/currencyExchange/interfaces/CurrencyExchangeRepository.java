@@ -8,9 +8,11 @@ import pl.niewadzj.moneyExchange.entities.account.Account;
 import pl.niewadzj.moneyExchange.entities.currencyExchange.CurrencyExchange;
 import pl.niewadzj.moneyExchange.entities.currencyExchange.CurrencyExchangeStatus;
 
+import java.util.List;
+
 @Repository
 public interface CurrencyExchangeRepository extends JpaRepository<CurrencyExchange, Long> {
-    Page<CurrencyExchange> findByAccountAndCurrencyExchangeStatus(Account account,
-                                                                  CurrencyExchangeStatus status,
-                                                                  Pageable pageable);
+    Page<CurrencyExchange> findByAccountAndCurrencyExchangeStatusIn(Account account,
+                                                                    List<CurrencyExchangeStatus> status,
+                                                                    Pageable pageable);
 }

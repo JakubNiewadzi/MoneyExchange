@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.niewadzj.moneyExchange.api.currencyExchange.interfaces.CurrencyExchangeService;
@@ -107,10 +108,11 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
         Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user));
 
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by("exchangeDateTime")
+                .descending());
 
-        Page<CurrencyExchangeResponse> currencyExchangeResponses = currencyExchangeRepository.findByAccountAndCurrencyExchangeStatus(account,
-                        CurrencyExchangeStatus.SUCCESSFUL,
+        Page<CurrencyExchangeResponse> currencyExchangeResponses = currencyExchangeRepository.findByAccountAndCurrencyExchangeStatusIn(account,
+                        List.of(CurrencyExchangeStatus.SUCCESSFUL, CurrencyExchangeStatus.REVERTED),
                         pageable).map(currencyExchangeMapper);
 
         return CurrencyHistoryResponse.builder()

@@ -47,7 +47,7 @@ export const MyAccountsPage = () => {
 
 
     return <div className='flex justify-center'>
-        <div className='w-11/12 mt-56 mb-8 flex flex-col bg-darkGray p-8 text-3xl
+        <div className='w-full mt-56 mb-8 flex flex-col bg-darkGray p-8 text-3xl
         rounded-lg shadow-lg'>
             <div className='flex flex-row justify-between'>
                 <div>Currencies for account with number</div>

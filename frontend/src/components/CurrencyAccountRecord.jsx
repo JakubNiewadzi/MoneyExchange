@@ -34,4 +34,4 @@ export const CurrencyAccountRecord = ({currencyId, code, balance, status, onActi
 
         </th>
     </tr>;
-}
+};
