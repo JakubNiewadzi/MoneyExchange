@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.niewadzj.moneyExchange.api.currencyExchange.interfaces.CurrencyExchangeController;
 import pl.niewadzj.moneyExchange.api.currencyExchange.interfaces.CurrencyExchangeService;
 import pl.niewadzj.moneyExchange.api.currencyExchange.records.CurrencyExchangeResponse;
+import pl.niewadzj.moneyExchange.api.currencyExchange.records.CurrencyHistoryResponse;
 import pl.niewadzj.moneyExchange.api.currencyExchange.records.ExchangeCurrencyRequest;
 import pl.niewadzj.moneyExchange.api.currencyExchange.records.ExchangeCurrencyResponse;
 import pl.niewadzj.moneyExchange.entities.user.User;
@@ -39,9 +40,9 @@ public class CurrencyExchangeControllerImpl implements CurrencyExchangeControlle
 
     @Override
     @GetMapping(GET_EXCHANGES_FOR_USER)
-    public final List<CurrencyExchangeResponse> getExchangesHistoryForUser(@RequestParam(defaultValue = "0", required = false) int pageNo,
-                                                                           @RequestParam(defaultValue = "10", required = false) int pageSize,
-                                                                           @AuthenticationPrincipal User user) {
+    public final CurrencyHistoryResponse getExchangesHistoryForUser(@RequestParam(defaultValue = "0", required = false) int pageNo,
+                                                                    @RequestParam(defaultValue = "10", required = false) int pageSize,
+                                                                    @AuthenticationPrincipal User user) {
         return currencyExchangeService.getExchangesHistoryForUser(pageNo, pageSize, user);
     }
 

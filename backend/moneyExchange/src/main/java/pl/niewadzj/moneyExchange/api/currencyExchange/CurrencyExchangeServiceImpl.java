@@ -2,6 +2,7 @@ package pl.niewadzj.moneyExchange.api.currencyExchange;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.niewadzj.moneyExchange.api.currencyExchange.interfaces.CurrencyExchangeService;
 import pl.niewadzj.moneyExchange.api.currencyExchange.mapper.CurrencyExchangeMapper;
 import pl.niewadzj.moneyExchange.api.currencyExchange.records.CurrencyExchangeResponse;
+import pl.niewadzj.moneyExchange.api.currencyExchange.records.CurrencyHistoryResponse;
 import pl.niewadzj.moneyExchange.api.currencyExchange.records.ExchangeCurrencyRequest;
 import pl.niewadzj.moneyExchange.api.currencyExchange.records.ExchangeCurrencyResponse;
 import pl.niewadzj.moneyExchange.entities.account.Account;
@@ -99,7 +101,7 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
     }
 
     @Override
-    public List<CurrencyExchangeResponse> getExchangesHistoryForUser(int pageNo, int pageSize, User user) {
+    public CurrencyHistoryResponse getExchangesHistoryForUser(int pageNo, int pageSize, User user) {
         log.debug("Getting exchange history for user: {}", user);
 
         Account account = accountRepository.findByAccountOwner(user)
@@ -107,10 +109,15 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
 
         Pageable pageable = PageRequest.of(pageNo, pageSize);
 
-        return currencyExchangeRepository.findByAccountAndCurrencyExchangeStatus(account,
+        Page<CurrencyExchangeResponse> currencyExchangeResponses = currencyExchangeRepository.findByAccountAndCurrencyExchangeStatus(account,
                         CurrencyExchangeStatus.SUCCESSFUL,
-                        pageable).map(currencyExchangeMapper)
-                .getContent();
+                        pageable).map(currencyExchangeMapper);
+
+        return CurrencyHistoryResponse.builder()
+                .currencyExchangeResponses(currencyExchangeResponses.getContent())
+                .amount(currencyExchangeResponses.getTotalElements())
+                .pages(currencyExchangeResponses.getTotalPages())
+                .build();
     }
 
     @Override
