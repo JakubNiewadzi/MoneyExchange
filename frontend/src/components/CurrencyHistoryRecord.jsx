@@ -31,7 +31,7 @@ export const CurrencyHistoryRecord = ({
             {hasHourPassed(exchangeDateTime) ?
                 <div><Button color='inherit' className='bg-lightGray w-2/3' onClick={() => onRevert(id)}>Revert</Button>
                 </div>
-                : <div>
+                :  <div>
                     Cannot revert
                 </div>
             }

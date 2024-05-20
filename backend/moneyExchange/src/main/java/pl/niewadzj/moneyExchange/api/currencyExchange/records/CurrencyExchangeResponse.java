@@ -1,6 +1,7 @@
 package pl.niewadzj.moneyExchange.api.currencyExchange.records;
 
 import lombok.Builder;
+import pl.niewadzj.moneyExchange.entities.currencyExchange.CurrencyExchangeStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -14,5 +15,6 @@ public record CurrencyExchangeResponse(Long id,
                                        String increasedCurrencyCode,
                                        BigDecimal amountIncreased,
                                        BigDecimal exchangeRate,
+                                       CurrencyExchangeStatus status,
                                        LocalDateTime exchangeDateTime) {
 }

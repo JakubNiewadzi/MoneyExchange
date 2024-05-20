@@ -20,6 +20,7 @@ public class CurrencyExchangeMapper implements Function<CurrencyExchange, Curren
                 .amountIncreased(currencyExchange.getAmountIncreased())
                 .exchangeDateTime(currencyExchange.getExchangeDateTime())
                 .exchangeRate(currencyExchange.getExchangeRate())
+                .status(currencyExchange.getCurrencyExchangeStatus())
                 .build();
     }
 }

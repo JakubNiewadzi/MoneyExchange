@@ -75,7 +75,7 @@ export const ExchangeHistoryPage = () => {
                         onClick={() => onChangePage(-1)}>
                     <IoIosArrowBack size={40}/>
                 </Button>
-                <div className='h-16 flex items-center'>{pageNumber + 1}</div>
+                <div className='h-16 w-8 flex items-center justify-center'>{pageNumber + 1}</div>
                 <Button color='inherit'
                         className='rounded-full h-16 mx-2'
                         onClick={() => onChangePage(1)}>

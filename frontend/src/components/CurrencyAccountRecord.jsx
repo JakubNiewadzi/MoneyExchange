@@ -31,7 +31,6 @@ export const CurrencyAccountRecord = ({currencyId, code, balance, status, onActi
                                                                    className="bg-background w-full">Activate</Button>
             </div>
             }
-
         </th>
     </tr>;
 };

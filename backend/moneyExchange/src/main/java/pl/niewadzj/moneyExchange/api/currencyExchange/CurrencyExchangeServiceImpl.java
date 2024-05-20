@@ -51,7 +51,7 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
 
     @Override
     @Transactional
-    public ExchangeCurrencyResponse exchangeCurrency(ExchangeCurrencyRequest exchangeCurrencyRequest, User user) {
+    public synchronized ExchangeCurrencyResponse exchangeCurrency(ExchangeCurrencyRequest exchangeCurrencyRequest, User user) {
         log.debug("Performing currency exchange: {}", exchangeCurrencyRequest);
         Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user));
@@ -124,7 +124,7 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
 
     @Override
     @Transactional
-    public ExchangeCurrencyResponse revertExchange(Long id, User user) {
+    public synchronized ExchangeCurrencyResponse revertExchange(Long id, User user) {
         Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user));
 
