@@ -27,6 +27,9 @@ const currencyExchangeSlice = createSlice({
         reducers: {
             changePage(state, action){
                 state.pageNumber = action.payload;
+            },
+            changeAmountPerPage(state, action){
+                state.amountPerPage = action.payload;
             }
         },
         extraReducers: (builder) => {
@@ -49,4 +52,4 @@ const currencyExchangeSlice = createSlice({
 
 export const currencyExchangeReducer = currencyExchangeSlice.reducer;
 
-export const {changePage} = currencyExchangeSlice.actions;
+export const {changePage, changeAmountPerPage} = currencyExchangeSlice.actions;

@@ -1,11 +1,12 @@
 import {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import {useDispatch, useSelector} from "react-redux";
-import {changePage, fetchCurrencyExchangeHistory} from "../state/slices/currencyExchangeSlice";
+import {changeAmountPerPage, changePage, fetchCurrencyExchangeHistory} from "../state/slices/currencyExchangeSlice";
 import {CurrencyHistoryRecord} from "../components/CurrencyHistoryRecord";
 import Button from "@mui/material/Button";
 import {IoIosArrowBack, IoIosArrowForward} from "react-icons/io";
 import {currencyExchangeApi} from "../api/currencyExchangeApi";
+import {MenuItem, Select} from "@mui/material";
 
 export const ExchangeHistoryPage = () => {
 
@@ -43,9 +44,19 @@ export const ExchangeHistoryPage = () => {
         setReload(!reload);
     };
 
+    const onChangeAmountPerPage = (e) => {
+        const value = e.target.value;
+        console.log(value);
+        dispatch(changeAmountPerPage(value));
+    };
+
     return <div className='flex flex-col justify-center'>
         <div className='flex w-full flex-col bg-darkGray mt-48 py-8 text-3xl'>
-            <table className='table-auto w-full'>
+            <div className='w-full mb-8 pl-14 font-semibold'>Here you can find any of your <b
+                className='text-blue-400'>  {totalAmount}  </b> exchanges
+            </div>
+            <hr color="blue"/>
+            <table className='table-auto w-full mt-2'>
                 <thead className='w-full border-b-4 border-lightGray'>
                 <tr className=' w-full m-4'>
                     <th scope="col" className="px-6 py-3">From</th>
@@ -65,23 +76,38 @@ export const ExchangeHistoryPage = () => {
                                            amountIncreased={currencyAccountRecord.amountIncreased}
                                            exchangeDateTime={currencyAccountRecord.exchangeDateTime}
                                            id={currencyAccountRecord.id}
+                                           status={currencyAccountRecord.status}
                                            onRevert={onRevert}/>
                 )}
                 </tbody>
             </table>
-            <div className='flex w-full justify-end pt-4 pr-8'>
-                <Button color='inherit'
-                        className='rounded-full h-16 mx-2'
-                        onClick={() => onChangePage(-1)}>
-                    <IoIosArrowBack size={40}/>
-                </Button>
-                <div className='h-16 w-8 flex items-center justify-center'>{pageNumber + 1}</div>
-                <Button color='inherit'
-                        className='rounded-full h-16 mx-2'
-                        onClick={() => onChangePage(1)}>
-                    <IoIosArrowForward  size={40}/>
-                </Button>
-                <div className='h-16 flex items-center'>{pageAmount}</div>
+            <div className='flex w-full pt-4 px-16'>
+                <div>
+                    <div className='text-xl font-semibold flex w-52 items-center'>Records per page</div>
+                    <Select
+                        name='select'
+                        className="text-white font-semibold w-full bg-lightGray rounded-bl focus:outline-none focus:ring ring-background"
+                        value={amountPerPage}
+                        onChange={onChangeAmountPerPage}>
+                        <MenuItem value={5}>5</MenuItem>
+                        <MenuItem value={10}>10</MenuItem>
+                        <MenuItem value={20}>20</MenuItem>
+                    </Select>
+                </div>
+                <div className='flex w-full justify-end'>
+                    <Button color='inherit'
+                            className='rounded-full h-16 mx-2'
+                            onClick={() => onChangePage(-1)}>
+                        <IoIosArrowBack size={40}/>
+                    </Button>
+                    <div className='h-16 w-8 flex items-center justify-center'>{pageNumber + 1}</div>
+                    <Button color='inherit'
+                            className='rounded-full h-16 mx-2'
+                            onClick={() => onChangePage(1)}>
+                        <IoIosArrowForward size={40}/>
+                    </Button>
+                    <div className='h-16 flex items-center'>{pageAmount}</div>
+                </div>
             </div>
         </div>
     </div>

@@ -8,7 +8,8 @@ export const CurrencyHistoryRecord = ({
                                           amountIncreased,
                                           exchangeDateTime,
                                           onRevert,
-                                          id
+                                          id,
+                                          status
                                       }) => {
 
     return <tr className="border-b border-lightGray hover:bg-background">
@@ -28,12 +29,12 @@ export const CurrencyHistoryRecord = ({
             {formatDate(exchangeDateTime)}
         </th>
         <th>
-            {hasHourPassed(exchangeDateTime) ?
+            { status !== 'REVERTED' ?
                 <div><Button color='inherit' className='bg-lightGray w-2/3' onClick={() => onRevert(id)}>Revert</Button>
                 </div>
-                :  <div>
-                    Cannot revert
-                </div>
+                :  hasHourPassed(exchangeDateTime)? <div>
+                    Already reverted
+                </div> : <div>Too late to revert</div>
             }
         </th>
     </tr>;
