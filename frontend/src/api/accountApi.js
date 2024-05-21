@@ -12,9 +12,15 @@ export const accountApi = {
             }
         })
     },
-    getCurrencyAccounts(token) {
+    getCurrencyAccounts(token, pageNumber, pageSize) {
         console.log("Getting currency accounts for signed in user");
+        console.log(pageNumber);
+        console.log(pageSize);
         return accountClient.get('/getCurrencyAccounts', {
+            params: {
+                pageNo: pageNumber,
+                pageSize: pageSize
+            },
             headers: {
                 Authorization: bearerAuth(token)
             }

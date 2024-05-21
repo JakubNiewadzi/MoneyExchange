@@ -5,10 +5,11 @@ export const fetchCurrencyAccounts = createAsyncThunk(
     'currencyAccounts/fetchCurrencyAccounts',
     async (args) => {
         if (!args.isFilterActive) {
-            const response = await accountApi.getCurrencyAccounts(args.token);
+            const response = await accountApi.getCurrencyAccounts(args.token, args.pageNumber, args.pageSize);
+            console.log(response.data)
             return response.data
         }
-        const response = await accountApi.getActiveCurrencyAccounts(args.token);
+        const response = await accountApi.getActiveCurrencyAccounts(args.token, args.pageNumber, args.pageSize);
         return response.data
     }
 );
@@ -37,6 +38,13 @@ const currencyAccountSlice = createSlice({
         },
         changeFilter: (state) => {
             state.isFilterActive = !state.isFilterActive;
+        },
+        changeAccountsPage(state, action){
+            state.pageNumber = action.payload;
+        },
+        changeAccountsAmountPerPage(state, action){
+            console.log(action.payload)
+            state.amountPerPage = action.payload;
         }
     },
     extraReducers: builder => {
@@ -59,5 +67,5 @@ const currencyAccountSlice = createSlice({
     }
 });
 
-export const {releaseCurrencyAccounts, changeFilter} = currencyAccountSlice.actions;
+export const {releaseCurrencyAccounts, changeFilter, changeAccountsAmountPerPage, changeAccountsPage} = currencyAccountSlice.actions;
 export const currencyAccountsReducer = currencyAccountSlice.reducer;

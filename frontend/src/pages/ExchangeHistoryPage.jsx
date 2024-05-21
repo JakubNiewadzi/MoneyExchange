@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import {useDispatch, useSelector} from "react-redux";
-import {changeAmountPerPage, changePage, fetchCurrencyExchangeHistory} from "../state/slices/currencyExchangeSlice";
+import {changeHistoryAmountPerPage, changeHistoryPage, fetchCurrencyExchangeHistory} from "../state/slices/currencyExchangeSlice";
 import {CurrencyHistoryRecord} from "../components/CurrencyHistoryRecord";
 import Button from "@mui/material/Button";
 import {IoIosArrowBack, IoIosArrowForward} from "react-icons/io";
@@ -36,7 +36,7 @@ export const ExchangeHistoryPage = () => {
     const onChangePage = (amount) => {
         const newPage = pageNumber + amount;
         if (newPage >= 0 && newPage < pageAmount)
-            dispatch(changePage(newPage));
+            dispatch(changeHistoryPage(newPage));
     };
 
     const onRevert = async (id) => {
@@ -46,8 +46,7 @@ export const ExchangeHistoryPage = () => {
 
     const onChangeAmountPerPage = (e) => {
         const value = e.target.value;
-        console.log(value);
-        dispatch(changeAmountPerPage(value));
+        dispatch(changeHistoryAmountPerPage(value));
     };
 
     return <div className='flex flex-col justify-center'>

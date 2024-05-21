@@ -1,10 +1,17 @@
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {changeFilter, fetchCurrencyAccounts} from "../state/slices/currencyAccountsSlice";
-import {Checkbox, CircularProgress} from "@mui/material";
+import {
+    changeAccountsAmountPerPage,
+    changeAccountsPage,
+    changeFilter,
+    fetchCurrencyAccounts
+} from "../state/slices/currencyAccountsSlice";
+import {Checkbox, CircularProgress, MenuItem, Select} from "@mui/material";
 import {CurrencyAccountRecord} from "../components/CurrencyAccountRecord";
 import {currencyAccountApi} from "../api/currencyAccountApi";
 import Cookies from "js-cookie";
+import Button from "@mui/material/Button";
+import {IoIosArrowBack, IoIosArrowForward} from "react-icons/io";
 
 export const MyAccountsPage = () => {
 
@@ -12,6 +19,10 @@ export const MyAccountsPage = () => {
     const accountNumber = useSelector(state => state.auth.accountNumber);
     const status = useSelector(state => state.currencyAccount.status);
     const isFilterActive = useSelector(state => state.currencyAccount.isFilterActive);
+    const pageAmount = useSelector(state => state.currencyAccount.pageAmount);
+    const totalAmount = useSelector(state =>state.currencyAccount.totalAmount);
+    const pageNumber = useSelector(state => state.currencyAccount.pageNumber);
+    const amountPerPage = useSelector(state => state.currencyAccount.amountPerPage);
 
     const [activeFilter, setActiveFilter] = useState(isFilterActive);
     const [reload, setReload] = useState(false);
@@ -21,14 +32,15 @@ export const MyAccountsPage = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        console.log(authToken);
         dispatch(fetchCurrencyAccounts(
             {
                 token: authToken,
-                isFilterActive: activeFilter
+                isFilterActive: activeFilter,
+                pageNumber: pageNumber,
+                pageSize: amountPerPage
             }
         ))
-    }, [activeFilter, reload]);
+    }, [activeFilter, reload, amountPerPage, pageNumber]);
 
     const onChangeFilter = () => {
         setActiveFilter(!activeFilter);
@@ -43,6 +55,17 @@ export const MyAccountsPage = () => {
     const onSuspend = async (currencyId) => {
         await currencyAccountApi.suspendCurrencyAccount(authToken, currencyId);
         setReload(!reload);
+    };
+
+    const onChangePage = (amount) => {
+        const newPage = pageNumber + amount;
+        if (newPage >= 0 && newPage < pageAmount)
+            dispatch(changeAccountsPage(newPage));
+    };
+
+    const onChangeAmountPerPage = (e) => {
+        const value = e.target.value;
+        dispatch(changeAccountsAmountPerPage(value));
     };
 
 
@@ -95,6 +118,34 @@ export const MyAccountsPage = () => {
                         <CircularProgress className='text-white' size={120}/>
                     </div>
                 }
+            </div>
+            <div className='flex w-full pt-4 pl-6 pr-24'>
+                <div>
+                    <div className='text-xl font-semibold flex w-52 items-center'>Records per page</div>
+                    <Select
+                        name='select'
+                        className="text-white font-semibold w-full bg-lightGray rounded-bl focus:outline-none focus:ring ring-background"
+                        value={amountPerPage}
+                        onChange={onChangeAmountPerPage}>
+                        <MenuItem value={5}>5</MenuItem>
+                        <MenuItem value={10}>10</MenuItem>
+                        <MenuItem value={20}>20</MenuItem>
+                    </Select>
+                </div>
+                <div className='flex w-full justify-end'>
+                    <Button color='inherit'
+                            className='rounded-full h-16 mx-2'
+                            onClick={() => onChangePage(-1)}>
+                        <IoIosArrowBack size={40}/>
+                    </Button>
+                    <div className='h-16 w-8 flex items-center justify-center'>{pageNumber + 1}</div>
+                    <Button color='inherit'
+                            className='rounded-full h-16 mx-2'
+                            onClick={() => onChangePage(1)}>
+                        <IoIosArrowForward size={40}/>
+                    </Button>
+                    <div className='h-16 flex items-center'>{pageAmount}</div>
+                </div>
             </div>
         </div>
     </div>
