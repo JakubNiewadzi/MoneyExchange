@@ -39,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
         checkIfUserExists(registrationRequest.email());
 
         User user = User.builder()
-                .email(registrationRequest.email())
+                .email(registrationRequest.email().toLowerCase())
                 .firstName(registrationRequest.firstName())
                 .lastName(registrationRequest.lastName())
                 .role(UserRole.USER)
@@ -64,7 +64,7 @@ public class AuthServiceImpl implements AuthService {
         log.debug("Processing login request: {}", loginRequest);
 
         User user = userRepository
-                .findByEmail(loginRequest.email())
+                .findByEmail(loginRequest.email().toLowerCase())
                 .orElseThrow(() -> new UserNotFoundException(loginRequest.email()));
 
 

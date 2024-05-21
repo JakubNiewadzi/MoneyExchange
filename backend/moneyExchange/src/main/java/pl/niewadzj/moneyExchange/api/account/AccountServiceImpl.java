@@ -2,15 +2,17 @@ package pl.niewadzj.moneyExchange.api.account;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import pl.niewadzj.moneyExchange.api.account.interfaces.AccountService;
 import pl.niewadzj.moneyExchange.api.account.mapper.AccountMapper;
 import pl.niewadzj.moneyExchange.api.account.records.AccountResponse;
 import pl.niewadzj.moneyExchange.api.account.records.AccountUserInfoResponse;
+import pl.niewadzj.moneyExchange.api.account.records.CurrencyAccountsPageResponse;
 import pl.niewadzj.moneyExchange.api.currencyAccount.mapper.CurrencyAccountMapper;
-import pl.niewadzj.moneyExchange.api.currencyAccount.records.CurrencyAccountResponse;
 import pl.niewadzj.moneyExchange.entities.account.Account;
 import pl.niewadzj.moneyExchange.entities.account.interfaces.AccountRepository;
 import pl.niewadzj.moneyExchange.entities.currency.Currency;
@@ -22,7 +24,6 @@ import pl.niewadzj.moneyExchange.entities.user.User;
 import pl.niewadzj.moneyExchange.exceptions.account.AccountNotFoundException;
 
 import java.math.BigDecimal;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -39,7 +40,7 @@ public class AccountServiceImpl implements AccountService {
     private final CurrencyRepository currencyRepository;
     private final CurrencyAccountMapper currencyAccountMapper;
     private final CurrencyAccountRepository currencyAccountRepository;
-    private final Random random = new Random(0);
+    private final Random random = new Random();
 
     @Override
     public final void createAccount(User owner) {
@@ -66,33 +67,46 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public final List<CurrencyAccountResponse> getCurrencyAccounts(User user) {
+    public final CurrencyAccountsPageResponse getCurrencyAccounts(int pageNo, int pageSize, User user) {
         log.debug("Fetching all currency accounts for user {}", user);
         final Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user));
 
-        return account.getAccountBalance()
-                .stream()
-                .map(currencyAccountMapper)
-                .sorted(Comparator.comparing(CurrencyAccountResponse::balance)
-                        .thenComparing(CurrencyAccountResponse::status)
-                        .reversed())
-                .toList();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by("balance").descending().and(Sort.by("currencyAccountStatus")));
+
+        Page<CurrencyAccount> currencyAccountResponsePage = currencyAccountRepository
+                .findByAccount(account, pageable);
+
+        return CurrencyAccountsPageResponse.builder()
+                .currencyAccountResponses(currencyAccountResponsePage.getContent()
+                        .stream()
+                        .map(currencyAccountMapper)
+                        .toList())
+                .amount(currencyAccountResponsePage.getTotalElements())
+                .pages(currencyAccountResponsePage.getTotalPages())
+                .build();
+
     }
 
     @Override
-    public final List<CurrencyAccountResponse> getActiveCurrencyAccounts(User user) {
+    public final CurrencyAccountsPageResponse getActiveCurrencyAccounts(int pageNo, int pageSize, User user) {
         log.debug("Fetching all currency accounts for user {}", user);
         final Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user));
 
-        return account.getAccountBalance()
-                .stream()
-                .filter(currencyAccount -> currencyAccount.getCurrencyAccountStatus() == CurrencyAccountStatus.ACTIVE)
-                .map(currencyAccountMapper)
-                .sorted(Comparator.comparing(CurrencyAccountResponse::balance)
-                        .reversed())
-                .toList();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by("balance").descending());
+
+        Page<CurrencyAccount> currencyAccountResponsePage = currencyAccountRepository
+                .findByAccountAndCurrencyAccountStatus(account, CurrencyAccountStatus.ACTIVE, pageable);
+
+        return CurrencyAccountsPageResponse.builder()
+                .currencyAccountResponses(currencyAccountResponsePage.getContent()
+                        .stream()
+                        .map(currencyAccountMapper)
+                        .toList())
+                .amount(currencyAccountResponsePage.getTotalElements())
+                .pages(currencyAccountResponsePage.getTotalPages())
+                .build();
     }
 
     @Override

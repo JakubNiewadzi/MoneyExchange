@@ -11,6 +11,7 @@ import pl.niewadzj.moneyExchange.api.account.interfaces.AccountController;
 import pl.niewadzj.moneyExchange.api.account.interfaces.AccountService;
 import pl.niewadzj.moneyExchange.api.account.records.AccountResponse;
 import pl.niewadzj.moneyExchange.api.account.records.AccountUserInfoResponse;
+import pl.niewadzj.moneyExchange.api.account.records.CurrencyAccountsPageResponse;
 import pl.niewadzj.moneyExchange.api.currencyAccount.records.CurrencyAccountResponse;
 import pl.niewadzj.moneyExchange.entities.user.User;
 
@@ -35,14 +36,16 @@ public class AccountControllerImpl implements AccountController {
 
     @Override
     @GetMapping(GET_CURRENCY_ACCOUNTS)
-    public final List<CurrencyAccountResponse> getCurrencyAccounts(@AuthenticationPrincipal User user) {
-        return accountService.getCurrencyAccounts(user);
+    public final CurrencyAccountsPageResponse getCurrencyAccounts(@RequestParam(defaultValue = PAGE_NUMBER, required = false) int pageNo,
+                                                                  @RequestParam(defaultValue = PAGE_SIZE, required = false) int pageSize, @AuthenticationPrincipal User user) {
+        return accountService.getCurrencyAccounts(pageNo, pageSize, user);
     }
 
     @Override
     @GetMapping(GET_ACTIVE_ACCOUNTS)
-    public final List<CurrencyAccountResponse> getActiveCurrencyAccounts(@AuthenticationPrincipal User user) {
-        return accountService.getActiveCurrencyAccounts(user);
+    public final CurrencyAccountsPageResponse getActiveCurrencyAccounts(@RequestParam(defaultValue = PAGE_NUMBER, required = false) int pageNo,
+                                                                        @RequestParam(defaultValue = PAGE_SIZE, required = false) int pageSize, @AuthenticationPrincipal User user) {
+        return accountService.getActiveCurrencyAccounts(pageNo, pageSize, user);
     }
 
     @Override

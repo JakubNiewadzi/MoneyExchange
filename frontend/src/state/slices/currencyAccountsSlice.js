@@ -17,6 +17,10 @@ const SLICE_NAME = 'currencyAccount';
 
 const initialState = {
     currencyAccounts: [],
+    pageNumber: 0,
+    amountPerPage: 5,
+    totalAmount: 0,
+    pageAmount: 0,
     isFilterActive: false,
     status: 'idle',
     error: null
@@ -42,7 +46,9 @@ const currencyAccountSlice = createSlice({
             })
             .addCase(fetchCurrencyAccounts.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.currencyAccounts = action.payload;
+                state.currencyAccounts = action.payload.currencyAccountResponses;
+                state.totalAmount = action.payload.amount;
+                state.pageAmount = action.payload.pages;
             })
             .addCase(fetchCurrencyAccounts.rejected, (state, action) => {
                 state.status = 'failed';
