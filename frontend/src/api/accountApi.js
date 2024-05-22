@@ -12,10 +12,8 @@ export const accountApi = {
             }
         })
     },
-    getCurrencyAccounts(token, pageNumber, pageSize) {
+    getCurrencyAccountsPage(token, pageNumber, pageSize) {
         console.log("Getting currency accounts for signed in user");
-        console.log(pageNumber);
-        console.log(pageSize);
         return accountClient.get('/getCurrencyAccounts', {
             params: {
                 pageNo: pageNumber,
@@ -26,12 +24,24 @@ export const accountApi = {
             }
         })
     },
-    getActiveCurrencyAccounts(token) {
+    getActiveCurrencyAccountsPage(token, pageNumber, pageSize) {
         console.log("Getting active currency accounts for signed in user");
         return accountClient.get('/getActiveCurrencyAccounts', {
+            params: {
+                pageNo: pageNumber,
+                pageSize: pageSize
+            },
             headers: {
                 Authorization: bearerAuth(token)
             }
         })
     },
+    getAllCurrencyAccounts(token) {
+        console.log("Getting all currency accounts for signed in user");
+        return accountClient.get('/getAllCurrencyAccountsFourUser', {
+            headers: {
+                Authorization: bearerAuth(token)
+            }
+        })
+    }
 };

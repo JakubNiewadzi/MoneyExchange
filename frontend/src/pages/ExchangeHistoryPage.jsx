@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import {IoIosArrowBack, IoIosArrowForward} from "react-icons/io";
 import {currencyExchangeApi} from "../api/currencyExchangeApi";
 import {MenuItem, Select} from "@mui/material";
+import {changeAccountsPage} from "../state/slices/currencyAccountsSlice";
 
 export const ExchangeHistoryPage = () => {
 
@@ -23,7 +24,6 @@ export const ExchangeHistoryPage = () => {
     const token = Cookies.get('authToken');
 
     useEffect(() => {
-        console.log(pageNumber);
         dispatch(fetchCurrencyExchangeHistory({
             token: token,
             pageNumber: pageNumber,
@@ -31,12 +31,19 @@ export const ExchangeHistoryPage = () => {
         }));
     }, [pageNumber, amountPerPage, reload]);
 
-    console.log(exchangeHistory);
+    useEffect(() => {
+        onChangePage(0);
+    }, [pageAmount]);
 
     const onChangePage = (amount) => {
         const newPage = pageNumber + amount;
-        if (newPage >= 0 && newPage < pageAmount)
-            dispatch(changeHistoryPage(newPage));
+        if (newPage < 0) {
+            dispatch(changeAccountsPage(0));
+        } else if (newPage >= pageAmount) {
+            dispatch(changeAccountsPage(pageAmount - 1));
+        } else {
+            dispatch(changeAccountsPage(newPage));
+        }
     };
 
     const onRevert = async (id) => {

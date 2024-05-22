@@ -1,15 +1,22 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {accountApi} from "../../api/accountApi";
 
-export const fetchCurrencyAccounts = createAsyncThunk(
-    'currencyAccounts/fetchCurrencyAccounts',
+export const fetchCurrencyAccountsPage = createAsyncThunk(
+    'currencyAccounts/fetchCurrencyAccountsPage',
     async (args) => {
         if (!args.isFilterActive) {
-            const response = await accountApi.getCurrencyAccounts(args.token, args.pageNumber, args.pageSize);
-            console.log(response.data)
+            const response = await accountApi.getCurrencyAccountsPage(args.token, args.pageNumber, args.pageSize);
             return response.data
         }
-        const response = await accountApi.getActiveCurrencyAccounts(args.token, args.pageNumber, args.pageSize);
+        const response = await accountApi.getActiveCurrencyAccountsPage(args.token, args.pageNumber, args.pageSize);
+        return response.data
+    }
+);
+
+export const fetchAllCurrencyAccounts = createAsyncThunk(
+    'currencyAccounts/fetchAllCurrencyAccounts',
+    async (token) => {
+        const response = await accountApi.getAllCurrencyAccounts(token);
         return response.data
     }
 );
@@ -39,33 +46,50 @@ const currencyAccountSlice = createSlice({
         changeFilter: (state) => {
             state.isFilterActive = !state.isFilterActive;
         },
-        changeAccountsPage(state, action){
+        changeAccountsPage(state, action) {
             state.pageNumber = action.payload;
         },
-        changeAccountsAmountPerPage(state, action){
-            console.log(action.payload)
+        changeAccountsAmountPerPage(state, action) {
             state.amountPerPage = action.payload;
         }
     },
     extraReducers: builder => {
         builder
-            .addCase(fetchCurrencyAccounts.pending, (state) => {
+            .addCase(fetchCurrencyAccountsPage.pending, (state) => {
                 state.status = 'loading';
             })
-            .addCase(fetchCurrencyAccounts.fulfilled, (state, action) => {
+            .addCase(fetchCurrencyAccountsPage.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.currencyAccounts = action.payload.currencyAccountResponses;
                 state.totalAmount = action.payload.amount;
                 state.pageAmount = action.payload.pages;
             })
-            .addCase(fetchCurrencyAccounts.rejected, (state, action) => {
+            .addCase(fetchCurrencyAccountsPage.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
                 state.currencyAccounts = initialState.currencyAccounts;
                 state.isFilterActive = initialState.isFilterActive;
             })
+
+            .addCase(fetchAllCurrencyAccounts.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(fetchAllCurrencyAccounts.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.currencyAccounts = action.payload;
+            })
+            .addCase(fetchAllCurrencyAccounts.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+                state.currencyAccounts = initialState.currencyAccounts;
+            })
     }
 });
 
-export const {releaseCurrencyAccounts, changeFilter, changeAccountsAmountPerPage, changeAccountsPage} = currencyAccountSlice.actions;
+export const {
+    releaseCurrencyAccounts,
+    changeFilter,
+    changeAccountsAmountPerPage,
+    changeAccountsPage
+} = currencyAccountSlice.actions;
 export const currencyAccountsReducer = currencyAccountSlice.reducer;

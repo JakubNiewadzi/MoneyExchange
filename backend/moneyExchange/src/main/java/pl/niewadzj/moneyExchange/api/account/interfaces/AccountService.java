@@ -21,4 +21,6 @@ public interface AccountService {
     AccountUserInfoResponse getAccountForUser(User user);
 
     List<AccountResponse> getAccounts(int pageNo, int pageSize);
+
+    List<CurrencyAccountResponse> getAllCurrencyAccountsForUser(User user);
 }

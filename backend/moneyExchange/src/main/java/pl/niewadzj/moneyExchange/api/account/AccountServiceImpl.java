@@ -13,6 +13,7 @@ import pl.niewadzj.moneyExchange.api.account.records.AccountResponse;
 import pl.niewadzj.moneyExchange.api.account.records.AccountUserInfoResponse;
 import pl.niewadzj.moneyExchange.api.account.records.CurrencyAccountsPageResponse;
 import pl.niewadzj.moneyExchange.api.currencyAccount.mapper.CurrencyAccountMapper;
+import pl.niewadzj.moneyExchange.api.currencyAccount.records.CurrencyAccountResponse;
 import pl.niewadzj.moneyExchange.entities.account.Account;
 import pl.niewadzj.moneyExchange.entities.account.interfaces.AccountRepository;
 import pl.niewadzj.moneyExchange.entities.currency.Currency;
@@ -139,6 +140,19 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository.findAll(pageable)
                 .map(accountMapper)
                 .getContent();
+    }
+
+    @Override
+    public final List<CurrencyAccountResponse> getAllCurrencyAccountsForUser(User user) {
+        log.debug("Getting all currency accounts for user");
+
+        final Account account = accountRepository.findByAccountOwner(user)
+                .orElseThrow(() -> new AccountNotFoundException(user));
+
+        return account.getAccountBalance()
+                .stream()
+                .map(currencyAccountMapper)
+                .toList();
     }
 
     private String generateAccountNumber() {

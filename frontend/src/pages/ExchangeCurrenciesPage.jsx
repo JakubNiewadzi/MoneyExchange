@@ -5,7 +5,7 @@ import {MenuItem, Select} from "@mui/material";
 import {useEffect, useState} from "react";
 import {currencyExchangeApi} from "../api/currencyExchangeApi";
 import Cookies from "js-cookie";
-import {fetchCurrencyAccounts} from "../state/slices/currencyAccountsSlice";
+import {fetchAllCurrencyAccounts, fetchCurrencyAccountsPage} from "../state/slices/currencyAccountsSlice";
 import {useNavigate} from "react-router";
 
 export const ExchangeCurrenciesPage = () => {
@@ -15,9 +15,9 @@ export const ExchangeCurrenciesPage = () => {
     const [currencyOne, setCurrencyOne] = useState(1);
     const [currencyTwo, setCurrencyTwo] = useState(2);
 
-    const [currencyOneAccount, setCurrencyOneAccount] = useState(currencyAccounts.find(currencyAccount =>
+    const [currencyOneAccount, setCurrencyOneAccount] = useState(currencyAccounts?.find(currencyAccount =>
         currencyAccount.currencyId === currencyOne));
-    const [currencyTwoAccount, setCurrencyTwoAccount] = useState(currencyAccounts.find(currencyAccount =>
+    const [currencyTwoAccount, setCurrencyTwoAccount] = useState(currencyAccounts?.find(currencyAccount =>
         currencyAccount.currencyId === currencyTwo));
 
     const [currencyOneAmount, setCurrencyOneAmount] = useState(10.00);
@@ -26,7 +26,7 @@ export const ExchangeCurrenciesPage = () => {
     const [errorOne, setErrorOne] = useState('');
     const [errorTwo, setErrorTwo] = useState('');
 
-    //console.log(currencies)
+    console.log(currencyOneAccount)
 
     const authToken = Cookies.get('authToken');
     const dispatch = useDispatch();
@@ -42,8 +42,8 @@ export const ExchangeCurrenciesPage = () => {
         setCurrencyTwoAmount((currencyOneAmount * currencies.find(element => element.id === currencyOne)?.exchangeRate
             / currencies.find(element => element.id === currencyTwo)?.exchangeRate).toFixed(2));
 
-        const nextCurrencyAccountOne = currencyAccounts.find(currencyAccount => currencyAccount.currencyId === currencyOne);
-        const nextCurrencyAccountTwo = currencyAccounts.find(currencyAccount => currencyAccount.currencyId === currencyTwo);
+        const nextCurrencyAccountOne = currencyAccounts?.find(currencyAccount => currencyAccount.currencyId === currencyOne);
+        const nextCurrencyAccountTwo = currencyAccounts?.find(currencyAccount => currencyAccount.currencyId === currencyTwo);
 
         setCurrencyOneAccount(nextCurrencyAccountOne);
         setCurrencyTwoAccount(nextCurrencyAccountTwo);
@@ -59,16 +59,11 @@ export const ExchangeCurrenciesPage = () => {
             setErrorTwo('')
         }
 
-    }, [currencyOne, currencyTwo]);
+    }, [currencyOne, currencyTwo, currencyAccounts]);
 
 
     useEffect(() => {
-        dispatch(fetchCurrencyAccounts(
-            {
-                token: authToken,
-                isFilterActive: false
-            }
-        ))
+        dispatch(fetchAllCurrencyAccounts(authToken));
     }, []);
 
 

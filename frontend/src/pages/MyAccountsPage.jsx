@@ -4,7 +4,7 @@ import {
     changeAccountsAmountPerPage,
     changeAccountsPage,
     changeFilter,
-    fetchCurrencyAccounts
+    fetchCurrencyAccountsPage
 } from "../state/slices/currencyAccountsSlice";
 import {Checkbox, CircularProgress, MenuItem, Select} from "@mui/material";
 import {CurrencyAccountRecord} from "../components/CurrencyAccountRecord";
@@ -20,7 +20,7 @@ export const MyAccountsPage = () => {
     const status = useSelector(state => state.currencyAccount.status);
     const isFilterActive = useSelector(state => state.currencyAccount.isFilterActive);
     const pageAmount = useSelector(state => state.currencyAccount.pageAmount);
-    const totalAmount = useSelector(state =>state.currencyAccount.totalAmount);
+    const totalAmount = useSelector(state => state.currencyAccount.totalAmount);
     const pageNumber = useSelector(state => state.currencyAccount.pageNumber);
     const amountPerPage = useSelector(state => state.currencyAccount.amountPerPage);
 
@@ -32,7 +32,7 @@ export const MyAccountsPage = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(fetchCurrencyAccounts(
+        dispatch(fetchCurrencyAccountsPage(
             {
                 token: authToken,
                 isFilterActive: activeFilter,
@@ -41,6 +41,10 @@ export const MyAccountsPage = () => {
             }
         ))
     }, [activeFilter, reload, amountPerPage, pageNumber]);
+
+    useEffect(() => {
+        onChangePage(0);
+    }, [pageAmount]);
 
     const onChangeFilter = () => {
         setActiveFilter(!activeFilter);
@@ -59,8 +63,13 @@ export const MyAccountsPage = () => {
 
     const onChangePage = (amount) => {
         const newPage = pageNumber + amount;
-        if (newPage >= 0 && newPage < pageAmount)
+        if (newPage < 0) {
+            dispatch(changeAccountsPage(0));
+        } else if (newPage >= pageAmount) {
+            dispatch(changeAccountsPage(pageAmount - 1));
+        } else {
             dispatch(changeAccountsPage(newPage));
+        }
     };
 
     const onChangeAmountPerPage = (e) => {
@@ -79,10 +88,10 @@ export const MyAccountsPage = () => {
                     <Checkbox checked={activeFilter} className='text-white' onClick={onChangeFilter}/>
                 </div>
             </div>
-            <div className='text-3xl mt-4 mb-8 font-bold'>{accountNumber} </div>
+            <div className='text-3xl mt-4 mb-8 font-bold text-blue-400'>{accountNumber} </div>
             <hr/>
             <div className='mt-8 relative overflow-x-auto'>
-                {status === 'succeeded' ? currencyAccounts.length !== 0 ?
+                {status === 'succeeded' ? currencyAccounts?.length !== 0 ?
                         <table className='table-auto min-w-full text-left rtl:text-right'>
                             <thead className='bg-darkGray border-b-4 border-lightGray'>
                             <tr>
@@ -101,7 +110,7 @@ export const MyAccountsPage = () => {
                             </tr>
                             </thead>
                             <tbody>
-                            {currencyAccounts.map(currencyAccount =>
+                            {currencyAccounts?.map(currencyAccount =>
                                 <CurrencyAccountRecord key={currencyAccount.currencyId}
                                                        currencyId={currencyAccount.currencyId}
                                                        code={currencyAccount.currencyCode}

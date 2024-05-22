@@ -24,6 +24,7 @@ import static pl.niewadzj.moneyExchange.api.account.constants.AccountMappings.GE
 import static pl.niewadzj.moneyExchange.api.account.constants.AccountMappings.GET_ACCOUNTS;
 import static pl.niewadzj.moneyExchange.api.account.constants.AccountMappings.GET_ACCOUNT_BY_NUMBER;
 import static pl.niewadzj.moneyExchange.api.account.constants.AccountMappings.GET_ACTIVE_ACCOUNTS;
+import static pl.niewadzj.moneyExchange.api.account.constants.AccountMappings.GET_ALL_CURRENCY_ACCOUNTS_FOR_USER;
 import static pl.niewadzj.moneyExchange.api.account.constants.AccountMappings.GET_CURRENCY_ACCOUNTS;
 
 @Slf4j
@@ -46,6 +47,12 @@ public class AccountControllerImpl implements AccountController {
     public final CurrencyAccountsPageResponse getActiveCurrencyAccounts(@RequestParam(defaultValue = PAGE_NUMBER, required = false) int pageNo,
                                                                         @RequestParam(defaultValue = PAGE_SIZE, required = false) int pageSize, @AuthenticationPrincipal User user) {
         return accountService.getActiveCurrencyAccounts(pageNo, pageSize, user);
+    }
+
+    @Override
+    @GetMapping(GET_ALL_CURRENCY_ACCOUNTS_FOR_USER)
+    public List<CurrencyAccountResponse> getAllCurrencyAccountsForUser(@AuthenticationPrincipal User user) {
+        return accountService.getAllCurrencyAccountsForUser(user);
     }
 
     @Override
