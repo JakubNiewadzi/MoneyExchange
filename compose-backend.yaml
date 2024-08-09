@@ -1,0 +1,69 @@
+services:
+  postgres:
+    container_name: money-exchange-database
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=backend
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=backend
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: pg_isready -U backend
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    networks:
+      - money-exchange-net
+
+  scheduler:
+    container_name: money-exchange-scheduler
+    build:
+      context: ./backend/scheduler-service
+      dockerfile: scheduler.dockerfile
+    environment:
+      - POSTGRES_USER=backend
+      - POSTGRES_PASSWORD=admin
+      - DATABASE_URL=jdbc:postgresql://money-exchange-database:5432/backend
+      - DATABASE_DDL=update
+    ports:
+      - 7111:7111
+    healthcheck:
+      test: wget -qO- http://localhost:7111/actuator/health | grep '"status":"UP"' || exit 1
+      interval: 15s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - money-exchange-net
+
+  backend:
+    container_name: money-exchange-backend
+    build:
+      context: ./backend/moneyExchange
+      dockerfile: backend.dockerfile
+    environment:
+      - POSTGRES_USER=backend
+      - POSTGRES_PASSWORD=admin
+      - DATABASE_URL=jdbc:postgresql://money-exchange-database:5432/backend
+      - DATABASE_DDL=update
+    ports:
+      - 8080:8080
+    healthcheck:
+      test: wget -qO- http://localhost:8080/actuator/health | grep '"status":"UP"' || exit 1
+      interval: 15s
+      timeout: 5s
+      retries: 10
+    depends_on:
+      postgres:
+        condition: service_healthy
+      scheduler:
+        condition: service_healthy
+    networks:
+      - money-exchange-net
+
+networks:
+  money-exchange-net:
+    driver: bridge

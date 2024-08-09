@@ -18,6 +18,7 @@ import pl.niewadzj.moneyExchange.entities.user.interfaces.UserRepository;
 import pl.niewadzj.moneyExchange.exceptions.auth.PasswordsDoNotMatchException;
 import pl.niewadzj.moneyExchange.exceptions.auth.UserAlreadyExistsException;
 import pl.niewadzj.moneyExchange.exceptions.auth.UserNotFoundException;
+import pl.niewadzj.moneyExchange.exceptions.jwt.TokenExpiredException;
 
 import java.util.Optional;
 
@@ -84,7 +85,23 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public TokenResponse refreshAuthToken(String refreshToken) {
         log.debug("Generating auth token, with refresh token: {}", refreshToken);
-        return null;
+
+        final String email = jwtService.extractEmail(refreshToken);
+
+        final User user = userRepository
+                .findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(email));
+
+        if(!jwtService.isTokenValid(refreshToken, user)){
+            throw new TokenExpiredException();
+        }
+
+        final String authToken = jwtService.generateToken(user);
+
+        return TokenResponse.builder()
+                .authToken(authToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
     private void checkIfUserExists(String email) {

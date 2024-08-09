@@ -14,16 +14,23 @@ export const CurrencyBanner = ({visible}) => {
     const [offset, setOffset] = useState(0);
     const [contentWidth, setContentWidth] = useState(0);
     const [exchangeRateCalculator, setExchangeRateCalculator] = useState(calculatingCurrency);
+    const [bannerCurrencies, setBannerCurrencies] = useState([]);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(fetchCurrencies(exchangeRateCalculator))
+        dispatch(fetchCurrencies(exchangeRateCalculator));
+        setBannerCurrencies(currencies);
     }, [exchangeRateCalculator]);
+
+    useEffect(() => {
+        setBannerCurrencies([...currencies, ...currencies.slice(0, 12)]);
+    }, [currencies]);
+
 
     const handleClick = (currencyId) => {
         if (currencyId !== exchangeRateCalculator) {
-            setExchangeRateCalculator(currencyId)
+            setExchangeRateCalculator(currencyId);
         }
     };
 
@@ -34,7 +41,7 @@ export const CurrencyBanner = ({visible}) => {
             const interval = setInterval(() => {
                 setOffset(prevOffset => {
                     const newOffset = prevOffset - 2;
-                    if (newOffset <= -contentWidth) {
+                    if (newOffset <= -contentWidth + window.screen.width) {
                         return 0;
                     } else {
                         return newOffset;
@@ -71,7 +78,7 @@ export const CurrencyBanner = ({visible}) => {
 
     return (visible ? <div className="overflow-hidden fixed z-50 flex mt-16 w-full">
             <div className="flex" id="banner-content" style={{transform: `translateX(${offset}px)`}}>
-                {currencies.map((currency) =>
+                {bannerCurrencies.map((currency) =>
                     <CurrencyCard key={currency.id}
                                   name={currency.name}
                                   code={currency.code}
@@ -81,5 +88,5 @@ export const CurrencyBanner = ({visible}) => {
                 )}
             </div>
         </div> : <div></div>
-    )
+    );
 };

@@ -73,7 +73,9 @@ public class AccountServiceImpl implements AccountService {
         final Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user));
 
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by("balance").descending().and(Sort.by("currencyAccountStatus")));
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by("balance")
+                .descending()
+                .and(Sort.by("currencyAccountStatus")));
 
         Page<CurrencyAccount> currencyAccountResponsePage = currencyAccountRepository
                 .findByAccount(account, pageable);

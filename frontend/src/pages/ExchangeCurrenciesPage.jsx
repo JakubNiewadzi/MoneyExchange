@@ -26,8 +26,6 @@ export const ExchangeCurrenciesPage = () => {
     const [errorOne, setErrorOne] = useState('');
     const [errorTwo, setErrorTwo] = useState('');
 
-    console.log(currencyOneAccount)
-
     const authToken = Cookies.get('authToken');
     const dispatch = useDispatch();
     const navigate = useNavigate();

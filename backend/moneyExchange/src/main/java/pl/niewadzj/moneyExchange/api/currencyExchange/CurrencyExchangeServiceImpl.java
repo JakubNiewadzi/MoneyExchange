@@ -165,7 +165,7 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
 
         currencyExchangeRepository.saveAndFlush(currencyExchange);
 
-        revertedExchange.setCurrencyExchangeStatus(CurrencyExchangeStatus.SUCCESSFUL);
+        revertedExchange.setCurrencyExchangeStatus(CurrencyExchangeStatus.REVERTED);
 
         currencyExchangeRepository.saveAndFlush(revertedExchange);
 

@@ -14,6 +14,7 @@ export const accountApi = {
     },
     getCurrencyAccountsPage(token, pageNumber, pageSize) {
         console.log("Getting currency accounts for signed in user");
+        console.log(pageNumber, pageSize);
         return accountClient.get('/getCurrencyAccounts', {
             params: {
                 pageNo: pageNumber,

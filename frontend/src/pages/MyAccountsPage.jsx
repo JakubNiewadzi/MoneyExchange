@@ -65,7 +65,7 @@ export const MyAccountsPage = () => {
         const newPage = pageNumber + amount;
         if (newPage < 0) {
             dispatch(changeAccountsPage(0));
-        } else if (newPage >= pageAmount) {
+        } else if (newPage >= pageAmount && pageAmount > 0) {
             dispatch(changeAccountsPage(pageAmount - 1));
         } else {
             dispatch(changeAccountsPage(newPage));

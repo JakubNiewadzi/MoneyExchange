@@ -31,8 +31,7 @@ export const backendApi = (url) => {
                     }).then(res => {
                     console.log(res);
                     Cookies.set("authToken", res?.data?.authToken);
-                })
-                    .catch(refreshError => {
+                }).catch(refreshError => {
                         console.error('Error refreshing token:', refreshError);
                         Cookies.remove("authToken");
                         Cookies.remove("refreshToken");
