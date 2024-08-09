@@ -14,6 +14,7 @@ import {MyAccountsPage} from "./pages/MyAccountsPage";
 import {TransactionForm} from "./forms/TransactionForm";
 import {ExchangeCurrenciesPage} from "./pages/ExchangeCurrenciesPage";
 import {ExchangeHistoryPage} from "./pages/ExchangeHistoryPage";
+import {TransferMoneyPage} from "./pages/TransferMoneyPage";
 
 
 const router = createBrowserRouter([
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
             {
                 path: "exchangeHistory",
                 element: <ExchangeHistoryPage/>
+            },
+            {
+                path: "transferMoney",
+                element: <TransferMoneyPage/>
             }
         ]
     }

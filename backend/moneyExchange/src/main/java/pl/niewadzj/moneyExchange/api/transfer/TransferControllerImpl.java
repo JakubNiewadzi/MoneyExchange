@@ -34,9 +34,8 @@ public class TransferControllerImpl implements TransferController {
 
     @Override
     @PostMapping(MAKE_TRANSFER_MAPPING)
-    public final MakeTransferResponse makeTransfer(
-            @RequestBody TransferRequest transferRequest,
-            @AuthenticationPrincipal User user) {
+    public final MakeTransferResponse makeTransfer(@RequestBody TransferRequest transferRequest,
+                                                   @AuthenticationPrincipal User user) {
         return transferService.makeTransfer(transferRequest, user);
     }
 

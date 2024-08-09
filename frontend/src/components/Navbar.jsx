@@ -30,7 +30,7 @@ export const Navbar = () => {
                                 <Button component={NavLink} to="/" color="inherit">Home</Button>
                                 <Button component={NavLink} to="/exchangeCurrencies" color="inherit">Exchange
                                     currencies</Button>
-                                <Button color="inherit">Transfer money</Button>
+                                <Button component={NavLink} to="/transferMoney" color="inherit">Transfer money</Button>
                             </div>
                         </div>
                     </div>
