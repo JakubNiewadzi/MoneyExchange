@@ -35,7 +35,7 @@ export const CurrencyBanner = ({visible}) => {
     };
 
     useEffect(() => {
-        if (currencies.length !== 0 && visible) {
+        if (bannerCurrencies.length !== 0 && visible) {
             const bannerContent = document.getElementById('banner-content');
             setContentWidth(bannerContent.offsetWidth);
             const interval = setInterval(() => {
@@ -78,12 +78,13 @@ export const CurrencyBanner = ({visible}) => {
 
     return (visible ? <div className="overflow-hidden fixed z-50 flex mt-16 w-full">
             <div className="flex" id="banner-content" style={{transform: `translateX(${offset}px)`}}>
-                {bannerCurrencies.map((currency) =>
-                    <CurrencyCard key={currency.id}
+                {bannerCurrencies.map((currency, index) =>
+                    <CurrencyCard key={index}
                                   name={currency.name}
                                   code={currency.code}
                                   exchangeRate={currency.exchangeRate}
                                   id={currency.id}
+                                  calculatingCurrency={currencies?.find(currency => currency.id===calculatingCurrency)?.code}
                                   onClick={handleClick}/>
                 )}
             </div>

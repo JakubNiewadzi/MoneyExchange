@@ -1,4 +1,4 @@
-export const CurrencyCard = ({code, exchangeRate, id, onClick}) => {
+export const CurrencyCard = ({code, exchangeRate, id, onClick, calculatingCurrency}) => {
     return <li key={id} className="flex flex-col justify-center align-middle bg-darkGray items-center
     w-40 h-24 hover:bg-lightGray cursor-pointer ring-1.5 ring-background"
                onClick={() => onClick(id)}>
@@ -8,6 +8,7 @@ export const CurrencyCard = ({code, exchangeRate, id, onClick}) => {
         <span>
             Rates: {exchangeRate}
         </span>
+        <span className='text-xs'>Calculated by: {calculatingCurrency}</span>
     </li>
 
 };

@@ -30,12 +30,6 @@ export const ExchangeCurrenciesPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const handleChange = (e) => {
-        const name = e.target.name;
-        const value = e.target.value;
-        name === 'select-one' ? setCurrencyOne(value) : setCurrencyTwo(value);
-    };
-
     useEffect(() => {
         setCurrencyTwoAmount((currencyOneAmount * currencies.find(element => element.id === currencyOne)?.exchangeRate
             / currencies.find(element => element.id === currencyTwo)?.exchangeRate).toFixed(2));
@@ -58,6 +52,12 @@ export const ExchangeCurrenciesPage = () => {
         }
 
     }, [currencyOne, currencyTwo, currencyAccounts]);
+
+    const handleCurrencyChange = (e) => {
+        const name = e.target.name;
+        const value = e.target.value;
+        name === 'select-one' ? setCurrencyOne(value) : setCurrencyTwo(value);
+    };
 
 
     useEffect(() => {
@@ -101,7 +101,9 @@ export const ExchangeCurrenciesPage = () => {
     };
 
     const onExchange = async () => {
-        const response = await currencyExchangeApi.exchangeCurrency(authToken, currencyOne, currencyTwo, currencyOneAmount);
+        const response = await currencyExchangeApi
+            .exchangeCurrency(authToken, currencyOne, currencyTwo, currencyOneAmount);
+
         if (response !== undefined) {
             navigate("/exchangeHistory");
         }
@@ -120,7 +122,7 @@ export const ExchangeCurrenciesPage = () => {
                         name='select-one'
                         className="text-white font-semibold w-full bg-lightGray rounded-bl focus:outline-none focus:ring ring-background"
                         value={currencyOne}
-                        onChange={handleChange}>
+                        onChange={handleCurrencyChange}>
                         {currencies.map(currency => {
                             return <MenuItem key={currency.id} value={currency.id}>{currency.code}</MenuItem>
                         })}
@@ -137,7 +139,7 @@ export const ExchangeCurrenciesPage = () => {
                         name='select-two'
                         className="text-white font-semibold w-full bg-lightGray rounded-bl focus:outline-none focus:ring ring-background"
                         value={currencyTwo}
-                        onChange={handleChange}>
+                        onChange={handleCurrencyChange}>
                         {currencies.map(currency => {
                             return <MenuItem key={currency.id} value={currency.id}>{currency.code}</MenuItem>
                         })}

@@ -5,7 +5,7 @@ const transferClient = backendApi('/api/v1/transfer')
 
 export const transferApi = {
     makeTransfer(token, transferRequest) {
-        console.log(`Making transfer to account with number ${transferRequest.accountNumber}`);
+        console.log(`Making transfer to account with number ${transferRequest.receiverAccountNumber}`);
         return transferClient.post("/makeTransfer", transferRequest, {
             headers: {
                 Authorization: bearerAuth(token)
