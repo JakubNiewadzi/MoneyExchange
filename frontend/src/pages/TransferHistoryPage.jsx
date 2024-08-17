@@ -1,25 +1,22 @@
 import {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import {useDispatch, useSelector} from "react-redux";
-import {
-    changeHistoryAmountPerPage,
-    changeHistoryPage,
-    fetchCurrencyExchangeHistory
-} from "../state/slices/currencyExchangeSlice";
 import {CurrencyHistoryRecord} from "../components/CurrencyHistoryRecord";
 import Button from "@mui/material/Button";
 import {IoIosArrowBack, IoIosArrowForward} from "react-icons/io";
-import {currencyExchangeApi} from "../api/currencyExchangeApi";
 import {MenuItem, Select} from "@mui/material";
+import {changeTransferAmountPerPage, changeTransferPage, fetchTransferHistory} from "../state/slices/transferSlice";
 
-export const ExchangeHistoryPage = () => {
+export const TransferHistoryPage = () => {
 
-    const pageNumber = useSelector(state => state.currencyExchange.pageNumber);
-    const amountPerPage = useSelector(state => state.currencyExchange.amountPerPage);
-    const totalAmount = useSelector(state => state.currencyExchange.totalAmount);
-    const pageAmount = useSelector(state => state.currencyExchange.pageAmount);
-    const exchangeHistory = useSelector(state => state.currencyExchange.currencyExchangeHistory);
+    const pageNumber = useSelector(state => state.transfer.pageNumber);
+    const amountPerPage = useSelector(state => state.transfer.amountPerPage);
+    const totalAmount = useSelector(state => state.transfer.totalAmount);
+    const pageAmount = useSelector(state => state.transfer.pageAmount);
+    const transferHistory = useSelector(state => state.transfer.transferHistory);
 
+
+    console.log(transferHistory)
     const [reload, setReload] = useState(false);
 
     const dispatch = useDispatch();
@@ -27,8 +24,7 @@ export const ExchangeHistoryPage = () => {
     const token = Cookies.get('authToken');
 
     useEffect(() => {
-        console.log(pageNumber);
-        dispatch(fetchCurrencyExchangeHistory({
+        dispatch(fetchTransferHistory({
             token: token,
             pageNumber: pageNumber,
             amountPerPage: amountPerPage
@@ -42,52 +38,46 @@ export const ExchangeHistoryPage = () => {
     const onChangePage = (amount) => {
         const newPage = pageNumber + amount;
         if (newPage < 0) {
-            dispatch(changeHistoryPage(0));
+            dispatch(changeTransferPage(0));
         } else if (newPage > pageAmount) {
-            dispatch(changeHistoryPage(pageAmount - 1));
+            dispatch(changeTransferPage(pageAmount - 1));
         } else {
-            dispatch(changeHistoryPage(newPage));
+            dispatch(changeTransferPage(newPage));
         }
-    };
-
-    const onRevert = async (id) => {
-        await currencyExchangeApi.revertExchange(token, id);
-        setReload(!reload);
     };
 
     const onChangeAmountPerPage = (e) => {
         const value = e.target.value;
-        dispatch(changeHistoryAmountPerPage(value));
+        dispatch(changeTransferAmountPerPage(value));
     };
 
     return <div className='flex flex-col justify-center'>
         <div className='flex w-full flex-col bg-darkGray mt-48 py-8 text-3xl'>
             <div className='w-full mb-8 pl-14 font-semibold'>Here you can find all of your <b
-                className='text-blue-400'>  {totalAmount}  </b> exchanges
+                className='text-blue-400'>  {totalAmount}  </b> transfers
             </div>
             <hr color="blue"/>
             <table className='table-auto w-full mt-2'>
                 <thead className='w-full border-b-4 border-lightGray'>
                 <tr className=' w-full m-4'>
-                    <th scope="col" className="px-6 py-3">From</th>
+                    <th scope="col" className="px-6 py-3">Receiver</th>
+                    <th scope="col" className="px-6 py-3">Provider currency</th>
                     <th scope="col" className="px-6 py-3">Amount</th>
-                    <th scope="col" className="px-6 py-3">To</th>
-                    <th scope="col" className="px-6 py-3">Amount</th>
+                    <th scope="col" className="px-6 py-3">Receiver currency</th>
                     <th scope="col" className="px-6 py-3">Time</th>
                     <th scope="col" className="px-6 py-3">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                {exchangeHistory.map(currencyAccountRecord =>
-                    <CurrencyHistoryRecord key={currencyAccountRecord.id}
-                                           decreasedCurrencyCode={currencyAccountRecord.decreasedCurrencyCode}
-                                           amountDecreased={currencyAccountRecord.amountDecreased}
-                                           increasedCurrencyCode={currencyAccountRecord.increasedCurrencyCode}
-                                           amountIncreased={currencyAccountRecord.amountIncreased}
-                                           exchangeDateTime={currencyAccountRecord.exchangeDateTime}
-                                           id={currencyAccountRecord.id}
-                                           status={currencyAccountRecord.status}
-                                           onRevert={onRevert}/>
+                {transferHistory.map(transferRecord =>
+                    <CurrencyHistoryRecord key={transferRecord.id}
+                                           decreasedCurrencyCode={transferRecord.decreasedCurrencyCode}
+                                           amountDecreased={transferRecord.amountDecreased}
+                                           increasedCurrencyCode={transferRecord.increasedCurrencyCode}
+                                           amountIncreased={transferRecord.amountIncreased}
+                                           exchangeDateTime={transferRecord.exchangeDateTime}
+                                           id={transferRecord.id}
+                                           status={transferRecord.status}/>
                 )}
                 </tbody>
             </table>

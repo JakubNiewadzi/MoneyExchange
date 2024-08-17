@@ -8,7 +8,6 @@ import {fetchAccountInfo, logout} from "../state/slices/authSlice";
 export const ProtectedRoute = () => {
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const location = useLocation();
 
     useEffect(() => {

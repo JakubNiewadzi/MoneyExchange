@@ -120,7 +120,8 @@ export const ExchangeCurrenciesPage = () => {
                     <label>From:</label>
                     <Select
                         name='select-one'
-                        className="text-white font-semibold w-full bg-lightGray rounded-bl focus:outline-none focus:ring ring-background"
+                        className="text-white font-semibold w-full bg-lightGray rounded-bl focus:outline-none focus:ring
+                        ring-blue-400"
                         value={currencyOne}
                         onChange={handleCurrencyChange}>
                         {currencies.map(currency => {
@@ -137,7 +138,8 @@ export const ExchangeCurrenciesPage = () => {
                     <label>To:</label>
                     <Select
                         name='select-two'
-                        className="text-white font-semibold w-full bg-lightGray rounded-bl focus:outline-none focus:ring ring-background"
+                        className="text-white font-semibold w-full bg-lightGray rounded-bl focus:outline-none focus:ring
+                        ring-blue-400"
                         value={currencyTwo}
                         onChange={handleCurrencyChange}>
                         {currencies.map(currency => {
@@ -150,7 +152,8 @@ export const ExchangeCurrenciesPage = () => {
                 <div className='flex flex-col md:w-2/5 w-4/5'>
                     <label>This amount of money:</label>
                     <input
-                        className="border appearance-none w-full bg-lightGray border-lightGray rounded-md py-2 px-4 focus:outline-none focus:ring ring-background focus:border-background"
+                        className="border appearance-none w-full bg-lightGray border-lightGray rounded-md py-2 px-4
+                        focus:outline-none focus:ring ring-blue-400 focus:border-background"
                         type='number'
                         name='amount-from'
                         placeholder='11.11'
@@ -166,7 +169,8 @@ export const ExchangeCurrenciesPage = () => {
                 <div className='flex flex-col md:w-2/5 w-4/5'>
                     <label>This amount of money:</label>
                     <input
-                        className="border appearance-none w-full bg-lightGray border-lightGray rounded-md py-2 px-4 focus:outline-none focus:ring ring-background"
+                        className="border appearance-none w-full bg-lightGray border-lightGray rounded-md py-2 px-4
+                        focus:outline-none focus:ring ring-blue-400"
                         type='number'
                         name='amount-to'
                         placeholder='11.11'

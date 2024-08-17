@@ -1,3 +1,5 @@
 export const NotFoundPage = () => {
-    return <>Not found :(</>
+    return <div className='flex justify-center w-full font-bold text-4xl pt-10'>
+        The page you wer looking found was not found.
+    </div>
 };

@@ -6,6 +6,9 @@ import Cookies from "js-cookie";
 import {fetchAccountInfo} from "../state/slices/authSlice";
 import {NavLink} from "react-router-dom";
 import register from "../images/register.jpg"
+import exchange from "../images/exchange.jpg"
+import {CiClock1} from "react-icons/ci";
+
 
 export const HomePage = () => {
 
@@ -42,22 +45,29 @@ export const HomePage = () => {
                     </div>
                 </div>
                 <div
-                    className='hidden text-4xl md:flex justify-center items-center font-bold md:w-3/5 mt-8 md:mt-0 md:text-center'>
+                    className='text-4xl md:flex justify-center items-center font-bold md:w-3/5 mt-8 md:mt-0 md:text-center'>
                     <img src={register} className='h-full' alt='register view'/>
                 </div>
             </div>
         </div>
         <div className='w-full h-[50vh] flex flex-col md:flex-row p-8'>
-            <div className='text-4xl font-bold md:w-3/5 text-center md:text-right mb-8 md:mb-0'></div>
-            <div className='text-4xl font-bold md:w-2/5 text-center md:text-left'>Manage <b
-                className='text-blue-400'>ANY</b> currency you can imagine.
+            <div
+                className='text-3xl md:w-3/5 h-full md:flex pb-8 font-bold justify-center md:mt-0 md:text-center'>
+                <img src={exchange} className='h-full' alt='exchange view'/>
+            </div>
+            <div className='flex flex-row text-4xl font-bold md:w-2/5'>
+                <div className='text-4xl font-bold md:w-full text-left md:text-left'>Manage <b
+                    className='text-blue-400'>ANY</b> currency you can imagine.
+                </div>
             </div>
         </div>
-        <div className='w-full h-[50vh] flex flex-col md:flex-row bg-darkGray p-8'>
+        <div className='w-full h-[50vh] flex flex-row md:flex-row bg-darkGray p-8'>
             <div className='text-4xl font-bold md:w-2/5 text-center md:text-right'>Mismanaged your account? You can
                 revert any exchange made by mistake up to <b className='text-blue-400'>ONE HOUR</b> after making it.
             </div>
-            <div className='text-4xl font-bold md:w-3/5 mt-8 md:mt-0'></div>
+            <div className='text-4xl font-bold md:w-3/5 mt-8 md:mt-0 flex justify-center h-full pb-12 items-center'>
+                <CiClock1 className='text-blue-400 font-bold text-9xl'/>
+            </div>
         </div>
     </div>
 };

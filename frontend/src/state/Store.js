@@ -3,6 +3,7 @@ import {authReducer} from "./slices/authSlice";
 import {currencyReducer} from "./slices/currencySlice";
 import {currencyAccountsReducer} from "./slices/currencyAccountsSlice";
 import {currencyExchangeReducer} from "./slices/currencyExchangeSlice";
+import {transferReducer} from "./slices/transferSlice";
 
 export const store = configureStore({
         reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
             currency: currencyReducer,
             currencyAccount: currencyAccountsReducer,
             currencyExchange: currencyExchangeReducer,
+            transfer: transferReducer,
         }
     }
 );

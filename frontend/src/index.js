@@ -15,6 +15,7 @@ import {TransactionForm} from "./forms/TransactionForm";
 import {ExchangeCurrenciesPage} from "./pages/ExchangeCurrenciesPage";
 import {ExchangeHistoryPage} from "./pages/ExchangeHistoryPage";
 import {TransferMoneyPage} from "./pages/TransferMoneyPage";
+import {TransferHistoryPage} from "./pages/TransferHistoryPage";
 
 
 const router = createBrowserRouter([
@@ -68,7 +69,11 @@ const router = createBrowserRouter([
             {
                 path: "transferMoney",
                 element: <TransferMoneyPage/>
-            }
+            },
+            {
+                path: "transferHistory",
+                element: <TransferHistoryPage/>
+            },
         ]
     }
 ]);

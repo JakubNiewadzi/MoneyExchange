@@ -17,7 +17,6 @@ export const TransferMoneyPage = () => {
     const [errors, setErrors] = useState({});
 
     const authToken = Cookies.get('authToken');
-    const dispatch = useDispatch();
     const handleInputChange = (e) => {
         const name = e.target.name;
         let value = e.target.value;
@@ -70,7 +69,7 @@ export const TransferMoneyPage = () => {
                     className='flex flex-col mt-4 md:justify-around md:items-stretch'>
                     <label>Receiver account number:</label>
                     <input className="border mt-2 appearance-none w-full bg-lightGray border-lightGray rounded-md py-2 px-4
-                    focus:outline-none focus:ring ring-background focus:border-background"
+                    focus:outline-none focus:ring ring-blue-400 focus:border-background"
                            type='text'
                            name='number-form'
                            placeholder='20113213213213'
@@ -107,7 +106,7 @@ export const TransferMoneyPage = () => {
                     <label>Transferred Money:</label>
                     <input
                         className="border mt-2 appearance-none w-full bg-lightGray border-lightGray rounded-md
-                        py-2 px-4 focus:outline-none focus:ring ring-background focus:border-background"
+                        py-2 px-4 focus:outline-none focus:ring ring-blue-400 focus:border-background"
                         type='number'
                         name='amount-transferred'
                         placeholder='11.11'
