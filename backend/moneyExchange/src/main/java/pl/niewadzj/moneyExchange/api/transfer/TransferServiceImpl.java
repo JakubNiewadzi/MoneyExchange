@@ -2,6 +2,7 @@ package pl.niewadzj.moneyExchange.api.transfer;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.niewadzj.moneyExchange.api.transfer.interfaces.TransferService;
 import pl.niewadzj.moneyExchange.api.transfer.mapper.TransferMapper;
 import pl.niewadzj.moneyExchange.api.transfer.records.MakeTransferResponse;
+import pl.niewadzj.moneyExchange.api.transfer.records.TransferHistoryResponse;
 import pl.niewadzj.moneyExchange.api.transfer.records.TransferRequest;
 import pl.niewadzj.moneyExchange.api.transfer.records.TransferResponse;
 import pl.niewadzj.moneyExchange.entities.account.Account;
@@ -96,42 +98,63 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    public List<TransferResponse> getTransfersForUser(int pageNo, int pageSize, User user) {
+    public TransferHistoryResponse getTransfersForUser(int pageNo, int pageSize, User user) {
         log.debug("Getting transfers for user: {}", user);
         Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user));
 
         Pageable pageable = PageRequest.of(pageNo, pageSize);
 
-        return transferRepository.findByProviderAccountOrReceiverAccount(account, account, pageable)
-                .map(transferMapper)
-                .getContent();
+        Page<TransferResponse> transferResponsePage = transferRepository
+                .findByProviderAccountOrReceiverAccount(account, account, pageable)
+                .map(transferMapper);
+
+        return TransferHistoryResponse
+                .builder()
+                .transferResponseList(transferResponsePage.getContent())
+                .amount(transferResponsePage.getTotalElements())
+                .pages(transferResponsePage.getTotalPages())
+                .build();
     }
 
     @Override
-    public List<TransferResponse> getTransfersForReceiverUser(int pageNo, int pageSize, User user) {
+    public TransferHistoryResponse getTransfersForReceiverUser(int pageNo, int pageSize, User user) {
         log.debug("Getting transfers for receiver user: {}", user);
         Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user));
 
         Pageable pageable = PageRequest.of(pageNo, pageSize);
 
-        return transferRepository.findByReceiverAccount(account, pageable)
-                .map(transferMapper)
-                .getContent();
+        Page<TransferResponse> transferResponsePage = transferRepository
+                .findByReceiverAccount(account, pageable)
+                .map(transferMapper);
+
+        return TransferHistoryResponse
+                .builder()
+                .transferResponseList(transferResponsePage.getContent())
+                .amount(transferResponsePage.getTotalElements())
+                .pages(transferResponsePage.getTotalPages())
+                .build();
     }
 
     @Override
-    public List<TransferResponse> getTransfersForProviderUser(int pageNo, int pageSize, User user) {
+    public TransferHistoryResponse getTransfersForProviderUser(int pageNo, int pageSize, User user) {
         log.debug("Getting transfers for provider user: {}", user);
         Account account = accountRepository.findByAccountOwner(user)
                 .orElseThrow(() -> new AccountNotFoundException(user));
 
         Pageable pageable = PageRequest.of(pageNo, pageSize);
 
-        return transferRepository.findByProviderAccount(account, pageable)
-                .map(transferMapper)
-                .getContent();
+        Page<TransferResponse> transferResponsePage = transferRepository
+                .findByProviderAccount(account, pageable)
+                .map(transferMapper);
+
+        return TransferHistoryResponse
+                .builder()
+                .transferResponseList(transferResponsePage.getContent())
+                .amount(transferResponsePage.getTotalElements())
+                .pages(transferResponsePage.getTotalPages())
+                .build();
     }
 
     private void decreaseCurrency(Account account, Currency currencyToDecrease, BigDecimal amount) {

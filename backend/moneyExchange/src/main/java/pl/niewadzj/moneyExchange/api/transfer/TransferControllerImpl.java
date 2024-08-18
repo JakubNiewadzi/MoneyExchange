@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.niewadzj.moneyExchange.api.transfer.interfaces.TransferController;
 import pl.niewadzj.moneyExchange.api.transfer.interfaces.TransferService;
 import pl.niewadzj.moneyExchange.api.transfer.records.MakeTransferResponse;
+import pl.niewadzj.moneyExchange.api.transfer.records.TransferHistoryResponse;
 import pl.niewadzj.moneyExchange.api.transfer.records.TransferRequest;
 import pl.niewadzj.moneyExchange.api.transfer.records.TransferResponse;
 import pl.niewadzj.moneyExchange.entities.user.User;
@@ -41,15 +42,15 @@ public class TransferControllerImpl implements TransferController {
 
     @Override
     @GetMapping(GET_TRANSFERS_FOR_USER)
-    public final List<TransferResponse> getTransfersForUser(@RequestParam(defaultValue = PAGE_NUMBER, required = false) int pageNo,
-                                                            @RequestParam(defaultValue = PAGE_SIZE, required = false) int pageSize,
-                                                            @AuthenticationPrincipal User user) {
+    public final TransferHistoryResponse getTransfersForUser(@RequestParam(defaultValue = PAGE_NUMBER, required = false) int pageNo,
+                                                             @RequestParam(defaultValue = PAGE_SIZE, required = false) int pageSize,
+                                                             @AuthenticationPrincipal User user) {
         return transferService.getTransfersForUser(pageNo, pageSize, user);
     }
 
     @Override
     @GetMapping(GET_TRANSFERS_FOR_PROVIDER)
-    public final List<TransferResponse> getTransfersForProviderUser(@RequestParam(defaultValue = PAGE_NUMBER, required = false) int pageNo,
+    public final TransferHistoryResponse getTransfersForProviderUser(@RequestParam(defaultValue = PAGE_NUMBER, required = false) int pageNo,
                                                                     @RequestParam(defaultValue = PAGE_SIZE, required = false) int pageSize,
                                                                     @AuthenticationPrincipal User user) {
         return transferService.getTransfersForProviderUser(pageNo, pageSize, user);
@@ -57,7 +58,7 @@ public class TransferControllerImpl implements TransferController {
 
     @Override
     @GetMapping(GET_TRANSFERS_FOR_RECEIVER)
-    public final List<TransferResponse> getTransfersForReceiverUser(@RequestParam(defaultValue = PAGE_NUMBER, required = false) int pageNo,
+    public final TransferHistoryResponse getTransfersForReceiverUser(@RequestParam(defaultValue = PAGE_NUMBER, required = false) int pageNo,
                                                                     @RequestParam(defaultValue = PAGE_SIZE, required = false) int pageSize,
                                                                     @AuthenticationPrincipal User user) {
         return transferService.getTransfersForReceiverUser(pageNo, pageSize, user);
