@@ -17,6 +17,9 @@ const initialState = {
     amountPerPage: 5,
     totalAmount: 0,
     pageAmount: 0,
+    all: true,
+    received: false,
+    sent: false,
     status: 'idle',
     error: null,
 };
@@ -25,11 +28,16 @@ const transferSlice = createSlice({
         name: SLICE_NAME,
         initialState,
         reducers: {
-            changeTransferPage(state, action){
+            changeTransferPage(state, action) {
                 state.pageNumber = action.payload;
             },
-            changeTransferAmountPerPage(state, action){
+            changeTransferAmountPerPage(state, action) {
                 state.amountPerPage = action.payload;
+            },
+            setFilter(state, action) {
+                state.all = action.payload.all;
+                state.received = action.payload.received;
+                state.sent = action.payload.sent;
             }
         },
         extraReducers: (builder) => {
@@ -42,7 +50,9 @@ const transferSlice = createSlice({
             });
             builder.addCase(fetchTransferHistory.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.transferHistory = action.payload;
+                state.transferHistory = action.payload.transferResponseList;
+                state.pageAmount = action.payload.pages;
+                state.totalAmount = action.payload.amount;
             });
         }
     }
@@ -50,4 +60,4 @@ const transferSlice = createSlice({
 
 export const transferReducer = transferSlice.reducer;
 
-export const {changeTransferPage, changeTransferAmountPerPage} = transferSlice.actions;
+export const {changeTransferPage, changeTransferAmountPerPage, setFilter} = transferSlice.actions;

@@ -55,7 +55,7 @@ export const HomePage = () => {
                 className='text-3xl md:w-3/5 h-full md:flex pb-8 font-bold justify-center md:mt-0 md:text-center'>
                 <img src={exchange} className='h-full' alt='exchange view'/>
             </div>
-            <div className='flex flex-row text-4xl font-bold md:w-2/5'>
+            <div className='flex flex-row text-4xl font-bold md:w-1/3 pt-12'>
                 <div className='text-4xl font-bold md:w-full text-left md:text-left'>Manage <b
                     className='text-blue-400'>ANY</b> currency you can imagine.
                 </div>

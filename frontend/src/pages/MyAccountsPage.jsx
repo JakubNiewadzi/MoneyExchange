@@ -79,13 +79,13 @@ export const MyAccountsPage = () => {
 
 
     return <div className='flex justify-center'>
-        <div className='w-full mt-56 mb-8 flex flex-col bg-darkGray p-8 text-3xl
+        <div className='font-semibold w-full mt-56 mb-8 flex flex-col bg-darkGray p-8 text-3xl
         rounded-lg shadow-lg'>
             <div className='flex flex-row justify-between'>
-                <div>Currencies for account with number</div>
+                <div >Currencies for account with number</div>
                 <div>
                     Only active accounts
-                    <Checkbox checked={activeFilter} className='text-white' onClick={onChangeFilter}/>
+                    <Checkbox checked={activeFilter} className={activeFilter ? 'text-blue-400' : 'text-white'} onClick={onChangeFilter}/>
                 </div>
             </div>
             <div className='text-3xl mt-4 mb-8 font-bold text-blue-400'>{accountNumber} </div>

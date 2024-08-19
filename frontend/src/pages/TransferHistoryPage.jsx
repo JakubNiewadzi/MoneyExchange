@@ -1,11 +1,15 @@
 import {useEffect, useState} from "react";
 import Cookies from "js-cookie";
 import {useDispatch, useSelector} from "react-redux";
-import {CurrencyHistoryRecord} from "../components/CurrencyHistoryRecord";
 import Button from "@mui/material/Button";
 import {IoIosArrowBack, IoIosArrowForward} from "react-icons/io";
-import {MenuItem, Select} from "@mui/material";
-import {changeTransferAmountPerPage, changeTransferPage, fetchTransferHistory} from "../state/slices/transferSlice";
+import {Checkbox, MenuItem, Select} from "@mui/material";
+import {
+    changeTransferAmountPerPage,
+    changeTransferPage,
+    fetchTransferHistory,
+    setFilter
+} from "../state/slices/transferSlice";
 
 export const TransferHistoryPage = () => {
 
@@ -14,9 +18,10 @@ export const TransferHistoryPage = () => {
     const totalAmount = useSelector(state => state.transfer.totalAmount);
     const pageAmount = useSelector(state => state.transfer.pageAmount);
     const transferHistory = useSelector(state => state.transfer.transferHistory);
+    const all = useSelector(state => state.transfer.all);
+    const received = useSelector(state => state.transfer.received);
+    const sent = useSelector(state => state.transfer.sent);
 
-
-    console.log(transferHistory)
     const [reload, setReload] = useState(false);
 
     const dispatch = useDispatch();
@@ -24,16 +29,32 @@ export const TransferHistoryPage = () => {
     const token = Cookies.get('authToken');
 
     useEffect(() => {
-        dispatch(fetchTransferHistory({
-            token: token,
-            pageNumber: pageNumber,
-            amountPerPage: amountPerPage
-        }));
-    }, [pageNumber, amountPerPage, reload]);
+        if (all === true) {
+            dispatch(fetchTransferHistory({
+                token: token,
+                pageNumber: pageNumber,
+                amountPerPage: amountPerPage
+            }));
+        } else if (received === true) {
+            
+        }
+    }, [pageNumber, amountPerPage, reload, all, received, sent]);
 
     useEffect(() => {
         onChangePage(0);
     }, [pageAmount]);
+
+    const onChangeFilter = (e) => {
+        const name = e.target.name;
+
+        if (name === 'all') {
+            dispatch(setFilter({all: true, received: false, sent: false}));
+        } else if (name === 'received') {
+            dispatch(setFilter({all: false, received: true, sent: false}));
+        } else if (name === 'sent') {
+            dispatch(setFilter({all: false, received: false, sent: true}));
+        }
+    };
 
     const onChangePage = (amount) => {
         const newPage = pageNumber + amount;
@@ -52,9 +73,22 @@ export const TransferHistoryPage = () => {
     };
 
     return <div className='flex flex-col justify-center'>
-        <div className='flex w-full flex-col bg-darkGray mt-48 py-8 text-3xl'>
-            <div className='w-full mb-8 pl-14 font-semibold'>Here you can find all of your <b
-                className='text-blue-400'>  {totalAmount}  </b> transfers
+        <div className='flex w-full flex-col font-semibold bg-darkGray mt-48 pt-2 pb-8 text-3xl'>
+            <div className='flex md:flex-row flex-col'>
+                <div className='md:w-1/2 my-8 pl-14  w-full'>Here you can find all of your <b
+                    className='text-blue-400'>  {totalAmount}  </b> transfers
+                </div>
+                <div className='flex flex-row w-1/2 justify-end mr-4'>
+                    <div className='flex h-full items-center'>All</div>
+                    <Checkbox checked={all} className={all ? 'text-blue-400' : 'text-white'} name='all'
+                              onClick={onChangeFilter}/>
+                    <div className='flex h-full items-center'>Received</div>
+                    <Checkbox checked={received} className={received ? 'text-blue-400' : 'text-white'} name='received'
+                              onClick={onChangeFilter}/>
+                    <div className='flex h-full items-center'>Sent</div>
+                    <Checkbox checked={sent} className={sent ? 'text-blue-400' : 'text-white'} name='sent'
+                              onClick={onChangeFilter}/>
+                </div>
             </div>
             <hr color="blue"/>
             <table className='table-auto w-full mt-2'>
@@ -70,14 +104,7 @@ export const TransferHistoryPage = () => {
                 </thead>
                 <tbody>
                 {transferHistory.map(transferRecord =>
-                    <CurrencyHistoryRecord key={transferRecord.id}
-                                           decreasedCurrencyCode={transferRecord.decreasedCurrencyCode}
-                                           amountDecreased={transferRecord.amountDecreased}
-                                           increasedCurrencyCode={transferRecord.increasedCurrencyCode}
-                                           amountIncreased={transferRecord.amountIncreased}
-                                           exchangeDateTime={transferRecord.exchangeDateTime}
-                                           id={transferRecord.id}
-                                           status={transferRecord.status}/>
+                    <div>elo</div>
                 )}
                 </tbody>
             </table>
