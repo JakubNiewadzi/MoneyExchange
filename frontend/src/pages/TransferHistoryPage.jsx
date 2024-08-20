@@ -10,6 +10,7 @@ import {
     fetchTransferHistory,
     setFilter
 } from "../state/slices/transferSlice";
+import {TransferHistoryRecord} from "../components/TransferHistoryRecord";
 
 export const TransferHistoryPage = () => {
 
@@ -28,6 +29,7 @@ export const TransferHistoryPage = () => {
 
     const token = Cookies.get('authToken');
 
+    console.log(transferHistory);
     useEffect(() => {
         if (all === true) {
             dispatch(fetchTransferHistory({
@@ -36,7 +38,7 @@ export const TransferHistoryPage = () => {
                 amountPerPage: amountPerPage
             }));
         } else if (received === true) {
-            
+
         }
     }, [pageNumber, amountPerPage, reload, all, received, sent]);
 
@@ -104,7 +106,13 @@ export const TransferHistoryPage = () => {
                 </thead>
                 <tbody>
                 {transferHistory.map(transferRecord =>
-                    <div>elo</div>
+                    <TransferHistoryRecord key={transferRecord.id}
+                                           receiver={transferRecord.receiverAccountNumber}
+                                           senderCurrency={transferRecord.providerCurrencyCode}
+                                           amount={transferRecord.currencyProvided}
+                                           receiverCurrency={transferRecord.receiverCurrencyCode}
+                                           time={transferRecord.transferDateTime}
+                                           status={transferRecord.transferStatus}/>
                 )}
                 </tbody>
             </table>
