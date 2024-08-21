@@ -8,6 +8,7 @@ import {
     changeTransferAmountPerPage,
     changeTransferPage,
     fetchTransferHistory,
+    fetchTransferHistoryForReceiver, fetchTransferHistoryForSender,
     setFilter
 } from "../state/slices/transferSlice";
 import {TransferHistoryRecord} from "../components/TransferHistoryRecord";
@@ -29,7 +30,6 @@ export const TransferHistoryPage = () => {
 
     const token = Cookies.get('authToken');
 
-    console.log(transferHistory);
     useEffect(() => {
         if (all === true) {
             dispatch(fetchTransferHistory({
@@ -38,9 +38,20 @@ export const TransferHistoryPage = () => {
                 amountPerPage: amountPerPage
             }));
         } else if (received === true) {
-
+            dispatch(fetchTransferHistoryForReceiver({
+                token: token,
+                pageNumber: pageNumber,
+                amountPerPage: amountPerPage
+            }));
+        } else if (sent === true) {
+            dispatch(fetchTransferHistoryForSender({
+                token: token,
+                pageNumber: pageNumber,
+                amountPerPage: amountPerPage
+            }));
         }
     }, [pageNumber, amountPerPage, reload, all, received, sent]);
+
 
     useEffect(() => {
         onChangePage(0);

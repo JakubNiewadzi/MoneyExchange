@@ -6,7 +6,29 @@ const SLICE_NAME = 'transfer';
 export const fetchTransferHistory = createAsyncThunk(
     'transfer/fetchTransferHistory',
     async (args) => {
-        const response = await transferApi.getTransfers(args.token, args.pageNumber, args.amountPerPage);
+        const response = await transferApi
+            .getTransfers(args.token, args.pageNumber, args.amountPerPage);
+
+        return response.data;
+    }
+);
+
+export const fetchTransferHistoryForSender = createAsyncThunk(
+    'transfer/fetchTransferHistoryForSender',
+    async (args) => {
+        const response = await transferApi
+            .getTransfersForProviderUser(args.token, args.pageNumber, args.amountPerPage);
+
+        return response.data;
+    }
+);
+
+export const fetchTransferHistoryForReceiver = createAsyncThunk(
+    'transfer/fetchTransferHistoryForReceiver',
+    async (args) => {
+        const response = await transferApi
+            .getTransfersForReceiverUser(args.token, args.pageNumber, args.amountPerPage);
+
         return response.data;
     }
 );
@@ -49,6 +71,32 @@ const transferSlice = createSlice({
                 state.error = action.payload;
             });
             builder.addCase(fetchTransferHistory.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.transferHistory = action.payload.transferResponseList;
+                state.pageAmount = action.payload.pages;
+                state.totalAmount = action.payload.amount;
+            });
+            builder.addCase(fetchTransferHistoryForSender.pending, (state) => {
+                state.status = 'loading';
+            });
+            builder.addCase(fetchTransferHistoryForSender.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.payload;
+            });
+            builder.addCase(fetchTransferHistoryForSender.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.transferHistory = action.payload.transferResponseList;
+                state.pageAmount = action.payload.pages;
+                state.totalAmount = action.payload.amount;
+            });
+            builder.addCase(fetchTransferHistoryForReceiver.pending, (state) => {
+                state.status = 'loading';
+            });
+            builder.addCase(fetchTransferHistoryForReceiver.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.payload;
+            });
+            builder.addCase(fetchTransferHistoryForReceiver.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.transferHistory = action.payload.transferResponseList;
                 state.pageAmount = action.payload.pages;

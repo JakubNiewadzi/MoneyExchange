@@ -23,5 +23,29 @@ export const transferApi = {
                 Authorization: bearerAuth(token)
             }
         });
+    },
+    getTransfersForProviderUser(token, pageNumber, pageSize) {
+        console.log(`Getting transfers for a provider user`);
+        return transferClient.get("/getTransfersForProvider", {
+            params: {
+                pageNo: pageNumber,
+                pageSize: pageSize
+            },
+            headers: {
+                Authorization: bearerAuth(token)
+            }
+        });
+    },
+    getTransfersForReceiverUser(token, pageNumber, pageSize) {
+        console.log(`Getting transfers for a receiver user`);
+        return transferClient.get("/getTransfersForReceiver", {
+            params: {
+                pageNo: pageNumber,
+                pageSize: pageSize
+            },
+            headers: {
+                Authorization: bearerAuth(token)
+            }
+        });
     }
 };
