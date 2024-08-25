@@ -93,6 +93,22 @@ services:
     networks:
       - money-exchange-net
 
+  redis:
+    image: redis:7.0-alpine
+    container_name: redis-server
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    networks:
+      - money-exchange-net
+
+
+volumes:
+  redis-data:      
+
 networks:
   money-exchange-net:
     driver: bridge
