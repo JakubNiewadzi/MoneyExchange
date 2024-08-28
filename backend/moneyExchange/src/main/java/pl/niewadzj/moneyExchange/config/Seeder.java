@@ -10,12 +10,16 @@ import pl.niewadzj.moneyExchange.api.currencyAccount.interfaces.CurrencyAccountS
 import pl.niewadzj.moneyExchange.api.currencyAccount.records.TransactionRequest;
 import pl.niewadzj.moneyExchange.entities.currency.Currency;
 import pl.niewadzj.moneyExchange.entities.currency.interfaces.CurrencyRepository;
+import pl.niewadzj.moneyExchange.entities.currencyAccount.interfaces.CurrencyAccountRepository;
+import pl.niewadzj.moneyExchange.entities.message.DateMessage;
+import pl.niewadzj.moneyExchange.entities.message.repositories.DateMessageRepository;
 import pl.niewadzj.moneyExchange.entities.user.User;
 import pl.niewadzj.moneyExchange.entities.user.UserRole;
 import pl.niewadzj.moneyExchange.entities.user.interfaces.UserRepository;
 import pl.niewadzj.moneyExchange.exceptions.currencyAccount.CurrencyAccountNotActiveException;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 
@@ -23,11 +27,13 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class Seeder implements CommandLineRunner {
 
-    private final UserRepository userRepository;
     private final AuthService authService;
-    private final CurrencyAccountService currencyAccountService;
+    private final UserRepository userRepository;
     private final Random random = new Random(0);
     private final CurrencyRepository currencyRepository;
+    private final DateMessageRepository dateMessageRepository;
+    private final CurrencyAccountService currencyAccountService;
+    private final CurrencyAccountRepository currencyAccountRepository;
 
     @Override
     @Transactional
@@ -49,6 +55,10 @@ public class Seeder implements CommandLineRunner {
                 } catch (CurrencyAccountNotActiveException e){}
             }
         }
+
+        createDateMessage();
+
+        System.out.println(dateMessageRepository.getDueMessages(LocalDateTime.now()));
     }
 
 
@@ -69,6 +79,39 @@ public class Seeder implements CommandLineRunner {
         userRepository.save(admin);
 
         return userRepository.findAll();
+    }
+
+    private void createDateMessage() {
+        DateMessage dateMessage = DateMessage
+                .builder()
+                .currencyAccount(currencyAccountRepository
+                        .findAll()
+                        .getFirst())
+                .message("Date message 1")
+                .triggerDate(LocalDateTime.now().plusDays(3))
+                .build();
+
+        DateMessage dateMessage2 = DateMessage
+                .builder()
+                .currencyAccount(currencyAccountRepository
+                        .findAll()
+                        .getFirst())
+                .message("Date message 2")
+                .triggerDate(LocalDateTime.now().minusDays(2))
+                .build();
+
+        DateMessage dateMessage3 = DateMessage
+                .builder()
+                .currencyAccount(currencyAccountRepository
+                        .findAll()
+                        .getFirst())
+                .message("Date message 3")
+                .triggerDate(LocalDateTime.now().minusDays(3))
+                .build();
+
+        dateMessageRepository.save(dateMessage);
+        dateMessageRepository.save(dateMessage2);
+        dateMessageRepository.save(dateMessage3);
     }
 
     private <T> T getRandom(List<T> list) {

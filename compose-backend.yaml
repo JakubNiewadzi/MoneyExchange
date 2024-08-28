@@ -49,6 +49,7 @@ services:
       - POSTGRES_PASSWORD=admin
       - DATABASE_URL=jdbc:postgresql://money-exchange-database:5432/backend
       - DATABASE_DDL=update
+      - REDIS_HOST=redis-server
     ports:
       - 8080:8080
     healthcheck:
@@ -60,6 +61,8 @@ services:
       postgres:
         condition: service_healthy
       scheduler:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     networks:
       - money-exchange-net
