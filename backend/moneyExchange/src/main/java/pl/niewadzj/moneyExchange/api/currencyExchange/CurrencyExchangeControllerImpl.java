@@ -11,13 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.niewadzj.moneyExchange.api.currencyExchange.interfaces.CurrencyExchangeController;
 import pl.niewadzj.moneyExchange.api.currencyExchange.interfaces.CurrencyExchangeService;
-import pl.niewadzj.moneyExchange.api.currencyExchange.records.CurrencyExchangeResponse;
 import pl.niewadzj.moneyExchange.api.currencyExchange.records.CurrencyHistoryResponse;
 import pl.niewadzj.moneyExchange.api.currencyExchange.records.ExchangeCurrencyRequest;
 import pl.niewadzj.moneyExchange.api.currencyExchange.records.ExchangeCurrencyResponse;
 import pl.niewadzj.moneyExchange.entities.user.User;
-
-import java.util.List;
 
 import static pl.niewadzj.moneyExchange.api.currencyExchange.constants.CurrencyExchangeMappings.CURRENCY_EXCHANGE_MAPPING;
 import static pl.niewadzj.moneyExchange.api.currencyExchange.constants.CurrencyExchangeMappings.EXCHANGE_CURRENCY_MAPPING;

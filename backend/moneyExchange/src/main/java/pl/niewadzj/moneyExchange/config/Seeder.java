@@ -37,11 +37,11 @@ public class Seeder implements CommandLineRunner {
 
     @Override
     @Transactional
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
 
         List<User> sampleUsers = createSampleUsers();
         List<Currency> currencies = currencyRepository.findAll();
-        if(currencies.isEmpty()){
+        if (currencies.isEmpty()) {
             return;
         }
 
@@ -52,13 +52,13 @@ public class Seeder implements CommandLineRunner {
                         BigDecimal.valueOf(random.nextDouble(0, 1000.25))), user);
                 try {
                     currencyAccountService.suspendCurrencyAccount(getRandom(currencies).getId(), user);
-                } catch (CurrencyAccountNotActiveException e){}
+                } catch (CurrencyAccountNotActiveException e) {
+                }
             }
         }
 
         createDateMessage();
 
-        System.out.println(dateMessageRepository.getDueMessages(LocalDateTime.now()));
     }
 
 
@@ -70,7 +70,7 @@ public class Seeder implements CommandLineRunner {
             authService.register(new RegistrationRequest("Emily", "Davis", "#Silnehaslo1", "emily.davis@example.com"));
             authService.register(new RegistrationRequest("Michael", "Brown", "#Silnehaslo1", "michael.brown@example.com"));
             authService.register(new RegistrationRequest("Sophia", "Wilson", "#Silnehaslo1", "sophia.wilson@example.com"));
-        }catch(Exception e){
+        } catch (Exception e) {
 
         }
         User admin = userRepository.findByEmail("jan.kowalski@gmail.com").orElseThrow();
@@ -84,34 +84,18 @@ public class Seeder implements CommandLineRunner {
     private void createDateMessage() {
         DateMessage dateMessage = DateMessage
                 .builder()
-                .currencyAccount(currencyAccountRepository
-                        .findAll()
-                        .getFirst())
+                .sourceCurrencyId(1L)
+                .targetCurrencyId(2L)
+                .amount(BigDecimal.ONE)
+                .userId(1L)
                 .message("Date message 1")
-                .triggerDate(LocalDateTime.now().plusDays(3))
+                .triggerDate(LocalDateTime.now().minusHours(3))
                 .build();
 
-        DateMessage dateMessage2 = DateMessage
-                .builder()
-                .currencyAccount(currencyAccountRepository
-                        .findAll()
-                        .getFirst())
-                .message("Date message 2")
-                .triggerDate(LocalDateTime.now().minusDays(2))
-                .build();
-
-        DateMessage dateMessage3 = DateMessage
-                .builder()
-                .currencyAccount(currencyAccountRepository
-                        .findAll()
-                        .getFirst())
-                .message("Date message 3")
-                .triggerDate(LocalDateTime.now().minusDays(3))
-                .build();
 
         dateMessageRepository.save(dateMessage);
-        dateMessageRepository.save(dateMessage2);
-        dateMessageRepository.save(dateMessage3);
+        dateMessageRepository.findAll().forEach(System.out::println);
+
     }
 
     private <T> T getRandom(List<T> list) {

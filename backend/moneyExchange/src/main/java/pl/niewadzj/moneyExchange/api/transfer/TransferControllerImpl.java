@@ -13,10 +13,7 @@ import pl.niewadzj.moneyExchange.api.transfer.interfaces.TransferService;
 import pl.niewadzj.moneyExchange.api.transfer.records.MakeTransferResponse;
 import pl.niewadzj.moneyExchange.api.transfer.records.TransferHistoryResponse;
 import pl.niewadzj.moneyExchange.api.transfer.records.TransferRequest;
-import pl.niewadzj.moneyExchange.api.transfer.records.TransferResponse;
 import pl.niewadzj.moneyExchange.entities.user.User;
-
-import java.util.List;
 
 import static pl.niewadzj.moneyExchange.api.transfer.constants.TransferConstants.PAGE_NUMBER;
 import static pl.niewadzj.moneyExchange.api.transfer.constants.TransferConstants.PAGE_SIZE;
@@ -51,16 +48,16 @@ public class TransferControllerImpl implements TransferController {
     @Override
     @GetMapping(GET_TRANSFERS_FOR_PROVIDER)
     public final TransferHistoryResponse getTransfersForProviderUser(@RequestParam(defaultValue = PAGE_NUMBER, required = false) int pageNo,
-                                                                    @RequestParam(defaultValue = PAGE_SIZE, required = false) int pageSize,
-                                                                    @AuthenticationPrincipal User user) {
+                                                                     @RequestParam(defaultValue = PAGE_SIZE, required = false) int pageSize,
+                                                                     @AuthenticationPrincipal User user) {
         return transferService.getTransfersForProviderUser(pageNo, pageSize, user);
     }
 
     @Override
     @GetMapping(GET_TRANSFERS_FOR_RECEIVER)
     public final TransferHistoryResponse getTransfersForReceiverUser(@RequestParam(defaultValue = PAGE_NUMBER, required = false) int pageNo,
-                                                                    @RequestParam(defaultValue = PAGE_SIZE, required = false) int pageSize,
-                                                                    @AuthenticationPrincipal User user) {
+                                                                     @RequestParam(defaultValue = PAGE_SIZE, required = false) int pageSize,
+                                                                     @AuthenticationPrincipal User user) {
         return transferService.getTransfersForReceiverUser(pageNo, pageSize, user);
     }
 }

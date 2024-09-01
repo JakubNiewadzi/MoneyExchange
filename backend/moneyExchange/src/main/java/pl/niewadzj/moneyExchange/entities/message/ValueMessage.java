@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.math.BigDecimal;
 
@@ -14,9 +15,11 @@ import java.math.BigDecimal;
 @Entity
 @SuperBuilder
 @NoArgsConstructor
+@RedisHash("ValueMessage")
 @DiscriminatorValue("Value")
-public class ValueMessage extends Message{
+public class ValueMessage extends Message {
 
     private BigDecimal value;
 
 }
+

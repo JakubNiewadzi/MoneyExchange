@@ -3,10 +3,7 @@ package pl.niewadzj.moneyExchange.api.transfer.interfaces;
 import pl.niewadzj.moneyExchange.api.transfer.records.MakeTransferResponse;
 import pl.niewadzj.moneyExchange.api.transfer.records.TransferHistoryResponse;
 import pl.niewadzj.moneyExchange.api.transfer.records.TransferRequest;
-import pl.niewadzj.moneyExchange.api.transfer.records.TransferResponse;
 import pl.niewadzj.moneyExchange.entities.user.User;
-
-import java.util.List;
 
 public interface TransferService {
 

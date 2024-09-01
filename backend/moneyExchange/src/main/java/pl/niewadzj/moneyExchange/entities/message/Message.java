@@ -8,12 +8,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.ManyToOne;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import pl.niewadzj.moneyExchange.entities.currencyAccount.CurrencyAccount;
+import org.springframework.data.annotation.Reference;
+import pl.niewadzj.moneyExchange.entities.user.User;
+
+import java.math.BigDecimal;
+
 
 @Entity
+@Getter
 @ToString
 @SuperBuilder
 @NoArgsConstructor
@@ -25,9 +31,10 @@ public abstract class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String message;
-    @ManyToOne
-    private CurrencyAccount currencyAccount;
+    private Long userId;
+    private Long sourceCurrencyId;
+    private Long targetCurrencyId;
+    private BigDecimal amount;
 
 
 }
-

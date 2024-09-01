@@ -15,7 +15,9 @@ import java.util.Optional;
 public interface CurrencyAccountRepository extends JpaRepository<CurrencyAccount, Long> {
 
     Optional<CurrencyAccount> findByCurrencyAndAccount(Currency currency, Account account);
+
     Page<CurrencyAccount> findByAccount(Account account, Pageable pageable);
+
     Page<CurrencyAccount> findByAccountAndCurrencyAccountStatus(Account account, CurrencyAccountStatus status, Pageable pageable);
 
 }

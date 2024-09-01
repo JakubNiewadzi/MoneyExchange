@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.time.LocalDateTime;
 
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 @SuperBuilder
 @NoArgsConstructor
+@RedisHash("DateMessage")
 @DiscriminatorValue("Date")
 @ToString(callSuper = true)
 public class DateMessage extends Message {

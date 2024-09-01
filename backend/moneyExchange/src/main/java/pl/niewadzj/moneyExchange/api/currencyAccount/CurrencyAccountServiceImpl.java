@@ -19,9 +19,9 @@ import pl.niewadzj.moneyExchange.entities.user.User;
 import pl.niewadzj.moneyExchange.exceptions.account.AccountNotFoundException;
 import pl.niewadzj.moneyExchange.exceptions.account.NotEnoughMoneyException;
 import pl.niewadzj.moneyExchange.exceptions.currency.CurrencyNotFoundException;
+import pl.niewadzj.moneyExchange.exceptions.currencyAccount.CurrencyAccountAlreadyActive;
 import pl.niewadzj.moneyExchange.exceptions.currencyAccount.CurrencyAccountNotActiveException;
 import pl.niewadzj.moneyExchange.exceptions.currencyAccount.CurrencyAccountNotFoundException;
-import pl.niewadzj.moneyExchange.exceptions.currencyAccount.CurrencyAccountAlreadyActive;
 import pl.niewadzj.moneyExchange.exceptions.currencyAccount.CurrencyAccountSuspendedException;
 
 import java.math.BigDecimal;

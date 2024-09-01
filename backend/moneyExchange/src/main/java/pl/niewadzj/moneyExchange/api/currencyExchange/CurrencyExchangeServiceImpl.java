@@ -112,8 +112,8 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
                 .descending());
 
         Page<CurrencyExchangeResponse> currencyExchangeResponses = currencyExchangeRepository.findByAccountAndCurrencyExchangeStatusIn(account,
-                        List.of(CurrencyExchangeStatus.SUCCESSFUL, CurrencyExchangeStatus.REVERTED),
-                        pageable).map(currencyExchangeMapper);
+                List.of(CurrencyExchangeStatus.SUCCESSFUL, CurrencyExchangeStatus.REVERTED),
+                pageable).map(currencyExchangeMapper);
 
         return CurrencyHistoryResponse.builder()
                 .currencyExchangeResponses(currencyExchangeResponses.getContent())

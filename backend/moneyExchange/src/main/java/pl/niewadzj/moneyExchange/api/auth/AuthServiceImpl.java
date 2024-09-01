@@ -92,7 +92,7 @@ public class AuthServiceImpl implements AuthService {
                 .findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(email));
 
-        if(!jwtService.isTokenValid(refreshToken, user)){
+        if (!jwtService.isTokenValid(refreshToken, user)) {
             throw new TokenExpiredException();
         }
 
