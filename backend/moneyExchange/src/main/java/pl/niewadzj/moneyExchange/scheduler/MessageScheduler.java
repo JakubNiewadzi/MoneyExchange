@@ -6,6 +6,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import pl.niewadzj.moneyExchange.api.message.interfaces.DateMessageService;
+import pl.niewadzj.moneyExchange.api.message.interfaces.ValueMessageService;
 
 @Component
 @EnableAsync
@@ -13,12 +14,19 @@ import pl.niewadzj.moneyExchange.api.message.interfaces.DateMessageService;
 public class MessageScheduler {
 
     private final DateMessageService dateMessageService;
+    private final ValueMessageService valueMessageService;
 
     @Async
     @Scheduled(initialDelay = 1000L * 10L,
             fixedRate = 1000L * 60L)
     public void performDueTransactions() {
-        System.out.println("elo");
         dateMessageService.performDueTransactions();
+    }
+
+    @Async
+    @Scheduled(initialDelay = 1000L * 10L,
+            fixedRate = 1000L)
+    public void checkExchangeRatesForValues() {
+        valueMessageService.performValueCheckOnMessages();
     }
 }

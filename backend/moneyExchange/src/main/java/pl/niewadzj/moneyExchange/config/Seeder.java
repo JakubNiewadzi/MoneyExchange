@@ -2,6 +2,7 @@ package pl.niewadzj.moneyExchange.config;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import pl.niewadzj.moneyExchange.api.auth.interfaces.AuthService;
@@ -35,10 +36,10 @@ public class Seeder implements CommandLineRunner {
     private final CurrencyAccountService currencyAccountService;
     private final CurrencyAccountRepository currencyAccountRepository;
 
+
     @Override
     @Transactional
     public void run(String... args) {
-
         List<User> sampleUsers = createSampleUsers();
         List<Currency> currencies = currencyRepository.findAll();
         if (currencies.isEmpty()) {
@@ -84,7 +85,7 @@ public class Seeder implements CommandLineRunner {
     private void createDateMessage() {
         DateMessage dateMessage = DateMessage
                 .builder()
-                .sourceCurrencyId(1L)
+                .sourceCurrencyId(12L)
                 .targetCurrencyId(2L)
                 .amount(BigDecimal.ONE)
                 .userId(1L)
