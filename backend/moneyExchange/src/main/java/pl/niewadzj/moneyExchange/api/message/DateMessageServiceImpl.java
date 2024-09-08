@@ -1,20 +1,18 @@
 package pl.niewadzj.moneyExchange.api.message;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import pl.niewadzj.moneyExchange.api.currencyExchange.interfaces.CurrencyExchangeService;
 import pl.niewadzj.moneyExchange.api.currencyExchange.records.ExchangeCurrencyRequest;
 import pl.niewadzj.moneyExchange.api.message.interfaces.DateMessageService;
 import pl.niewadzj.moneyExchange.api.message.records.DateMessageRequest;
-import pl.niewadzj.moneyExchange.entities.account.Account;
-import pl.niewadzj.moneyExchange.entities.account.interfaces.AccountRepository;
-import pl.niewadzj.moneyExchange.entities.currencyAccount.CurrencyAccount;
-import pl.niewadzj.moneyExchange.entities.currencyAccount.interfaces.CurrencyAccountRepository;
+import pl.niewadzj.moneyExchange.api.message.records.DateMessagesResponse;
 import pl.niewadzj.moneyExchange.entities.message.DateMessage;
 import pl.niewadzj.moneyExchange.entities.message.repositories.DateMessageRepository;
 import pl.niewadzj.moneyExchange.entities.user.User;
 import pl.niewadzj.moneyExchange.entities.user.interfaces.UserRepository;
-import pl.niewadzj.moneyExchange.exceptions.account.AccountNotFoundException;
 import pl.niewadzj.moneyExchange.exceptions.auth.UserNotFoundException;
 
 import java.time.LocalDateTime;
@@ -41,8 +39,11 @@ public class DateMessageServiceImpl implements DateMessageService {
                             .amount(dateMessage.getAmount())
                             .build();
 
+                    Long userId = dateMessage.getUserId();
+
                     currencyExchangeService.exchangeCurrency(exchangeCurrencyRequest,
-                            userRepository.findById(dateMessage.getUserId()).orElseThrow(() -> new UserNotFoundException("aa")));
+                            userRepository.findById(userId)
+                                    .orElseThrow(() -> new UserNotFoundException(userId)));
                 });
 
         dateMessageRepository.deleteAll(dateMessageIterable);
@@ -51,7 +52,6 @@ public class DateMessageServiceImpl implements DateMessageService {
     @Override
     public void createDateMessage(DateMessageRequest dateMessageRequest,
                                   User user) {
-
         DateMessage dateMessage = DateMessage.builder()
                 .message(dateMessageRequest.message())
                 .userId(user.getId())
@@ -62,6 +62,15 @@ public class DateMessageServiceImpl implements DateMessageService {
                 .build();
 
         dateMessageRepository.save(dateMessage);
+    }
+
+    @Override
+    public DateMessagesResponse getDateMessageResponses(int pageNo, int pageSize, User user) {
+        Page<DateMessage> dateMessagesPage = dateMessageRepository.findAll(PageRequest.of(pageNo, pageSize));
+
+        dateMessagesPage.get().forEach(System.out::println);
+
+        return null;
     }
 
 }

@@ -24,5 +24,5 @@ public record ValueMessageRequest(String message,
                                   @NotNull(message = AMOUNT_NULL_MSG)
                                   @DecimalMin(value = AMOUNT_MIN_VALUE)
                                   @Digits(integer = AMOUNT_INTEGER, fraction = AMOUNT_FRACTION)
-                                  BigDecimal targetExchangeRate) {
+                                  BigDecimal valueExchangeRate) {
 }

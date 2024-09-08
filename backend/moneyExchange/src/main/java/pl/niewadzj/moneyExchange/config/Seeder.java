@@ -9,11 +9,14 @@ import pl.niewadzj.moneyExchange.api.auth.interfaces.AuthService;
 import pl.niewadzj.moneyExchange.api.auth.records.RegistrationRequest;
 import pl.niewadzj.moneyExchange.api.currencyAccount.interfaces.CurrencyAccountService;
 import pl.niewadzj.moneyExchange.api.currencyAccount.records.TransactionRequest;
+import pl.niewadzj.moneyExchange.api.message.records.ValueMessageRequest;
 import pl.niewadzj.moneyExchange.entities.currency.Currency;
 import pl.niewadzj.moneyExchange.entities.currency.interfaces.CurrencyRepository;
 import pl.niewadzj.moneyExchange.entities.currencyAccount.interfaces.CurrencyAccountRepository;
 import pl.niewadzj.moneyExchange.entities.message.DateMessage;
+import pl.niewadzj.moneyExchange.entities.message.ValueMessage;
 import pl.niewadzj.moneyExchange.entities.message.repositories.DateMessageRepository;
+import pl.niewadzj.moneyExchange.entities.message.repositories.ValueMessageRepository;
 import pl.niewadzj.moneyExchange.entities.user.User;
 import pl.niewadzj.moneyExchange.entities.user.UserRole;
 import pl.niewadzj.moneyExchange.entities.user.interfaces.UserRepository;
@@ -34,7 +37,7 @@ public class Seeder implements CommandLineRunner {
     private final CurrencyRepository currencyRepository;
     private final DateMessageRepository dateMessageRepository;
     private final CurrencyAccountService currencyAccountService;
-    private final CurrencyAccountRepository currencyAccountRepository;
+    private final ValueMessageRepository valueMessageRepository;
 
 
     @Override
@@ -59,7 +62,7 @@ public class Seeder implements CommandLineRunner {
         }
 
         createDateMessage();
-
+        createValueMessage();
     }
 
 
@@ -98,6 +101,22 @@ public class Seeder implements CommandLineRunner {
         dateMessageRepository.findAll().forEach(System.out::println);
 
     }
+
+    private void createValueMessage(){
+        ValueMessage valueMessage = ValueMessage
+                .builder()
+                .sourceCurrencyId(12L)
+                .targetCurrencyId(1L)
+                .amount(BigDecimal.ONE)
+                .userId(1L)
+                .message("Date message 1")
+                .value(BigDecimal.valueOf(10.0))
+                .build();
+
+        valueMessageRepository.save(valueMessage);
+        valueMessageRepository.findAll().forEach(System.out::println);
+    }
+
 
     private <T> T getRandom(List<T> list) {
         return list.get(random.nextInt(0, list.size()));
