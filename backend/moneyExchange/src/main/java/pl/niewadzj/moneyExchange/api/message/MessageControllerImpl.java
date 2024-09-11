@@ -3,6 +3,7 @@ package pl.niewadzj.moneyExchange.api.message;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +21,8 @@ import pl.niewadzj.moneyExchange.entities.user.User;
 
 import static pl.niewadzj.moneyExchange.api.message.constants.MessageMappings.CREATE_DATE_MESSAGE;
 import static pl.niewadzj.moneyExchange.api.message.constants.MessageMappings.CREATE_VALUE_MESSAGE;
+import static pl.niewadzj.moneyExchange.api.message.constants.MessageMappings.DELETE_DATE_MESSAGE;
+import static pl.niewadzj.moneyExchange.api.message.constants.MessageMappings.DELETE_VALUE_MESSAGE;
 import static pl.niewadzj.moneyExchange.api.message.constants.MessageMappings.GET_DATE_MESSAGES;
 import static pl.niewadzj.moneyExchange.api.message.constants.MessageMappings.GET_VALUE_MESSAGES;
 import static pl.niewadzj.moneyExchange.api.message.constants.MessageMappings.MESSAGE_MAPPING;
@@ -61,5 +64,17 @@ public class MessageControllerImpl implements MessageController {
                                                   @RequestParam(defaultValue = "10", required = false) int pageSize,
                                                   @AuthenticationPrincipal User user) {
         return valueMessageService.getValueMessageResponses(pageNo, pageSize, user);
+    }
+
+    @Override
+    @DeleteMapping(DELETE_VALUE_MESSAGE)
+    public void deleteValueMessage(Long id, @AuthenticationPrincipal User user) {
+        valueMessageService.deleteValueMessage(id, user);
+    }
+
+    @Override
+    @DeleteMapping(DELETE_DATE_MESSAGE)
+    public void deleteDateMessage(Long id, @AuthenticationPrincipal User user) {
+        dateMessageService.deleteDateMessage(id, user);
     }
 }

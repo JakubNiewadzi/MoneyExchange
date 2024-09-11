@@ -9,13 +9,19 @@ import pl.niewadzj.moneyExchange.api.currencyExchange.records.ExchangeCurrencyRe
 import pl.niewadzj.moneyExchange.api.message.interfaces.DateMessageService;
 import pl.niewadzj.moneyExchange.api.message.records.DateMessageRequest;
 import pl.niewadzj.moneyExchange.api.message.records.DateMessagesResponse;
+import pl.niewadzj.moneyExchange.api.message.records.ValueMessagesResponse;
 import pl.niewadzj.moneyExchange.entities.message.DateMessage;
+import pl.niewadzj.moneyExchange.entities.message.ValueMessage;
 import pl.niewadzj.moneyExchange.entities.message.repositories.DateMessageRepository;
 import pl.niewadzj.moneyExchange.entities.user.User;
 import pl.niewadzj.moneyExchange.entities.user.interfaces.UserRepository;
 import pl.niewadzj.moneyExchange.exceptions.auth.UserNotFoundException;
+import pl.niewadzj.moneyExchange.exceptions.message.DateMessageNotFoundException;
+import pl.niewadzj.moneyExchange.exceptions.message.MessageNotOwnedByUserException;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -66,11 +72,27 @@ public class DateMessageServiceImpl implements DateMessageService {
 
     @Override
     public DateMessagesResponse getDateMessageResponses(int pageNo, int pageSize, User user) {
-        Page<DateMessage> dateMessagesPage = dateMessageRepository.findAll(PageRequest.of(pageNo, pageSize));
+        List<DateMessage> dateMessages = dateMessageRepository
+                .findByUserId(user.getId());
 
-        dateMessagesPage.get().forEach(System.out::println);
-
-        return null;
+        return DateMessagesResponse.builder()
+                .dateMessages(dateMessages)
+                .amount(dateMessages.size())
+                .pages((dateMessages.size() / pageSize) + 1)
+                .build();
     }
+
+    @Override
+    public void deleteDateMessage(Long id, User user) {
+        DateMessage dateMessage = dateMessageRepository.findById(id)
+                .orElseThrow(() -> new DateMessageNotFoundException(id));
+
+        if (!Objects.equals(dateMessage.getUserId(), user.getId())){
+            throw new MessageNotOwnedByUserException();
+        }
+
+        dateMessageRepository.deleteById(id);
+    }
+
 
 }

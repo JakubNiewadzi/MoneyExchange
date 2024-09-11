@@ -17,11 +17,15 @@ import pl.niewadzj.moneyExchange.entities.user.interfaces.UserRepository;
 import pl.niewadzj.moneyExchange.exceptions.auth.UserNotFoundException;
 import pl.niewadzj.moneyExchange.exceptions.currency.CurrencyNotFoundException;
 import pl.niewadzj.moneyExchange.exceptions.message.InvalidMessageValue;
+import pl.niewadzj.moneyExchange.exceptions.message.MessageNotOwnedByUserException;
+import pl.niewadzj.moneyExchange.exceptions.message.ValueMessageNotFoundException;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -86,7 +90,26 @@ public class ValueMessageServiceImpl implements ValueMessageService {
 
     @Override
     public ValueMessagesResponse getValueMessageResponses(int pageNo, int pageSize, User user) {
-        return null;
+        List<ValueMessage> valueMessages = valueMessageRepository
+                .findByUserId(user.getId());
+
+        return ValueMessagesResponse.builder()
+                .valueMessages(valueMessages)
+                .amount(valueMessages.size())
+                .pages((valueMessages.size() / pageSize) + 1)
+                .build();
+    }
+
+    @Override
+    public void deleteValueMessage(Long id, User user) {
+        ValueMessage valueMessage = valueMessageRepository.findById(id)
+                .orElseThrow(() -> new ValueMessageNotFoundException(id));
+
+        if (!Objects.equals(valueMessage.getUserId(), user.getId())){
+            throw new MessageNotOwnedByUserException();
+        }
+
+        valueMessageRepository.deleteById(id);
     }
 
     private void validateValueMessage(ValueMessageRequest valueMessageRequest) {

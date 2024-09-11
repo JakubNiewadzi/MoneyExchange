@@ -13,4 +13,5 @@ public interface DateMessageService {
 
     DateMessagesResponse getDateMessageResponses(int pageNo, int pageSize, User user);
 
+    void deleteDateMessage(Long id, User user);
 }

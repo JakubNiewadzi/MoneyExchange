@@ -7,6 +7,8 @@ public final class MessageMappings {
     public static final String CREATE_VALUE_MESSAGE = "/createValueMessage";
     public static final String GET_DATE_MESSAGES = "/getDateMessages";
     public static final String GET_VALUE_MESSAGES = "/getValueMessages";
+    public static final String DELETE_VALUE_MESSAGE = "/deleteValueMessage";
+    public static final String DELETE_DATE_MESSAGE = "/deleteDateMessage";
 
     private MessageMappings(){}
 

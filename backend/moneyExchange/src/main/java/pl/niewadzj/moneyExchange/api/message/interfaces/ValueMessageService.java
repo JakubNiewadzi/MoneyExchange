@@ -14,4 +14,5 @@ public interface ValueMessageService {
 
     ValueMessagesResponse getValueMessageResponses(int pageNo, int pageSize, User user);
 
+    void deleteValueMessage(Long id, User user);
 }
