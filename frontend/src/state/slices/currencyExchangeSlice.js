@@ -6,7 +6,8 @@ const SLICE_NAME = 'currencyExchange';
 export const fetchCurrencyExchangeHistory = createAsyncThunk(
     'currencyExchange/fetchCurrencyExchangeHistory',
     async (args) => {
-        const response = await currencyExchangeApi.getExchanges(args.token, args.pageNumber, args.amountPerPage);
+        const response = await currencyExchangeApi
+            .getExchanges(args.token, args.pageNumber, args.amountPerPage);
         return response.data;
     }
 );

@@ -67,14 +67,14 @@ public class MessageControllerImpl implements MessageController {
     }
 
     @Override
-    @DeleteMapping(DELETE_VALUE_MESSAGE)
-    public void deleteValueMessage(Long id, @AuthenticationPrincipal User user) {
-        valueMessageService.deleteValueMessage(id, user);
+    @DeleteMapping(DELETE_DATE_MESSAGE)
+    public void deleteDateMessage(@RequestParam Long id, @AuthenticationPrincipal User user) {
+        dateMessageService.deleteDateMessage(id, user);
     }
 
     @Override
-    @DeleteMapping(DELETE_DATE_MESSAGE)
-    public void deleteDateMessage(Long id, @AuthenticationPrincipal User user) {
-        dateMessageService.deleteDateMessage(id, user);
+    @DeleteMapping(DELETE_VALUE_MESSAGE)
+    public void deleteValueMessage(@RequestParam Long id, @AuthenticationPrincipal User user) {
+        valueMessageService.deleteValueMessage(id, user);
     }
 }
