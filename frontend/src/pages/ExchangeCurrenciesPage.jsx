@@ -5,7 +5,7 @@ import {MenuItem, Select} from "@mui/material";
 import {useEffect, useState} from "react";
 import {currencyExchangeApi} from "../api/currencyExchangeApi";
 import Cookies from "js-cookie";
-import {fetchAllCurrencyAccounts, fetchCurrencyAccountsPage} from "../state/slices/currencyAccountsSlice";
+import {fetchAllCurrencyAccounts} from "../state/slices/currencyAccountsSlice";
 import {useNavigate} from "react-router";
 
 export const ExchangeCurrenciesPage = () => {
@@ -112,10 +112,12 @@ export const ExchangeCurrenciesPage = () => {
     return <div className='flex flex-col justify-center'>
         <div
             className='flex flex-col bg-darkGray w-full space items-center py-8 justify-center rounded-lg shadow-lg mt-48'>
-            <div className='text-3xl font-semibold text-center'>Exchange your currencies, cause it's what this site is all
+            <div className='text-3xl font-semibold text-center'>Exchange your currencies, cause it's what this site is
+                all
                 about.
             </div>
-            <div className='flex mt-8 md:flex-row flex-col md:w-1/2 w-full md:justify-around md:items-stretch items-center'>
+            <div
+                className='flex mt-8 md:flex-row flex-col md:w-1/2 w-full md:justify-around md:items-stretch items-center'>
                 <div className='flex flex-col md:w-2/5 w-4/5'>
                     <label>From:</label>
                     <Select
@@ -148,7 +150,8 @@ export const ExchangeCurrenciesPage = () => {
                     </Select>
                 </div>
             </div>
-            <div className='flex mt-8 md:flex-row flex-col md:w-1/2 w-full md:justify-around md:items-stretch items-center'>
+            <div
+                className='flex mt-8 md:flex-row flex-col md:w-1/2 w-full md:justify-around md:items-stretch items-center'>
                 <div className='flex flex-col md:w-2/5 w-4/5'>
                     <label>This amount of money:</label>
                     <input
@@ -187,8 +190,15 @@ export const ExchangeCurrenciesPage = () => {
                         className="text-white text-lg font-semibold bg-background rounded-full ring ring-blue-400">Convert!</Button>
             </div>
         </div>
-        <div className='flex flex-col w-full space items-center h-[40vh] rounded-lg p-10 text-3xl font-semibold'>
+        <div className='flex flex-col w-full space items-center rounded-lg p-10 text-3xl font-semibold md:mb-16'>
             Don't want to exchange right now? Plan your exchange in advance!
+            <div className='flex flex-col md:flex-row md:w-1/2 w-full justify-around mt-14'>
+                <Button className='text-white text-lg font-semibold bg-lightGray px-4 py-2'
+                        onClick={() => navigate("/planDate")}>I choose date</Button>
+                <Button className='text-white text-lg font-semibold bg-lightGray md:mt-0 mt-4 px-4 py-2'
+                        onClick={() => navigate("/planRate")}
+                >I choose rate</Button>
+            </div>
         </div>
     </div>
 

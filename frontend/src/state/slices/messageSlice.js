@@ -72,3 +72,7 @@ const messageSlice = createSlice({
         }
     }
 );
+
+export const {changePage, changeAmountPerPage} = messageSlice.actions;
+
+export const messageReducer = messageSlice.reducer;

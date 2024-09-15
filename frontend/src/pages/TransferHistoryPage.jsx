@@ -8,7 +8,8 @@ import {
     changeTransferAmountPerPage,
     changeTransferPage,
     fetchTransferHistory,
-    fetchTransferHistoryForReceiver, fetchTransferHistoryForSender,
+    fetchTransferHistoryForReceiver,
+    fetchTransferHistoryForSender,
     setFilter
 } from "../state/slices/transferSlice";
 import {TransferHistoryRecord} from "../components/TransferHistoryRecord";

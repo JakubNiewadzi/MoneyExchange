@@ -29,10 +29,10 @@ export const CurrencyHistoryRecord = ({
             {formatDate(exchangeDateTime)}
         </th>
         <th>
-            { status !== 'REVERTED' ?
+            {status !== 'REVERTED' ?
                 <div><Button color='inherit' className='bg-lightGray w-2/3' onClick={() => onRevert(id)}>Revert</Button>
                 </div>
-                :  hasHourPassed(exchangeDateTime)? <div>
+                : hasHourPassed(exchangeDateTime) ? <div>
                     Already reverted
                 </div> : <div>Too late to revert</div>
             }

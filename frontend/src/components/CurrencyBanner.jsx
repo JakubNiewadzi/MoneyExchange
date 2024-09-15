@@ -58,18 +58,16 @@ export const CurrencyBanner = ({visible}) => {
         const client = Stomp.over(socket);
 
         client.connect({}, () => {
-            {
-                console.log('Websocket connection established');
-                setIsConnected(true);
-                client.subscribe('/topic/currencyUpdates', (message) => {
-                    const receivedMessage = JSON.parse(message.body);
-                    dispatch(setCurrencies(receivedMessage));
-                })
-            }
+            console.log('Websocket connection established');
+            setIsConnected(true);
+            client.subscribe('/topic/currencyUpdates', (message) => {
+                const receivedMessage = JSON.parse(message.body);
+                dispatch(setCurrencies(receivedMessage));
+            })
         });
-        
-        return () =>{
-            if(isConnected) {
+
+        return () => {
+            if (isConnected) {
                 client.disconnect();
                 setIsConnected(false);
             }
@@ -84,7 +82,7 @@ export const CurrencyBanner = ({visible}) => {
                                   code={currency.code}
                                   exchangeRate={currency.exchangeRate}
                                   id={currency.id}
-                                  calculatingCurrency={currencies?.find(currency => currency.id===calculatingCurrency)?.code}
+                                  calculatingCurrency={currencies?.find(currency => currency.id === calculatingCurrency)?.code}
                                   onClick={handleClick}/>
                 )}
             </div>

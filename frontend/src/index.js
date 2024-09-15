@@ -16,6 +16,7 @@ import {ExchangeCurrenciesPage} from "./pages/ExchangeCurrenciesPage";
 import {ExchangeHistoryPage} from "./pages/ExchangeHistoryPage";
 import {TransferMoneyPage} from "./pages/TransferMoneyPage";
 import {TransferHistoryPage} from "./pages/TransferHistoryPage";
+import {PlanExchangePage} from "./pages/PlanExchangePage";
 
 
 const router = createBrowserRouter([
@@ -73,6 +74,14 @@ const router = createBrowserRouter([
             {
                 path: "transferHistory",
                 element: <TransferHistoryPage/>
+            },
+            {
+                path: "planDate",
+                element: <PlanExchangePage/>
+            },
+            {
+                path: "planRate",
+                element: <PlanExchangePage/>
             },
         ]
     }

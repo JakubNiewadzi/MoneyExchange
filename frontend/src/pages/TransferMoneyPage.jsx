@@ -1,9 +1,8 @@
 import {useState} from "react";
 import {MenuItem, Select} from "@mui/material";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import Cookies from "js-cookie";
 import Button from "@mui/material/Button";
-import {currencyExchangeApi} from "../api/currencyExchangeApi";
 import {transferApi} from "../api/transferApi";
 
 export const TransferMoneyPage = () => {
@@ -23,8 +22,7 @@ export const TransferMoneyPage = () => {
 
         if (name === 'number-form') {
             setReceiverAccountNumber(value);
-        }
-        else if(name === 'amount-transferred'){
+        } else if (name === 'amount-transferred') {
             setTransferredMoney(value);
         }
     };
@@ -45,15 +43,19 @@ export const TransferMoneyPage = () => {
             });
         console.log(response);
         if (response === undefined) {
-           console.log("There has been an error while connecting to the backend");
-        } else if (response.status===200){
+            console.log("There has been an error while connecting to the backend");
+        } else if (response.status === 200) {
             setErrors({})
-        }else if (response.status===404){
-            setErrors({...errors,
-                numberError: "No user with given number has been found"})
-        } else if(response.status===400){
-            setErrors({...errors,
-                moneyError: "You do not have enough money on this account"});
+        } else if (response.status === 404) {
+            setErrors({
+                ...errors,
+                numberError: "No user with given number has been found"
+            })
+        } else if (response.status === 400) {
+            setErrors({
+                ...errors,
+                moneyError: "You do not have enough money on this account"
+            });
         }
     };
 
@@ -120,7 +122,7 @@ export const TransferMoneyPage = () => {
             </div>
             <div className='mt-8 flex w-1/2 justify-center'>
                 <Button className="text-white text-lg font-semibold bg-background rounded-full ring ring-blue-400"
-                onClick={handleSubmit}>Transfer!</Button>
+                        onClick={handleSubmit}>Transfer!</Button>
             </div>
         </div>
     </div>

@@ -18,7 +18,7 @@ export const TransferHistoryRecord = ({receiver, senderCurrency, amount, receive
             {formatDate(time)}
         </th>
         <th>
-            { status }
+            {status}
         </th>
     </tr>;
 

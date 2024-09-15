@@ -1,4 +1,4 @@
-import {Navigate, Outlet, useLocation, useNavigate} from "react-router";
+import {Navigate, Outlet, useLocation} from "react-router";
 import {useDispatch, useSelector} from "react-redux";
 import {Navbar} from "../components/Navbar";
 import {useEffect} from "react";
