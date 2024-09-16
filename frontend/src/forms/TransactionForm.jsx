@@ -22,7 +22,6 @@ export const TransactionForm = ({action}) => {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        console.log(amount);
         action === "Deposit" ? await currencyAccountApi.deposit(authToken, amount, params.id) :
             await currencyAccountApi.withdraw(authToken, amount, params.id);
         navigate("/myAccounts");

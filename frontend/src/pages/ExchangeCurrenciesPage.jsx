@@ -156,7 +156,7 @@ export const ExchangeCurrenciesPage = () => {
                     <label>This amount of money:</label>
                     <input
                         className="border appearance-none w-full bg-lightGray border-lightGray rounded-md py-2 px-4
-                        focus:outline-none focus:ring ring-blue-400 focus:border-background"
+                        focus:outline-none focus:ring-2 ring-blue-400 focus:border-background"
                         type='number'
                         name='amount-from'
                         placeholder='11.11'
@@ -173,7 +173,7 @@ export const ExchangeCurrenciesPage = () => {
                     <label>This amount of money:</label>
                     <input
                         className="border appearance-none w-full bg-lightGray border-lightGray rounded-md py-2 px-4
-                        focus:outline-none focus:ring ring-blue-400"
+                        focus:outline-none focus:ring-2 ring-blue-400"
                         type='number'
                         name='amount-to'
                         placeholder='11.11'
