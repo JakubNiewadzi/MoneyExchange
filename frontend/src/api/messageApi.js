@@ -48,7 +48,7 @@ export const messageApi = {
     },
     deleteDateMessage(token, id) {
         console.log(`Deleting date message with id ${id}`);
-        return messageClient.get("/deleteDateMessages", {
+        return messageClient.delete("/deleteDateMessages", {
             params: {
                 id: id
             },
@@ -59,7 +59,7 @@ export const messageApi = {
     },
     deleteValueMessage(token, id) {
         console.log(`Deleting value message with id ${id}`);
-        return messageClient.get("/deleteValueMessages", {
+        return messageClient.delete("/deleteValueMessages", {
             params: {
                 id: id
             },

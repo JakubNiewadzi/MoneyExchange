@@ -1,5 +1,6 @@
 package pl.niewadzj.moneyExchange.entities.message;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,6 +29,7 @@ public abstract class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String message;
+    @Column(name = "user_id", nullable = false)
     private Long userId;
     private Long sourceCurrencyId;
     private Long targetCurrencyId;

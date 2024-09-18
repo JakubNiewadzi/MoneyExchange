@@ -71,7 +71,7 @@ export const TransferMoneyPage = () => {
                     className='flex flex-col mt-4 md:justify-around md:items-stretch'>
                     <label>Receiver account number:</label>
                     <input className="border mt-2 appearance-none w-full bg-lightGray border-lightGray rounded-md py-2 px-4
-                    focus:outline-none focus:ring ring-blue-400 focus:border-background"
+                    focus:outline-none focus:ring-2 ring-blue-400 focus:border-background"
                            type='text'
                            name='number-form'
                            placeholder='20113213213213'
@@ -83,7 +83,7 @@ export const TransferMoneyPage = () => {
                         <label>Provider currency:</label>
                         <Select
                             name='select-one'
-                            className="text-white mt-2 font-semibold w-full bg-lightGray rounded-bl focus:outline-none focus:ring ring-background"
+                            className="text-white mt-2 font-semibold w-full bg-lightGray rounded-bl focus:outline-none focus:ring-2 ring-background"
                             value={currencyOne}
                             onChange={handleCurrencyChange}>
                             {currencies.map(currency => {
@@ -95,7 +95,7 @@ export const TransferMoneyPage = () => {
                         <label>Receiver currency:</label>
                         <Select
                             name='select-two'
-                            className="text-white mt-2 font-semibold w-full bg-lightGray rounded-bl focus:outline-none focus:ring ring-background"
+                            className="text-white mt-2 font-semibold w-full bg-lightGray rounded-bl focus:outline-none focus:ring-2 ring-background"
                             value={currencyTwo}
                             onChange={handleCurrencyChange}>
                             {currencies.map(currency => {
@@ -108,7 +108,7 @@ export const TransferMoneyPage = () => {
                     <label>Transferred Money:</label>
                     <input
                         className="border mt-2 appearance-none w-full bg-lightGray border-lightGray rounded-md
-                        py-2 px-4 focus:outline-none focus:ring ring-blue-400 focus:border-background"
+                        py-2 px-4 focus:outline-none focus:ring-2 ring-blue-400 focus:border-background"
                         type='number'
                         name='amount-transferred'
                         placeholder='11.11'

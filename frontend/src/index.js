@@ -17,6 +17,7 @@ import {ExchangeHistoryPage} from "./pages/ExchangeHistoryPage";
 import {TransferMoneyPage} from "./pages/TransferMoneyPage";
 import {TransferHistoryPage} from "./pages/TransferHistoryPage";
 import {PlanExchangePage} from "./pages/PlanExchangePage";
+import {ActiveMessagesPage} from "./pages/ActiveMessagesPage";
 
 
 const router = createBrowserRouter([
@@ -82,6 +83,10 @@ const router = createBrowserRouter([
             {
                 path: "planRate",
                 element: <PlanExchangePage/>
+            },
+            {
+                path: "activeMessages",
+                element: <ActiveMessagesPage/>
             },
         ]
     }

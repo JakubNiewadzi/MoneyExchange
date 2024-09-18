@@ -91,7 +91,14 @@ public class ValueMessageServiceImpl implements ValueMessageService {
     @Override
     public ValueMessagesResponse getValueMessageResponses(int pageNo, int pageSize, User user) {
         List<ValueMessage> valueMessages = valueMessageRepository
-                .findByUserId(user.getId());
+                .findAll();
+
+        valueMessages.forEach(System.out::println);
+
+        valueMessages = valueMessages.stream()
+                .filter(valueMessage -> Objects.equals(valueMessage.getUserId(), user.getId()))
+                .toList();
+
 
         return ValueMessagesResponse.builder()
                 .valueMessages(valueMessages)
@@ -105,7 +112,7 @@ public class ValueMessageServiceImpl implements ValueMessageService {
         ValueMessage valueMessage = valueMessageRepository.findById(id)
                 .orElseThrow(() -> new ValueMessageNotFoundException(id));
 
-        if (!Objects.equals(valueMessage.getUserId(), user.getId())){
+        if (!Objects.equals(valueMessage.getUserId(), user.getId())) {
             throw new MessageNotOwnedByUserException();
         }
 

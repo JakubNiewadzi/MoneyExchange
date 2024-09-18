@@ -6,9 +6,9 @@ import {useEffect, useState} from "react";
 import {fetchAllCurrencyAccounts} from "../state/slices/currencyAccountsSlice";
 import Cookies from "js-cookie";
 import {FormContainer} from "../components/FormContainer";
-import {useLocation} from "react-router";
+import {useLocation, useNavigate} from "react-router";
 import {messageApi} from "../api/messageApi";
-import {formatDate} from "../services/dateService";
+import {formatDate, requestDate} from "../services/dateService";
 
 export const PlanExchangePage = () => {
 
@@ -23,6 +23,7 @@ export const PlanExchangePage = () => {
     const authToken = Cookies.get('authToken');
     const dispatch = useDispatch();
     const location = useLocation();
+    const navigate = useNavigate();
     const path = location.pathname;
 
 
@@ -61,23 +62,6 @@ export const PlanExchangePage = () => {
         }
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        path === '/planDate' ? await
-            messageApi.createDateMessage(authToken, {
-                message: `Date message from ${currencyOne} to ${currencyTwo} for ${amount} on ${date}`,
-                sourceCurrencyId: currencyOne,
-                targetCurrencyId: currencyTwo,
-                amount: amount,
-                triggerDate: formatDate(date),
-            }) : messageApi.createValueMessage(authToken, {
-            message: `Value message from ${currencyOne} to ${currencyTwo} for ${amount} `,
-            sourceCurrencyId: currencyOne,
-            targetCurrencyId: currencyTwo,
-            amount: amount,
-            //triggerDate:
-        });
-    };
 
 
     const dateInput = <div className='flex flex-col'>
@@ -96,38 +80,61 @@ export const PlanExchangePage = () => {
     const valueInput =
         <div className='flex md:flex-row flex-col'>
             <div className='flex flex-col md:mr-4'>
-            <label className="my-2">Target exchange rate: </label>
-            <input type="number"
-                   className="border w-full bg-lightGray border-lightGray
+                <label className="my-2">Target exchange rate: </label>
+                <input type="number"
+                       className="border w-full bg-lightGray border-lightGray
                rounded-sm py-2 px-4 focus:outline-none focus:ring-2
                         ring-blue-400"
-                   id='value'
-                   name="value"
-                   placeholder="123.33"
-                   value={value}
-                   onChange={handleChange}
-                   step='0.01'
-                   min='0'
-            />
+                       id='value'
+                       name="value"
+                       placeholder="123.33"
+                       value={value}
+                       onChange={handleChange}
+                       step='0.01'
+                       min='0'
+                />
             </div>
             <div className='flex flex-col'>
-            <label className="my-2">Current exchange rate: </label>
-            <input type="number"
-                   className="border w-full bg-lightGray border-lightGray
+                <label className="my-2">Current exchange rate: </label>
+                <input type="number"
+                       className="border w-full bg-lightGray border-lightGray
                rounded-sm py-2 px-4 focus:outline-none focus:ring-2
                         ring-blue-400"
-                   id='current'
-                   name="current"
-                   placeholder="123.33"
-                   value={currentRate}
-                   step='0.01'
-                   min='0'
-                   disabled
-            />
-        </div>
+                       id='current'
+                       name="current"
+                       placeholder="123.33"
+                       value={currentRate}
+                       step='0.01'
+                       min='0'
+                       disabled
+                />
+            </div>
         </div>;
 
-    return <FormContainer onSubmit={handleSubmit}>
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        path === '/planDate' ?
+            await messageApi.createDateMessage(authToken, {
+                message: `Date message from ${currencyOne} to ${currencyTwo} for ${amount} on ${date}`,
+                sourceCurrencyId: currencyOne,
+                targetCurrencyId: currencyTwo,
+                amount: amount,
+                triggerDate: requestDate(date),
+            })
+            :
+            await messageApi.createValueMessage(authToken, {
+                message: `Value message from ${currencyOne} to ${currencyTwo} for ${amount} `,
+                sourceCurrencyId: currencyOne,
+                targetCurrencyId: currencyTwo,
+                amount: amount,
+                valueExchangeRate: value,
+            });
+
+        navigate("/activeMessages");
+    };
+
+    return <FormContainer handleSubmit={handleSubmit}>
         <h2 className="text-center text-2xl font-semibold mb-4">Plan your exchange</h2>
         <div
             className='flex mt-2 md:flex-row flex-col w-full md:justify-around md:items-stretch font-semibold items-center'>

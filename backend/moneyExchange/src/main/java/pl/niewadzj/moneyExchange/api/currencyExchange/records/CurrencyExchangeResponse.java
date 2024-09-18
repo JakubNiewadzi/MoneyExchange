@@ -1,5 +1,6 @@
 package pl.niewadzj.moneyExchange.api.currencyExchange.records;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import pl.niewadzj.moneyExchange.entities.currencyExchange.CurrencyExchangeStatus;
 
@@ -16,5 +17,6 @@ public record CurrencyExchangeResponse(Long id,
                                        BigDecimal amountIncreased,
                                        BigDecimal exchangeRate,
                                        CurrencyExchangeStatus status,
+                                       @JsonFormat(timezone = JsonFormat.DEFAULT_TIMEZONE)
                                        LocalDateTime exchangeDateTime) {
 }

@@ -9,6 +9,4 @@ import java.util.List;
 @Repository
 public interface ValueMessageRepository extends JpaRepository<ValueMessage, Long> {
 
-    List<ValueMessage> findByUserId(Long userId);
-
 }

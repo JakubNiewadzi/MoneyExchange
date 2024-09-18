@@ -1,17 +1,14 @@
 package pl.niewadzj.moneyExchange.api.message;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.niewadzj.moneyExchange.api.currencyExchange.interfaces.CurrencyExchangeService;
 import pl.niewadzj.moneyExchange.api.currencyExchange.records.ExchangeCurrencyRequest;
 import pl.niewadzj.moneyExchange.api.message.interfaces.DateMessageService;
 import pl.niewadzj.moneyExchange.api.message.records.DateMessageRequest;
 import pl.niewadzj.moneyExchange.api.message.records.DateMessagesResponse;
-import pl.niewadzj.moneyExchange.api.message.records.ValueMessagesResponse;
 import pl.niewadzj.moneyExchange.entities.message.DateMessage;
-import pl.niewadzj.moneyExchange.entities.message.ValueMessage;
 import pl.niewadzj.moneyExchange.entities.message.repositories.DateMessageRepository;
 import pl.niewadzj.moneyExchange.entities.user.User;
 import pl.niewadzj.moneyExchange.entities.user.interfaces.UserRepository;
@@ -24,6 +21,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.StreamSupport;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DateMessageServiceImpl implements DateMessageService {
@@ -58,7 +56,9 @@ public class DateMessageServiceImpl implements DateMessageService {
     @Override
     public void createDateMessage(DateMessageRequest dateMessageRequest,
                                   User user) {
+
         DateMessage dateMessage = DateMessage.builder()
+                .id(null)
                 .message(dateMessageRequest.message())
                 .userId(user.getId())
                 .sourceCurrencyId(dateMessageRequest.sourceCurrencyId())
@@ -66,14 +66,24 @@ public class DateMessageServiceImpl implements DateMessageService {
                 .amount(dateMessageRequest.amount())
                 .triggerDate(dateMessageRequest.triggerDate())
                 .build();
+        System.out.println(dateMessage);
+        dateMessage = dateMessageRepository.save(dateMessage);
+        System.out.println(dateMessage);
 
-        dateMessageRepository.save(dateMessage);
     }
 
     @Override
     public DateMessagesResponse getDateMessageResponses(int pageNo, int pageSize, User user) {
+        log.info("Finding date messages for a user");
         List<DateMessage> dateMessages = dateMessageRepository
-                .findByUserId(user.getId());
+                .findAll();
+
+        dateMessages.forEach(System.out::println);
+
+        dateMessages = dateMessages.stream()
+                .filter(dateMessage -> Objects.equals(dateMessage.getUserId(), user.getId()))
+                .toList();
+
 
         return DateMessagesResponse.builder()
                 .dateMessages(dateMessages)

@@ -1,5 +1,6 @@
 package pl.niewadzj.moneyExchange.api.message.records;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
@@ -22,5 +23,6 @@ public record DateMessageRequest(String message,
                                  @DecimalMin(value = AMOUNT_MIN_VALUE)
                                  @Digits(integer = AMOUNT_INTEGER, fraction = AMOUNT_FRACTION)
                                  BigDecimal amount,
+                                 @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = JsonFormat.DEFAULT_TIMEZONE)
                                  LocalDateTime triggerDate) {
 }

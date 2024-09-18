@@ -24,8 +24,10 @@ import pl.niewadzj.moneyExchange.exceptions.currencyAccount.CurrencyAccountNotAc
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Random;
+import java.util.TimeZone;
 
 @Configuration
 @RequiredArgsConstructor
@@ -43,6 +45,8 @@ public class Seeder implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) {
+        TimeZone.setDefault(TimeZone.getTimeZone(ZoneId.of("Europe/Warsaw")));
+
         List<User> sampleUsers = createSampleUsers();
         List<Currency> currencies = currencyRepository.findAll();
         if (currencies.isEmpty()) {

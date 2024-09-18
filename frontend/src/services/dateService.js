@@ -10,6 +10,10 @@ export const formatDate = (dateString) => {
     return `${year}-${month}-${day} ${hours}:${minutes}`;
 };
 
+export const requestDate = (dateString) => {
+    return `${formatDate(dateString)}:00`;
+};
+
 export const hasHourPassed = (dateString) => {
 
     const date = new Date(dateString);
