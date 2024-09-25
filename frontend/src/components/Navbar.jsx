@@ -4,16 +4,43 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import {NavLink} from "react-router-dom";
 import {useSelector} from "react-redux";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {MdArrowDropDown, MdArrowDropUp} from "react-icons/md";
 import {FaBell} from "react-icons/fa";
 import {CurrencyBanner} from "./CurrencyBanner";
 import {ProfileButton} from "./ProfileButton";
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
+import {setCurrencies} from "../state/slices/currencySlice";
 
 export const Navbar = () => {
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
 
     const [visible, setVisible] = useState(true);
+    const [isConnected, setIsConnected] = useState(false);
+
+    useEffect(() => {
+        const socket = new SockJS(process.env.REACT_APP_API_BACKEND_URL + "/messages", null, {
+            withCredentials: true
+        });
+        const client = Stomp.over(socket);
+
+        client.connect({}, () => {
+            console.log('Websocket private connection established');
+            setIsConnected(true);
+            client.subscribe('/user/queue/notifications', (message) => {
+                const receivedMessage = JSON.parse(message);
+                console.log(receivedMessage);
+            })
+        });
+
+        return () => {
+            if (isConnected) {
+                client.disconnect();
+                setIsConnected(false);
+            }
+        }
+    }, []);
 
     return (
         <div className="absolute">
@@ -64,4 +91,4 @@ export const Navbar = () => {
         </div>
     );
 
-}
+};

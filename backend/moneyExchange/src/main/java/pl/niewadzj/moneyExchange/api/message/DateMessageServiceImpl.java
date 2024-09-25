@@ -2,6 +2,9 @@ package pl.niewadzj.moneyExchange.api.message;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import pl.niewadzj.moneyExchange.api.currencyExchange.interfaces.CurrencyExchangeService;
 import pl.niewadzj.moneyExchange.api.currencyExchange.records.ExchangeCurrencyRequest;
@@ -28,6 +31,7 @@ public class DateMessageServiceImpl implements DateMessageService {
 
     private final UserRepository userRepository;
     private final DateMessageRepository dateMessageRepository;
+    private final SimpMessagingTemplate simpMessagingTemplate;
     private final CurrencyExchangeService currencyExchangeService;
 
     @Override
@@ -45,9 +49,11 @@ public class DateMessageServiceImpl implements DateMessageService {
 
                     Long userId = dateMessage.getUserId();
 
-                    currencyExchangeService.exchangeCurrency(exchangeCurrencyRequest,
-                            userRepository.findById(userId)
-                                    .orElseThrow(() -> new UserNotFoundException(userId)));
+                    User user = userRepository.findById(userId)
+                            .orElseThrow(() -> new UserNotFoundException(userId));
+
+                    currencyExchangeService.exchangeCurrency(exchangeCurrencyRequest, user);
+                    sendNotification(user, dateMessage.getMessage());
                 });
 
         dateMessageRepository.deleteAll(dateMessageIterable);
@@ -66,10 +72,8 @@ public class DateMessageServiceImpl implements DateMessageService {
                 .amount(dateMessageRequest.amount())
                 .triggerDate(dateMessageRequest.triggerDate())
                 .build();
-        System.out.println(dateMessage);
-        dateMessage = dateMessageRepository.save(dateMessage);
-        System.out.println(dateMessage);
 
+        dateMessageRepository.save(dateMessage);
     }
 
     @Override
@@ -102,6 +106,12 @@ public class DateMessageServiceImpl implements DateMessageService {
         }
 
         dateMessageRepository.deleteById(id);
+    }
+
+    @Override
+    @MessageMapping("/private")
+    public void sendNotification(User user, @Payload String message) {
+        simpMessagingTemplate.convertAndSendToUser(user.getUsername(), "/queue/notifications", message);
     }
 
 
