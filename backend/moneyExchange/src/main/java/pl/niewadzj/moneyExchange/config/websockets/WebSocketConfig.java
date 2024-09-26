@@ -1,4 +1,4 @@
-package pl.niewadzj.moneyExchange.config;
+package pl.niewadzj.moneyExchange.config.websockets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Configuration;
@@ -26,18 +26,17 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker(TOPIC, QUEUE);
+        config.enableSimpleBroker(QUEUE);
         config.setApplicationDestinationPrefixes(APP_PREFIX);
-        config.setUserDestinationPrefix(USER_PREFIX);
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint(CURRENCIES_ENDPOINT)
-                .setAllowedOrigins("http://localhost:3000", "http://localhost")
-                .withSockJS();
-
+//        registry.addEndpoint(CURRENCIES_ENDPOINT)
+//                .setAllowedOrigins("http://localhost:3000", "http://localhost")
+//                .withSockJS();
         registry.addEndpoint(MESSAGES_ENDPOINT)
+                .addInterceptors(new WebSocketHandshakeInterceptor())
                 .setAllowedOrigins("http://localhost:3000", "http://localhost")
                 .withSockJS();
     }

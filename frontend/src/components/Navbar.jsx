@@ -11,7 +11,8 @@ import {CurrencyBanner} from "./CurrencyBanner";
 import {ProfileButton} from "./ProfileButton";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
-import {setCurrencies} from "../state/slices/currencySlice";
+import Cookies from "js-cookie";
+import {bearerAuth} from "../api/bearerAuth";
 
 export const Navbar = () => {
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
@@ -19,20 +20,20 @@ export const Navbar = () => {
     const [visible, setVisible] = useState(true);
     const [isConnected, setIsConnected] = useState(false);
 
+    const authToken = Cookies.get('authToken');
+
     useEffect(() => {
-        const socket = new SockJS(process.env.REACT_APP_API_BACKEND_URL + "/messages", null, {
-            withCredentials: true
-        });
+        const socket = new SockJS(process.env.REACT_APP_API_BACKEND_URL + "/messages");
         const client = Stomp.over(socket);
 
-        client.connect({}, () => {
-            console.log('Websocket private connection established');
+        client.connect({ Authorization: bearerAuth(authToken) }, () => {
+            console.log('WebSocket private connection established');
             setIsConnected(true);
-            client.subscribe('/user/queue/notifications', (message) => {
-                const receivedMessage = JSON.parse(message);
-                console.log(receivedMessage);
-            })
+            client.subscribe('/queue/messages', (message) => {
+                console.log(message);
+            });
         });
+
 
         return () => {
             if (isConnected) {

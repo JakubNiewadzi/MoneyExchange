@@ -104,6 +104,17 @@ public class Seeder implements CommandLineRunner {
         dateMessageRepository.save(dateMessage);
         dateMessageRepository.findAll().forEach(System.out::println);
 
+        DateMessage dateMessage2 = DateMessage
+                .builder()
+                .sourceCurrencyId(12L)
+                .targetCurrencyId(4L)
+                .amount(BigDecimal.TWO)
+                .userId(1L)
+                .message("Date message 1")
+                .triggerDate(LocalDateTime.now().plusMinutes(2))
+                .build();
+
+        dateMessageRepository.save(dateMessage2);
     }
 
     private void createValueMessage(){

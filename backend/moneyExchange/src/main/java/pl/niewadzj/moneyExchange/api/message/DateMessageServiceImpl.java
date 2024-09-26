@@ -22,7 +22,10 @@ import pl.niewadzj.moneyExchange.exceptions.message.MessageNotOwnedByUserExcepti
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.StreamSupport;
+
+import static pl.niewadzj.moneyExchange.websockets.constants.WebSocketsConstants.MESSAGES_ENDPOINT;
+import static pl.niewadzj.moneyExchange.websockets.constants.WebSocketsConstants.QUEUE;
+import static pl.niewadzj.moneyExchange.websockets.constants.WebSocketsConstants.TOPIC;
 
 @Slf4j
 @Service
@@ -36,27 +39,28 @@ public class DateMessageServiceImpl implements DateMessageService {
 
     @Override
     public void performDueTransactions() {
-        Iterable<DateMessage> dateMessageIterable = dateMessageRepository.findAll();
-
-        StreamSupport.stream(dateMessageIterable.spliterator(), false)
+        List<DateMessage> dateMessages = dateMessageRepository.findAll()
+                .stream()
                 .filter(dateMessage -> dateMessage.getTriggerDate().isBefore(LocalDateTime.now()))
-                .forEach(dateMessage -> {
-                    ExchangeCurrencyRequest exchangeCurrencyRequest = ExchangeCurrencyRequest.builder()
-                            .currencyFromId(dateMessage.getSourceCurrencyId())
-                            .currencyToId(dateMessage.getTargetCurrencyId())
-                            .amount(dateMessage.getAmount())
-                            .build();
+                .toList();
 
-                    Long userId = dateMessage.getUserId();
+        dateMessages.forEach(dateMessage -> {
+            ExchangeCurrencyRequest exchangeCurrencyRequest = ExchangeCurrencyRequest.builder()
+                    .currencyFromId(dateMessage.getSourceCurrencyId())
+                    .currencyToId(dateMessage.getTargetCurrencyId())
+                    .amount(dateMessage.getAmount())
+                    .build();
 
-                    User user = userRepository.findById(userId)
-                            .orElseThrow(() -> new UserNotFoundException(userId));
+            Long userId = dateMessage.getUserId();
+            System.out.println("Performing a planned exchange");
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new UserNotFoundException(userId));
 
-                    currencyExchangeService.exchangeCurrency(exchangeCurrencyRequest, user);
-                    sendNotification(user, dateMessage.getMessage());
-                });
+            currencyExchangeService.exchangeCurrency(exchangeCurrencyRequest, user);
+            sendNotification(user, dateMessage.getMessage());
+        });
 
-        dateMessageRepository.deleteAll(dateMessageIterable);
+        dateMessageRepository.deleteAll(dateMessages);
     }
 
     @Override
@@ -101,7 +105,7 @@ public class DateMessageServiceImpl implements DateMessageService {
         DateMessage dateMessage = dateMessageRepository.findById(id)
                 .orElseThrow(() -> new DateMessageNotFoundException(id));
 
-        if (!Objects.equals(dateMessage.getUserId(), user.getId())){
+        if (!Objects.equals(dateMessage.getUserId(), user.getId())) {
             throw new MessageNotOwnedByUserException();
         }
 
@@ -109,9 +113,9 @@ public class DateMessageServiceImpl implements DateMessageService {
     }
 
     @Override
-    @MessageMapping("/private")
-    public void sendNotification(User user, @Payload String message) {
-        simpMessagingTemplate.convertAndSendToUser(user.getUsername(), "/queue/notifications", message);
+    public void sendNotification(User user, String message) {
+        simpMessagingTemplate.convertAndSend("%s%s".formatted(QUEUE, MESSAGES_ENDPOINT),
+                message);
     }
 
 

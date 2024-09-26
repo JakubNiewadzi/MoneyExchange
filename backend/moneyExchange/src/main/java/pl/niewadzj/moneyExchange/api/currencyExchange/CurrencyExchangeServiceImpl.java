@@ -88,6 +88,7 @@ public class CurrencyExchangeServiceImpl implements CurrencyExchangeService {
 
         currencyExchange.setCurrencyExchangeStatus(CurrencyExchangeStatus.SUCCESSFUL);
 
+        System.out.println("Performing a planned exchange");
         currencyExchangeRepository.saveAndFlush(currencyExchange);
 
         return ExchangeCurrencyResponse.builder()
