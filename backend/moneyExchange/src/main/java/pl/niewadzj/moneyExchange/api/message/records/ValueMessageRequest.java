@@ -12,8 +12,7 @@ import static pl.niewadzj.moneyExchange.api.currencyExchange.constants.CurrencyE
 import static pl.niewadzj.moneyExchange.api.currencyExchange.constants.CurrencyExchangeConstants.AMOUNT_NULL_MSG;
 import static pl.niewadzj.moneyExchange.api.currencyExchange.constants.CurrencyExchangeConstants.ID_NULL_MSG;
 
-public record ValueMessageRequest(String message,
-                                  @NotNull(message = ID_NULL_MSG)
+public record ValueMessageRequest(@NotNull(message = ID_NULL_MSG)
                                   Long sourceCurrencyId,
                                   @NotNull(message = ID_NULL_MSG)
                                   Long targetCurrencyId,

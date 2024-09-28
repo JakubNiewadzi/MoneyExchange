@@ -2,20 +2,21 @@ package pl.niewadzj.moneyExchange.api.message;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import pl.niewadzj.moneyExchange.api.currencyExchange.interfaces.CurrencyExchangeService;
 import pl.niewadzj.moneyExchange.api.currencyExchange.records.ExchangeCurrencyRequest;
 import pl.niewadzj.moneyExchange.api.message.interfaces.DateMessageService;
+import pl.niewadzj.moneyExchange.api.message.interfaces.MessageService;
 import pl.niewadzj.moneyExchange.api.message.records.DateMessageRequest;
 import pl.niewadzj.moneyExchange.api.message.records.DateMessagesResponse;
+import pl.niewadzj.moneyExchange.entities.currency.Currency;
+import pl.niewadzj.moneyExchange.entities.currency.interfaces.CurrencyRepository;
 import pl.niewadzj.moneyExchange.entities.message.DateMessage;
 import pl.niewadzj.moneyExchange.entities.message.repositories.DateMessageRepository;
 import pl.niewadzj.moneyExchange.entities.user.User;
 import pl.niewadzj.moneyExchange.entities.user.interfaces.UserRepository;
 import pl.niewadzj.moneyExchange.exceptions.auth.UserNotFoundException;
+import pl.niewadzj.moneyExchange.exceptions.currency.CurrencyNotFoundException;
 import pl.niewadzj.moneyExchange.exceptions.message.DateMessageNotFoundException;
 import pl.niewadzj.moneyExchange.exceptions.message.MessageNotOwnedByUserException;
 
@@ -23,18 +24,15 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-import static pl.niewadzj.moneyExchange.websockets.constants.WebSocketsConstants.MESSAGES_ENDPOINT;
-import static pl.niewadzj.moneyExchange.websockets.constants.WebSocketsConstants.QUEUE;
-import static pl.niewadzj.moneyExchange.websockets.constants.WebSocketsConstants.TOPIC;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class DateMessageServiceImpl implements DateMessageService {
 
     private final UserRepository userRepository;
+    private final MessageService messageService;
+    private final CurrencyRepository currencyRepository;
     private final DateMessageRepository dateMessageRepository;
-    private final SimpMessagingTemplate simpMessagingTemplate;
     private final CurrencyExchangeService currencyExchangeService;
 
     @Override
@@ -52,12 +50,11 @@ public class DateMessageServiceImpl implements DateMessageService {
                     .build();
 
             Long userId = dateMessage.getUserId();
-            System.out.println("Performing a planned exchange");
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new UserNotFoundException(userId));
 
             currencyExchangeService.exchangeCurrency(exchangeCurrencyRequest, user);
-            sendNotification(user, dateMessage.getMessage());
+            messageService.sendNotification(user.getUsername(), dateMessage.getMessage());
         });
 
         dateMessageRepository.deleteAll(dateMessages);
@@ -66,10 +63,19 @@ public class DateMessageServiceImpl implements DateMessageService {
     @Override
     public void createDateMessage(DateMessageRequest dateMessageRequest,
                                   User user) {
+        Currency sourceCurrency = currencyRepository.findById(dateMessageRequest.sourceCurrencyId())
+                .orElseThrow(() -> new CurrencyNotFoundException(dateMessageRequest.sourceCurrencyId()));
+
+        Currency targetCurrency = currencyRepository.findById(dateMessageRequest.targetCurrencyId())
+                .orElseThrow(() -> new CurrencyNotFoundException(dateMessageRequest.targetCurrencyId()));
 
         DateMessage dateMessage = DateMessage.builder()
                 .id(null)
-                .message(dateMessageRequest.message())
+                .message("Performed an exchange from %s to %s on %s".formatted(
+                        sourceCurrency.getCode(),
+                        targetCurrency.getCode(),
+                        dateMessageRequest.triggerDate().toString()
+                ))
                 .userId(user.getId())
                 .sourceCurrencyId(dateMessageRequest.sourceCurrencyId())
                 .targetCurrencyId(dateMessageRequest.targetCurrencyId())
@@ -85,8 +91,6 @@ public class DateMessageServiceImpl implements DateMessageService {
         log.info("Finding date messages for a user");
         List<DateMessage> dateMessages = dateMessageRepository
                 .findAll();
-
-        dateMessages.forEach(System.out::println);
 
         dateMessages = dateMessages.stream()
                 .filter(dateMessage -> Objects.equals(dateMessage.getUserId(), user.getId()))
@@ -110,12 +114,6 @@ public class DateMessageServiceImpl implements DateMessageService {
         }
 
         dateMessageRepository.deleteById(id);
-    }
-
-    @Override
-    public void sendNotification(User user, String message) {
-        simpMessagingTemplate.convertAndSend("%s%s".formatted(QUEUE, MESSAGES_ENDPOINT),
-                message);
     }
 
 

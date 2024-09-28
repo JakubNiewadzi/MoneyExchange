@@ -5,6 +5,7 @@ import {currencyAccountsReducer} from "./slices/currencyAccountsSlice";
 import {currencyExchangeReducer} from "./slices/currencyExchangeSlice";
 import {transferReducer} from "./slices/transferSlice";
 import {messageReducer} from "./slices/messageSlice";
+import {notificationReducer} from "./slices/notificationSlice";
 
 export const store = configureStore({
         reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
             currencyExchange: currencyExchangeReducer,
             transfer: transferReducer,
             message: messageReducer,
+            notification: notificationReducer
         }
     }
 );

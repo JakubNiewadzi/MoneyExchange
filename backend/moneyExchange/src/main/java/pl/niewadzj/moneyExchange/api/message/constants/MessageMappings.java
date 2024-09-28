@@ -10,6 +10,7 @@ public final class MessageMappings {
     public static final String DELETE_VALUE_MESSAGE = "/deleteValueMessage";
     public static final String DELETE_DATE_MESSAGE = "/deleteDateMessage";
 
-    private MessageMappings(){}
+    private MessageMappings() {
+    }
 
 }

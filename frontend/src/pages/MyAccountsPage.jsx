@@ -20,7 +20,6 @@ export const MyAccountsPage = () => {
     const status = useSelector(state => state.currencyAccount.status);
     const isFilterActive = useSelector(state => state.currencyAccount.isFilterActive);
     const pageAmount = useSelector(state => state.currencyAccount.pageAmount);
-    const totalAmount = useSelector(state => state.currencyAccount.totalAmount);
     const pageNumber = useSelector(state => state.currencyAccount.pageNumber);
     const amountPerPage = useSelector(state => state.currencyAccount.amountPerPage);
 

@@ -14,8 +14,7 @@ import static pl.niewadzj.moneyExchange.api.currencyExchange.constants.CurrencyE
 import static pl.niewadzj.moneyExchange.api.currencyExchange.constants.CurrencyExchangeConstants.AMOUNT_NULL_MSG;
 import static pl.niewadzj.moneyExchange.api.currencyExchange.constants.CurrencyExchangeConstants.ID_NULL_MSG;
 
-public record DateMessageRequest(String message,
-                                 @NotNull(message = ID_NULL_MSG)
+public record DateMessageRequest(@NotNull(message = ID_NULL_MSG)
                                  Long sourceCurrencyId,
                                  @NotNull(message = ID_NULL_MSG)
                                  Long targetCurrencyId,
@@ -23,6 +22,6 @@ public record DateMessageRequest(String message,
                                  @DecimalMin(value = AMOUNT_MIN_VALUE)
                                  @Digits(integer = AMOUNT_INTEGER, fraction = AMOUNT_FRACTION)
                                  BigDecimal amount,
-                                 @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = JsonFormat.DEFAULT_TIMEZONE)
+                                 @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = JsonFormat.DEFAULT_TIMEZONE)
                                  LocalDateTime triggerDate) {
 }

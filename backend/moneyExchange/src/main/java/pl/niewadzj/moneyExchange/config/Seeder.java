@@ -2,17 +2,14 @@ package pl.niewadzj.moneyExchange.config;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import pl.niewadzj.moneyExchange.api.auth.interfaces.AuthService;
 import pl.niewadzj.moneyExchange.api.auth.records.RegistrationRequest;
 import pl.niewadzj.moneyExchange.api.currencyAccount.interfaces.CurrencyAccountService;
 import pl.niewadzj.moneyExchange.api.currencyAccount.records.TransactionRequest;
-import pl.niewadzj.moneyExchange.api.message.records.ValueMessageRequest;
 import pl.niewadzj.moneyExchange.entities.currency.Currency;
 import pl.niewadzj.moneyExchange.entities.currency.interfaces.CurrencyRepository;
-import pl.niewadzj.moneyExchange.entities.currencyAccount.interfaces.CurrencyAccountRepository;
 import pl.niewadzj.moneyExchange.entities.message.DateMessage;
 import pl.niewadzj.moneyExchange.entities.message.ValueMessage;
 import pl.niewadzj.moneyExchange.entities.message.repositories.DateMessageRepository;
@@ -102,7 +99,6 @@ public class Seeder implements CommandLineRunner {
 
 
         dateMessageRepository.save(dateMessage);
-        dateMessageRepository.findAll().forEach(System.out::println);
 
         DateMessage dateMessage2 = DateMessage
                 .builder()
@@ -117,19 +113,18 @@ public class Seeder implements CommandLineRunner {
         dateMessageRepository.save(dateMessage2);
     }
 
-    private void createValueMessage(){
+    private void createValueMessage() {
         ValueMessage valueMessage = ValueMessage
                 .builder()
                 .sourceCurrencyId(12L)
                 .targetCurrencyId(1L)
                 .amount(BigDecimal.ONE)
                 .userId(1L)
-                .message("Date message 1")
+                .message("Value message 1")
                 .value(BigDecimal.valueOf(10.0))
                 .build();
 
         valueMessageRepository.save(valueMessage);
-        valueMessageRepository.findAll().forEach(System.out::println);
     }
 
 

@@ -116,7 +116,6 @@ export const PlanExchangePage = () => {
 
         path === '/planDate' ?
             await messageApi.createDateMessage(authToken, {
-                message: `Date message from ${currencyOne} to ${currencyTwo} for ${amount} on ${date}`,
                 sourceCurrencyId: currencyOne,
                 targetCurrencyId: currencyTwo,
                 amount: amount,
@@ -124,7 +123,6 @@ export const PlanExchangePage = () => {
             })
             :
             await messageApi.createValueMessage(authToken, {
-                message: `Value message from ${currencyOne} to ${currencyTwo} for ${amount} `,
                 sourceCurrencyId: currencyOne,
                 targetCurrencyId: currencyTwo,
                 amount: amount,

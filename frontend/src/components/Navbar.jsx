@@ -3,7 +3,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import {NavLink} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import {MdArrowDropDown, MdArrowDropUp} from "react-icons/md";
 import {FaBell} from "react-icons/fa";
@@ -13,24 +13,32 @@ import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import Cookies from "js-cookie";
 import {bearerAuth} from "../api/bearerAuth";
+import {addNotification} from "../state/slices/notificationSlice";
+import {HiBell, HiBellAlert} from "react-icons/hi2";
 
 export const Navbar = () => {
+    const email = useSelector(state => state.auth.email);
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+    const notifications = useSelector(state => state.notification.notifications);
 
     const [visible, setVisible] = useState(true);
     const [isConnected, setIsConnected] = useState(false);
 
     const authToken = Cookies.get('authToken');
+    const dispatch = useDispatch();
 
     useEffect(() => {
+        if (email === null){
+            return;
+        }
         const socket = new SockJS(process.env.REACT_APP_API_BACKEND_URL + "/messages");
         const client = Stomp.over(socket);
 
         client.connect({ Authorization: bearerAuth(authToken) }, () => {
             console.log('WebSocket private connection established');
             setIsConnected(true);
-            client.subscribe('/queue/messages', (message) => {
-                console.log(message);
+            client.subscribe(`/queue/${email}/messages`, (message) => {
+                dispatch(addNotification(message.body));
             });
         });
 
@@ -79,8 +87,7 @@ export const Navbar = () => {
                             <>
                                 <Button color="inherit"
                                         className="relative rounded-full transition-all duration-500">
-                                    <FaBell size={30}/>
-
+                                    {notifications.length === 0 ? <HiBell size={30}/> : <HiBellAlert size={30}/>}
                                 </Button>
                                 <ProfileButton/>
                             </>

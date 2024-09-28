@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.niewadzj.moneyExchange.api.currencyExchange.interfaces.CurrencyExchangeService;
 import pl.niewadzj.moneyExchange.api.currencyExchange.records.ExchangeCurrencyRequest;
+import pl.niewadzj.moneyExchange.api.message.interfaces.MessageService;
 import pl.niewadzj.moneyExchange.api.message.interfaces.ValueMessageService;
 import pl.niewadzj.moneyExchange.api.message.records.ValueMessageCurrencies;
 import pl.niewadzj.moneyExchange.api.message.records.ValueMessageRequest;
@@ -32,6 +33,7 @@ import java.util.Objects;
 public class ValueMessageServiceImpl implements ValueMessageService {
 
     private final UserRepository userRepository;
+    private final MessageService messageService;
     private final CurrencyRepository currencyRepository;
     private final ValueMessageRepository valueMessageRepository;
     private final CurrencyExchangeService currencyExchangeService;
@@ -76,8 +78,18 @@ public class ValueMessageServiceImpl implements ValueMessageService {
     public void createValueMessage(ValueMessageRequest valueMessageRequest, User user) {
         validateValueMessage(valueMessageRequest);
 
+        Currency sourceCurrency = currencyRepository.findById(valueMessageRequest.sourceCurrencyId())
+                .orElseThrow(() -> new CurrencyNotFoundException(valueMessageRequest.sourceCurrencyId()));
+
+        Currency targetCurrency = currencyRepository.findById(valueMessageRequest.targetCurrencyId())
+                .orElseThrow(() -> new CurrencyNotFoundException(valueMessageRequest.targetCurrencyId()));
+
         ValueMessage valueMessage = ValueMessage.builder()
-                .message(valueMessageRequest.message())
+                .message("Performed an exchange from %s to %s, because the exchange rate fell below %.2f".formatted(
+                        sourceCurrency.getCode(),
+                        targetCurrency.getCode(),
+                        valueMessageRequest.valueExchangeRate()
+                ))
                 .userId(user.getId())
                 .sourceCurrencyId(valueMessageRequest.sourceCurrencyId())
                 .targetCurrencyId(valueMessageRequest.targetCurrencyId())
@@ -92,8 +104,6 @@ public class ValueMessageServiceImpl implements ValueMessageService {
     public ValueMessagesResponse getValueMessageResponses(int pageNo, int pageSize, User user) {
         List<ValueMessage> valueMessages = valueMessageRepository
                 .findAll();
-
-        valueMessages.forEach(System.out::println);
 
         valueMessages = valueMessages.stream()
                 .filter(valueMessage -> Objects.equals(valueMessage.getUserId(), user.getId()))
@@ -162,6 +172,7 @@ public class ValueMessageServiceImpl implements ValueMessageService {
 
             currencyExchangeService.exchangeCurrency(exchangeCurrencyRequest, user);
             valueMessageRepository.delete(valueMessage);
+            messageService.sendNotification(user.getUsername(), valueMessage.getMessage());
         }
     }
 }

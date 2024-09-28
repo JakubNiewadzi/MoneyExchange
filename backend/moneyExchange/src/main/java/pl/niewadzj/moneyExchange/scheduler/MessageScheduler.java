@@ -25,7 +25,7 @@ public class MessageScheduler {
 
     @Async
     @Scheduled(initialDelay = 1000L * 10L,
-            fixedRate = 1000L)
+            fixedRate = 10L * 1000L)
     public void checkExchangeRatesForValues() {
         valueMessageService.performValueCheckOnMessages();
     }
