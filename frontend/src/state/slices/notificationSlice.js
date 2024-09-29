@@ -1,6 +1,4 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {messageApi} from "../../api/messageApi";
-import {fetchDateMessages, fetchValueMessages} from "./messageSlice";
+import {createSlice} from "@reduxjs/toolkit";
 
 const SLICE_NAME = "notification";
 
@@ -13,7 +11,10 @@ const notificationSlice = createSlice({
         initialState,
         reducers: {
             addNotification(state, action) {
-                state.notifications = [...state.notifications, action]
+                state.notifications = [...state.notifications, action.payload]
+            },
+            removeNotifications(state, action) {
+                state.notifications = action.payload
             },
             clearNotifications(state) {
                 state.notifications = [];
@@ -22,6 +23,6 @@ const notificationSlice = createSlice({
     }
 );
 
-export const {addNotification, clearNotifications} = notificationSlice.actions;
+export const {addNotification, clearNotifications, removeNotifications} = notificationSlice.actions;
 
 export const notificationReducer = notificationSlice.reducer;

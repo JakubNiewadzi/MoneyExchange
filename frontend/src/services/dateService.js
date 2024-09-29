@@ -1,4 +1,7 @@
 export const formatDate = (dateString) => {
+    if (!isValidDate(dateString)){
+        return dateString;
+    }
     const date = new Date(dateString);
 
     const year = date.getFullYear();
@@ -25,4 +28,8 @@ export const hasHourPassed = (dateString) => {
 
     return diffInHours >= 1;
 
+};
+
+export const isValidDate = (dateString) => {
+    return !isNaN(Date.parse(dateString));
 };
